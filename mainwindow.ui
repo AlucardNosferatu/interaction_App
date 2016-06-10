@@ -174,7 +174,7 @@
      <string>Clear</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="testButton">
     <property name="geometry">
      <rect>
       <x>580</x>
@@ -184,7 +184,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>HR</string>
+     <string>SquareTest</string>
     </property>
    </widget>
    <widget class="QPushButton" name="initButton">
@@ -407,6 +407,32 @@
     </property>
     <property name="text">
      <string>Addr</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="noiseButton">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>70</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>NoiseTest</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>120</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
     </property>
    </widget>
   </widget>
