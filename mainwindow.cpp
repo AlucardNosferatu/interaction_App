@@ -89,9 +89,9 @@ void MainWindow::handleReadyRead()
                 float emgdata=emg[j];
                 emg[j]=filter.iir_notch(emg[j],j);
                 emg[j]=filter.fir_highpass(emg[j],j);
-                filtered[j].append(emgdata);
+                filtered[j].append(emg[j]);
                 if (j==0)
-                    ui->c1Plot->graph(0)->addData(emgcount,emgdata);
+                    ui->c1Plot->graph(0)->addData(emgcount,emg[j]);
             }
             gesture = gesturerecognize0523(emg);
             ui->GestureEdit->setText(def_gesture[gesture]);
@@ -110,13 +110,6 @@ void MainWindow::handleReadyRead()
 void MainWindow::handleBytesWritten(qint64 bytes)
 {
     m_bytesWritten += bytes;
-}
-
-void MainWindow::on_sendButton_clicked()
-{
-    if (!serialport.isOpen())
-        return;
-    serialport.write(ui->lineEdit->text().toLocal8Bit());
 }
 
 void MainWindow::on_closeButton_clicked()
@@ -302,4 +295,13 @@ void MainWindow::on_testButton_clicked()
     unsigned char squarecommand[4] = {0xff,0x01,0x05,0x05};
     if (!serialport.isOpen())
         return;
-    serialport.write((char*)squarecommand,4);}
+    serialport.write((char*)squarecommand,4);
+}
+
+void MainWindow::on_normalMeaButton_clicked()
+{
+    unsigned char normalcommand[4] = {0xff,0x01,0x06,0x06};
+    if (!serialport.isOpen())
+        return;
+    serialport.write((char*)normalcommand,4);
+}

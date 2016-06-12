@@ -30,8 +30,6 @@ private slots:
     void handleReadyRead();
     void handleBytesWritten(qint64 bytes);
     void on_openButton_clicked();
-    void on_sendButton_clicked();
-
     void on_closeButton_clicked();
 
     void on_beginButton_clicked();
@@ -45,13 +43,17 @@ private slots:
 
     void on_saveButton_clicked();
 
-    void on_pushButton_clicked();
-
     void on_initButton_clicked();
 
     void on_pushButtonRLD_clicked();
 
     void on_pushButton_2_clicked();
+
+    void on_noiseButton_clicked();
+
+    void on_testButton_clicked();
+
+    void on_normalMeaButton_clicked();
 
 private:
     Ui::MainWindow *ui;

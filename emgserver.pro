@@ -17,7 +17,6 @@ SOURCES += main.cpp\
     parser.cpp \
     plot/qcustomplot.cpp \
     filter.cpp \
-    parser2.cpp \
     initial.cpp \
     neupr.cpp \
     recognize.cpp
@@ -26,7 +25,6 @@ HEADERS  += mainwindow.h \
     parser.h \
     plot/qcustomplot.h \
     filter.h \
-    parser2.h \
     initial.h \
     neupr.h \
     recognize.h
