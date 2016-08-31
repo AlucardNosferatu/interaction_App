@@ -52,7 +52,7 @@ int Parser::parse(unsigned char c)
         else if (type==IMU)
         {
             imuDataBuffer[dataindex++]=c;
-            if (dataindex==16)
+            if (dataindex==48)
                 currentstate=GET_SUM;
         }
         tmpsum+=c;
@@ -74,7 +74,6 @@ int Parser::parse(unsigned char c)
         }
         else
             res = ERROR;
-        emit parseFinish(res);
         return res;
     }
 }
@@ -82,11 +81,9 @@ int Parser::parse(unsigned char c)
 
 int Parser::getLatestIMUData(float quat[])
 {
-    float *floatdata=(float*)imuDataBuffer;
-    quat[0]=floatdata[0];
-    quat[1]=floatdata[1];
-    quat[2]=floatdata[2];
-    quat[3]=floatdata[3];
+    float *floatdata=(float*)(imuDataBuffer);
+    for (int i=0;i<12;i++)
+        quat[i]=floatdata[i];
     return 0;
 }
 

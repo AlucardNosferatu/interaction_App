@@ -9,7 +9,6 @@
 #include <QList>
 #include "plot/qcustomplot.h"
 #include "filter.h"
-#include "initial.h"
 
 namespace Ui {
     class MainWindow;
@@ -22,7 +21,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    float ini_emg[N_FRENQUENCY][N_CHANNEL];
 
 private slots:
     void updateUI();
@@ -30,33 +28,21 @@ private slots:
     void handleReadyRead();
     void handleBytesWritten(qint64 bytes);
     void on_openButton_clicked();
-    void on_sendButton_clicked();
-
     void on_closeButton_clicked();
 
     void on_beginButton_clicked();
-
     void on_stopButton_clicked();
     void response_received(ParserResult r);
-
     void on_ResetButton_clicked();
-
     void on_clearButton_clicked();
-
     void on_saveButton_clicked();
-
-    void on_pushButton_clicked();
-
     void on_initButton_clicked();
-
     void on_pushButtonRLD_clicked();
-
     void on_pushButton_2_clicked();
-
     void on_noiseButton_clicked();
-    
     void on_testButton_clicked();
-    
+    void on_normalMeaButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     Parser parser;
@@ -71,6 +57,10 @@ private:
 
     QList<float> rawdata[8];
     QList<float> filtered[8];
+    QList<QList<float>> quatRaw;
+
+    QCustomPlot* plots[8];
+
 };
 
 #endif // MAINWINDOW_H

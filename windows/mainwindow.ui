@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>787</width>
-    <height>591</height>
+    <width>834</width>
+    <height>830</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -107,8 +107,8 @@
      <rect>
       <x>40</x>
       <y>120</y>
-      <width>661</width>
-      <height>291</height>
+      <width>361</width>
+      <height>131</height>
      </rect>
     </property>
    </widget>
@@ -180,8 +180,8 @@
    <widget class="QPushButton" name="initButton">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>440</y>
+      <x>170</x>
+      <y>700</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -193,8 +193,8 @@
    <widget class="QTextEdit" name="GestureEdit">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>430</y>
+      <x>30</x>
+      <y>690</y>
       <width>111</width>
       <height>31</height>
      </rect>
@@ -203,8 +203,8 @@
    <widget class="QTextEdit" name="Mav0">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>430</y>
+      <x>320</x>
+      <y>690</y>
       <width>231</width>
       <height>31</height>
      </rect>
@@ -213,8 +213,8 @@
    <widget class="QTextEdit" name="Threshold">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>430</y>
+      <x>650</x>
+      <y>690</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -223,8 +223,8 @@
    <widget class="QLineEdit" name="lineEdit_2">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>440</y>
+      <x>260</x>
+      <y>700</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -236,8 +236,8 @@
    <widget class="QLineEdit" name="lineEdit_3">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>440</y>
+      <x>570</x>
+      <y>700</y>
       <width>71</width>
       <height>21</height>
      </rect>
@@ -249,8 +249,8 @@
    <widget class="QCheckBox" name="checkBox1P">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>480</y>
+      <x>30</x>
+      <y>740</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -262,8 +262,8 @@
    <widget class="QCheckBox" name="checkBox2P">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>480</y>
+      <x>90</x>
+      <y>740</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -275,8 +275,8 @@
    <widget class="QCheckBox" name="checkBox3P">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>480</y>
+      <x>150</x>
+      <y>740</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -288,8 +288,8 @@
    <widget class="QCheckBox" name="checkBox4P">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>480</y>
+      <x>210</x>
+      <y>740</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -301,8 +301,8 @@
    <widget class="QCheckBox" name="checkBox1N">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>510</y>
+      <x>270</x>
+      <y>740</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -314,8 +314,8 @@
    <widget class="QCheckBox" name="checkBox2N">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>510</y>
+      <x>330</x>
+      <y>740</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -327,8 +327,8 @@
    <widget class="QCheckBox" name="checkBox3N">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>510</y>
+      <x>390</x>
+      <y>740</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -340,8 +340,8 @@
    <widget class="QCheckBox" name="checkBox4N">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>510</y>
+      <x>450</x>
+      <y>740</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -353,8 +353,8 @@
    <widget class="QPushButton" name="pushButtonRLD">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>490</y>
+      <x>500</x>
+      <y>740</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -366,8 +366,8 @@
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>490</y>
+      <x>720</x>
+      <y>740</y>
       <width>91</width>
       <height>23</height>
      </rect>
@@ -379,8 +379,8 @@
    <widget class="QLineEdit" name="lineEditAddr">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>490</y>
+      <x>660</x>
+      <y>740</y>
       <width>51</width>
       <height>20</height>
      </rect>
@@ -389,8 +389,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>490</y>
+      <x>620</x>
+      <y>740</y>
       <width>31</width>
       <height>21</height>
      </rect>
@@ -425,13 +425,83 @@
      <string>NormalMeasure</string>
     </property>
    </widget>
+   <widget class="QCustomPlot" name="c2Plot" native="true">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>120</y>
+      <width>361</width>
+      <height>131</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCustomPlot" name="c3Plot" native="true">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>260</y>
+      <width>361</width>
+      <height>131</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCustomPlot" name="c4Plot" native="true">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>260</y>
+      <width>361</width>
+      <height>131</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCustomPlot" name="c5Plot" native="true">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>400</y>
+      <width>361</width>
+      <height>131</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCustomPlot" name="c6Plot" native="true">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>400</y>
+      <width>361</width>
+      <height>131</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCustomPlot" name="c7Plot" native="true">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>540</y>
+      <width>361</width>
+      <height>131</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCustomPlot" name="c8Plot" native="true">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>540</y>
+      <width>361</width>
+      <height>131</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>787</width>
+     <width>834</width>
      <height>23</height>
     </rect>
    </property>

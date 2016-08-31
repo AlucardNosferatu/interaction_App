@@ -28,13 +28,11 @@ public:
 
 private:
     int currentstate,dataindex,type;
-    unsigned char imuDataBuffer[16];
+    unsigned char imuDataBuffer[50];
     unsigned char emgDataBuffer[27];
     unsigned char commandBuffer[5];
     unsigned char tmpsum;
 
-signals:
-    void parseFinish(ParserResult result);
 };
 
 #endif // PARSER_H
