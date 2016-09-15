@@ -1,4 +1,4 @@
-#include "dataprocessor.h"
+﻿#include "dataprocessor.h"
 
 DataProcessor::DataProcessor(QObject *parent) : QObject(parent)
 {
@@ -19,7 +19,7 @@ float DataProcessor::tare()
 {
     TSS_Error tss_error;
     unsigned int timestamp;
-    //零位
+
     tss_error = tss_tareWithCurrentOrientation(upperArm,&timestamp);
     tss_error = tss_tareWithCurrentOrientation(foreArm,&timestamp);
 
@@ -34,7 +34,7 @@ int DataProcessor::setDirection(float d)
     return 0;
 }
 
-void DataProcessor::initiate(int interval)
+void DataProcessor::connectIMU(int interval)
 {
     TSS_Error tss_error;
     unsigned int timestamp;
@@ -90,7 +90,7 @@ int DataProcessor::setZeros(double *angles)
     return 0;
 }
 
-void DataProcessor::disconnect()
+void DataProcessor::disconnectIMU()
 {
     tss_stopStreaming(upperArm,NULL);
     tss_stopStreaming(foreArm,NULL);
@@ -100,7 +100,7 @@ void DataProcessor::disconnect()
     tss_closeTSDevice(body);
 }
 
-int DataProcessor::getData(double *angles, double axes[AXISNUM][3], double *quatRaw)
+int DataProcessor::getIMUData(float *angles, float axes[AXISNUM][3], float *quatRaw)
 {
     TSS_Error tss_error;
     unsigned int timestamp;
@@ -127,7 +127,7 @@ int DataProcessor::getData(double *angles, double axes[AXISNUM][3], double *quat
     return 0;
 }
 
-int DataProcessor::getZeros(double *angles)
+int DataProcessor::getZeros(float *angles)
 {
     TSS_Error tss_error;
     unsigned int timestamp;
@@ -139,58 +139,102 @@ int DataProcessor::getZeros(double *angles)
 
 int DataProcessor::resetFileStream(QString fname)
 {
-    if (infile.isOpen())
-        infile.close();
-    fileName=fname;
-    filePos=0;
-    infile.setFileName(fileName);
-    if(!infile.open( QIODevice::ReadOnly | QIODevice::Text))
-        return -1;
-    textinput.setDevice(&infile);
+    // reset both IMU file and EMG file
+    IMUfileExists=false;
+    EMGfileExists=false;
+
+    QFileInfo fi(fname);
+
+    QString abpath=fi.absolutePath();
+    QString fn=fi.baseName();
+
+    QString IMUfname=abpath+"/"+fn+".imu";
+    QFileInfo imufi(IMUfname);
+    if (imufi.exists())
+    {
+        IMUfileExists=true;
+        if (IMUinfile.isOpen())
+            IMUinfile.close();
+        IMUfilePos=0;
+        IMUinfile.setFileName(fname);
+        if(!IMUinfile.open( QIODevice::ReadOnly | QIODevice::Text))
+            return -1;
+        IMUtextinput.setDevice(&IMUinfile);
+    }
+
+    QString EMGfname=abpath+"/"+fn+".emg";
+    QFileInfo emgfi(EMGfname);
+    if (emgfi.exists())
+    {
+        EMGfileExists=true;
+        if (EMGinfile.isOpen())
+            EMGinfile.close();
+        EMGfilePos=0;
+        EMGinfile.setFileName(fname);
+        if(!EMGinfile.open( QIODevice::ReadOnly | QIODevice::Text))
+            return -1;
+        EMGtextinput.setDevice(&EMGinfile);
+    }
     return 0;
 }
-
 
 int DataProcessor::getFileLineNum()
 {
     int linenum=0;
-    while (!textinput.atEnd())
+    if (IMUfileExists)
     {
-         textinput.readLine();
-         linenum++;
+        while (!IMUtextinput.atEnd())
+        {
+             IMUtextinput.readLine();
+             linenum++;
+        }
+    }else
+    {
+        while (!EMGtextinput.atEnd())
+        {
+             EMGtextinput.readLine();
+             linenum++;
+        }
     }
     return linenum;
 }
 
 int DataProcessor::setFilePos(int newpos)
 {
-    int linenum=0;
-    infile.seek(0);
-    for (int i=0;i<newpos;i++)
-        infile.readLine();
-    filePos=infile.pos();
+    if (IMUfileExists)
+    {
+        IMUinfile.seek(0);
+        for (int i=0;i<newpos;i++)
+            IMUinfile.readLine();
+        IMUfilePos=IMUinfile.pos();
+    }
+    if (EMGfileExists)
+    {
+        EMGinfile.seek(0);
+        for (int i=0;i<newpos;i++)
+            EMGinfile.readLine();
+        EMGfilePos=EMGinfile.pos();
+    }
     return 0;
 }
 
-int DataProcessor::getDataFromFile(double *angles, double axes[AXISNUM][3], double *quatRaw)
+int DataProcessor::getIMUDataFromFile(float *angles, float axes[][3], float *quatRaw)
 {
-    farm0=MyQuaternion(fquat[3],fquat[0],fquat[1],fquat[2]);
-    textinput.seek(filePos);    
-    textinput>>bquat[0]>>bquat[1]>>bquat[2]>>bquat[3]
-            >>uquat[0]>>uquat[1]>>uquat[2]>>uquat[3]
-            >>fquat[0]>>fquat[1]>>fquat[2]>>fquat[3];
-
-    if(textinput.atEnd())
+    if (IMUfileExists)
     {
-        return -1;
+        farm0=MyQuaternion(fquat[3],fquat[0],fquat[1],fquat[2]);
+        IMUtextinput.seek(IMUfilePos);
+        IMUtextinput>>bquat[0]>>bquat[1]>>bquat[2]>>bquat[3]
+                >>uquat[0]>>uquat[1]>>uquat[2]>>uquat[3]
+                >>fquat[0]>>fquat[1]>>fquat[2]>>fquat[3];
+
+        if(IMUtextinput.atEnd())
+        {
+            return -1;
+        }
+        IMUfilePos=IMUtextinput.pos();
+        process(angles,axes);
     }
-    filePos=textinput.pos();
-    LARGE_INTEGER t1,t2,tc;
-    QueryPerformanceFrequency(&tc);
-    QueryPerformanceCounter(&t1);
-    process(angles,axes);
-    QueryPerformanceCounter(&t2);
-    //printf("%f\n",(t2.QuadPart - t1.QuadPart)*1.0/tc.QuadPart);
     return 0;
 }
 
@@ -222,7 +266,7 @@ int DataProcessor::getOrientation(float *vector,float *forward,float *right,floa
 }
 
 
-int DataProcessor::processForCalibration(double *angles)
+int DataProcessor::processForCalibration(float *angles)
 {
     MyQuaternion fz,fx,fy,uz,ux,ux0,fx0,farmc,uarmc,uy;
     ux0=uarm.conjugate()*x*uarm;    //former xaxis
@@ -259,7 +303,7 @@ int DataProcessor::processForCalibration(double *angles)
     return 0;
 }
 
-int DataProcessor::process(double *angles, double axes[AXISNUM][3])
+int DataProcessor::process(float *angles, float axes[AXISNUM][3])
 {
     MyQuaternion fz,fx,fy,uz,ux,ux0,fx0,farmc,uarmc,uy;
     ux0=uarm.conjugate()*x*uarm;    //former xaxis
@@ -364,4 +408,45 @@ double DataProcessor::getTwistAngle(MyQuaternion ux,MyQuaternion fx,MyQuaternion
     if ((ux.e.cross(fx.e*direction).dot(uz1.e))<0)
         retval*=-1;
     return retval;
+}
+
+
+void DataProcessor::setRalSensor(RalSensor *r)
+{
+    ralsensor=r;
+}
+
+int DataProcessor::connectEMGSensor(QString portname)
+{
+    ralsensor->setAndOpenSerialPort(portname);
+    return 0;
+}
+
+int DataProcessor::disconnectEMGSensor()
+{
+    ralsensor->closeSerialPort();
+    return 0;
+}
+
+int DataProcessor::getEMGData(float *emgRaw)
+{
+    ralsensor->getLatestEMGData(emgRaw);
+    return 0;
+}
+
+int DataProcessor::getEMGDataFromFile(float *emgRaw)
+{
+    if (EMGfileExists)
+    {
+        EMGtextinput.seek(EMGfilePos);
+        EMGtextinput>>emgRaw[0]>>emgRaw[1]>>emgRaw[2]>>emgRaw[3]
+                >>emgRaw[4]>>emgRaw[5]>>emgRaw[6]>>emgRaw[7];
+
+        if(EMGtextinput.atEnd())
+        {
+            return -1;
+        }
+        EMGfilePos=EMGtextinput.pos();
+    }
+    return 0;
 }

@@ -39,6 +39,9 @@ public:
     bool removeMovementCiterionAt(const int &index);
     bool updateMovementCiterionAt(const int &index, const Joint &name, const MovementType move);
 
+    bool setEMGCiterion(int newEMG);
+    int getEMGGesture();
+
 
     //list function
     QStringList getAxisCiteriaList();
@@ -46,7 +49,7 @@ public:
     QStringList getMoveCiteriaList();
 
     //likelihood
-    double getLikelihood(const double angles[JOINTNUM],const double axes[AXISNUM][3],const double mprobability[JOINTNUM][MOVEMENTNUM]);
+    double getLikelihood(const double angles[JOINTNUM], const double axes[AXISNUM][3], const double mprobability[JOINTNUM][MOVEMENTNUM], int emg);
 
 private:
     QString mName;
@@ -54,6 +57,7 @@ private:
     QList<AxisCiterion> axisCiteria;
     QList<AngleCiterion> angleCiteria;
     QList<MovementCiterion> movementCiteria;
+    int emgCiterion;
     QString mDescription;
 };
 

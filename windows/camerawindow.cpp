@@ -68,6 +68,7 @@ int CameraWindow::setPictPath(QString fileName)
     QString path=QFileInfo(fileName).path();
     QString name=QFileInfo(fileName).baseName();
     picPath=path+QString("/")+name;
+    qDebug()<<picPath;
     return 0;
 }
 

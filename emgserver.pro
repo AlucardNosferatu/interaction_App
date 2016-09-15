@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport
+QT       += core gui serialport multimedia multimediawidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
@@ -19,18 +19,19 @@ SOURCES += main.cpp\
     gesture_modeling/gesture.cpp \
     gesture_modeling/movementciterion.cpp \
     imu/cyclequeue.cpp \
-    imu/dataprocessor.cpp \
-    imu/gesturelib.cpp \
     imu/movement.cpp \
     imu/quaternion.cpp \
-    ralsensor/filter.cpp \
-    ralsensor/parser.cpp \
     ralsensor/ralsensor.cpp \
     windows/calibrationwindow.cpp \
     windows/camerawindow.cpp \
     windows/gestureeditor.cpp \
     windows/mainwindow.cpp \
-    recognizor.cpp
+    recognizor.cpp \
+    gesturelib.cpp \
+    dataprocessor.cpp \
+    ralsensor/ralfilter.cpp \
+    ralsensor/ralparser.cpp \
+    ralsensor/iirfilter.cpp \
 
 
 HEADERS  +=     plot/qcustomplot.h \
@@ -44,17 +45,24 @@ HEADERS  +=     plot/qcustomplot.h \
     imu/movement.h \
     imu/quaternion.h \
     imu/recognizor.h \
-    ralsensor/filter.h \
-    ralsensor/parser.h \
     ralsensor/ralsensor.h \
     windows/calibrationwindow.h \
     windows/camerawindow.h \
     windows/gestureeditor.h \
     windows/mainwindow.h \
-    recognizor.h
+    recognizor.h \
+    gesturelib.h \
+    dataprocessor.h \
+    yei/yei_threespace_api.h \
+    ralsensor/ralfilter.h \
+    ralsensor/ralparser.h \
+    ralsensor/iirfilter.h \
 
+win32: LIBS += -L$$PWD/yei/ -lThreeSpace_API
+INCLUDEPATH += $$PWD/yei
+DEPENDPATH += $$PWD/yei
 
 FORMS    += windows/mainwindow.ui \
     windows/calibrationwindow.ui \
     windows/camerawindow.ui \
-    windows/gestureeditor.ui
+    windows/gestureeditor.ui \

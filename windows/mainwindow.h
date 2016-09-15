@@ -4,11 +4,14 @@
 #include <QMainWindow>
 #include "qserialport.h"
 #include "qserialportinfo.h"
-#include "parser.h"
 #include <QTimer>
 #include <QList>
 #include "plot/qcustomplot.h"
-#include "filter.h"
+#include "recognizor.h"
+
+#include "camerawindow.h"
+#include "gestureeditor.h"
+#include "calibrationwindow.h"
 
 namespace Ui {
     class MainWindow;
@@ -24,15 +27,14 @@ public:
 
 private slots:
     void updateUI();
+
+    // serial port list slots
     void on_freshButton_clicked();
-    void handleReadyRead();
-    void handleBytesWritten(qint64 bytes);
-    void on_openButton_clicked();
-    void on_closeButton_clicked();
+    void on_onEMGButton_clicked();
 
     void on_beginButton_clicked();
     void on_stopButton_clicked();
-    void response_received(ParserResult r);
+
     void on_ResetButton_clicked();
     void on_clearButton_clicked();
     void on_saveButton_clicked();
@@ -40,12 +42,30 @@ private slots:
     void on_pushButtonRLD_clicked();
     void on_pushButton_2_clicked();
     void on_noiseButton_clicked();
-    void on_testButton_clicked();
     void on_normalMeaButton_clicked();
+
+    // plot slots
+    void addDatatoEMGPlots(float *emgdata,int n_datacount);
+    void addDatatoIMUPlots(float *angles,int n_datacount);
+
+    // command response slots
+    void responseReceived(unsigned char res);
+
+    void on_onIMUButton_clicked();
+    void on_loadButton_clicked();
+
+    void on_Slider_sliderReleased();
+
+    void on_playButton_clicked();
+
+    void on_editorButton_clicked();
+
+    void on_pauseButton_clicked();
+
+    void on_squaretestButton_clicked();
 
 private:
     Ui::MainWindow *ui;
-    Parser parser;
     QSerialPortInfo portinfo;
     QSerialPort serialport;
     qint64 m_bytesWritten;
@@ -53,13 +73,18 @@ private:
     QByteArray  m_readData;
     int imucount,emgcount;
     QTimer updatetimer;
-    Filter filter;
-
-    QList<float> rawdata[8];
-    QList<float> filtered[8];
-    QList<QList<float>> quatRaw;
 
     QCustomPlot* plots[8];
+
+    Recognizor recognizor;
+
+    int fileLength,datapoint;
+
+    GestureEditor *gwin;
+    CalibrationWindow *cawin;
+    CameraWindow *cwin;
+
+    bool isplaying;
 
 };
 

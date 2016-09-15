@@ -54,6 +54,7 @@ void Gesture::read(const QJsonObject &json)
         citerion.read(movementObject);
         movementCiteria.append(citerion);
     }
+    emgCiterion=json["EMG"].toInt();
 }
 
 void Gesture::write(QJsonObject &json) const
@@ -87,7 +88,7 @@ void Gesture::write(QJsonObject &json) const
         movementArray.append(movementObject);
     }
     json["movementCiteria"]=movementArray;
-
+    json["EMG"]=emgCiterion;
 }
 
 //CRUD functions
@@ -193,6 +194,17 @@ bool Gesture::updateMovementCiterionAt(const int &index, const Joint &name, cons
         return false;
 }
 
+bool Gesture::setEMGCiterion(int newEMG)
+{
+    emgCiterion=newEMG;
+    return true;
+}
+
+int Gesture::getEMGGesture()
+{
+    return emgCiterion;
+}
+
 //list function
 QStringList Gesture::getAxisCiteriaList()
 {
@@ -219,7 +231,7 @@ QStringList Gesture::getMoveCiteriaList()
 }
 
 //likelihood function
-double Gesture::getLikelihood(const double angles[JOINTNUM],const double axes[AXISNUM][3],const double mprobability[JOINTNUM][MOVEMENTNUM])
+double Gesture::getLikelihood(const double angles[JOINTNUM],const double axes[AXISNUM][3],const double mprobability[JOINTNUM][MOVEMENTNUM],int emg)
 {
     double p=1;
     for (int i=0;i<angleCiteria.size();i++)
@@ -243,7 +255,7 @@ double Gesture::getLikelihood(const double angles[JOINTNUM],const double axes[AX
             return 0;
     }
 
-    if (p<0.5)
+    if (p<0.5 || (emgCiterion!=0 && emg!=emgCiterion))
         p=0;
     else
         p=pow(p,1.0/(angleCiteria.size()+axisCiteria.size()+movementCiteria.size()));

@@ -1,43 +1,13 @@
-ï»¿#include "mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "recognize.h"
+#include "recognizor.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    isplaying=false;
     ui->setupUi(this);
-    ui->c1Plot->addGraph();
-    ui->c1Plot->graph(0)->setName(QString("channel 1"));
-    ui->c1Plot->xAxis->setRange(0,1000);
-
-    ui->c2Plot->addGraph();
-    ui->c2Plot->graph(0)->setName(QString("channel 2"));
-    ui->c2Plot->xAxis->setRange(0,1000);
-
-    ui->c3Plot->addGraph();
-    ui->c3Plot->graph(0)->setName(QString("channel 3"));
-    ui->c3Plot->xAxis->setRange(0,1000);
-
-    ui->c4Plot->addGraph();
-    ui->c4Plot->graph(0)->setName(QString("channel 4"));
-    ui->c4Plot->xAxis->setRange(0,1000);
-
-    ui->c5Plot->addGraph();
-    ui->c5Plot->graph(0)->setName(QString("channel 5"));
-    ui->c5Plot->xAxis->setRange(0,1000);
-
-    ui->c6Plot->addGraph();
-    ui->c6Plot->graph(0)->setName(QString("channel 6"));
-    ui->c6Plot->xAxis->setRange(0,1000);
-
-    ui->c7Plot->addGraph();
-    ui->c7Plot->graph(0)->setName(QString("channel 7"));
-    ui->c7Plot->xAxis->setRange(0,1000);
-
-    ui->c8Plot->addGraph();
-    ui->c8Plot->graph(0)->setName(QString("channel 8"));
-    ui->c8Plot->xAxis->setRange(0,1000);
 
     plots[0]=ui->c1Plot;
     plots[1]=ui->c2Plot;
@@ -48,8 +18,51 @@ MainWindow::MainWindow(QWidget *parent) :
     plots[6]=ui->c7Plot;
     plots[7]=ui->c8Plot;
 
+    for (int i=0;i<8;i++)
+    {
+        plots[i]->addGraph();
+        plots[i]->graph(0)->setName(QString("channel %1").arg(i+1));
+        plots[i]->xAxis->setRange(0,100);
+        plots[i]->yAxis->setRange(0,0.0005);
+        plots[i]->legend->setVisible(true);
+    }
+
     connect(&updatetimer,SIGNAL(timeout()),this,SLOT(updateUI()));
-    filter.reset();
+    connect(&recognizor,SIGNAL(newEMGData(float*,int)),this,SLOT(addDatatoEMGPlots(float*,int)));
+    connect(&recognizor,SIGNAL(newIMUData(float*,int)),this,SLOT(addDatatoIMUPlots(float*,int)));
+    connect(&(recognizor.ralsensor),SIGNAL(newCommandResponse(unsigned char)),this,SLOT(responseReceived(unsigned char)));
+
+    cwin=new CameraWindow(this);
+    cwin->move(100,300);
+    cwin->show();
+    gwin=new GestureEditor(this,recognizor.getGesturelib());
+    cawin=new CalibrationWindow(this,recognizor.getDataprocessor());
+    cawin->move(1400,300);
+    recognizor.setCameraWindow(cwin);
+    //cawin->show();
+
+    //elbow plot
+    ui->elbowPlot->addGraph();
+    ui->elbowPlot->addGraph();
+    ui->elbowPlot->graph(0)->setName(QString("epsilon"));
+    ui->elbowPlot->graph(1)->setName(QString("tau"));
+    ui->elbowPlot->graph(1)->setPen(QPen(Qt::red));
+    ui->elbowPlot->legend->setVisible(true);
+    ui->elbowPlot->xAxis->setRange(0,100);
+    ui->elbowPlot->rescaleAxes(true);
+
+    //shoulder plot
+    ui->shoulderPlot->addGraph();
+    ui->shoulderPlot->addGraph();
+    ui->shoulderPlot->addGraph();
+    ui->shoulderPlot->graph(0)->setName(QString("theta"));
+    ui->shoulderPlot->graph(1)->setName(QString("phi"));
+    ui->shoulderPlot->graph(2)->setName(QString("omega"));
+    ui->shoulderPlot->graph(1)->setPen((QPen(Qt::red)));
+    ui->shoulderPlot->graph(2)->setPen(QPen(Qt::black));
+    ui->shoulderPlot->xAxis->setRange(0,100);
+    ui->shoulderPlot->legend->setVisible(true);
+    ui->shoulderPlot->rescaleAxes(true);
 }
 
 MainWindow::~MainWindow()
@@ -62,11 +75,19 @@ void MainWindow::updateUI()
     ui->emgNumber->display(emgcount);
     ui->countNumber->display(imucount);
 
+    ui->elbowPlot->rescaleAxes();
+    ui->shoulderPlot->rescaleAxes();
+    ui->elbowPlot->replot();
+    ui->shoulderPlot->replot();
+
     for (int i=0;i<8;i++)
     {
-        plots[i]->rescaleAxes();
+        plots[i]->xAxis->rescale();
         plots[i]->replot();
     }
+
+    if (isplaying)
+        ui->lengthLabel->setText(QString("%1/%2").arg(ui->Slider->value()).arg(fileLength));
 }
 
 void MainWindow::on_freshButton_clicked()
@@ -80,115 +101,68 @@ void MainWindow::on_freshButton_clicked()
     }
 }
 
-void MainWindow::on_openButton_clicked()
+void MainWindow::on_onEMGButton_clicked()
 {
-    if (ui->portBox->currentText().isEmpty())
-        return;
-
-    serialport.setPortName(ui->portBox->currentText());
-    serialport.setBaudRate(921600);
-    serialport.setDataBits(QSerialPort::Data8);
-    serialport.setStopBits(QSerialPort::OneStop);
-    serialport.setParity(QSerialPort::NoParity);
-    serialport.setFlowControl(QSerialPort::NoFlowControl);
-    connect(&serialport,SIGNAL(readyRead()),SLOT(handleReadyRead()));
-    //connect(&parser,SIGNAL(parseFinish(ParserResult)),SLOT(response_received(ParserResult)));
-    serialport.open(QIODevice::ReadWrite);
-    imucount=0;
-    emgcount=0;
-    updatetimer.start(100);
-    connect(&parser,SIGNAL(parseFinish(ParserResult)),this,SLOT(response_received(ParserResult)));
-    ui->statusBar->showMessage(QString("Series port opened"));
+    // Connect to RALSensor (Serial Port)
+    if (!recognizor.isEMGConnected())
+    {
+        if (ui->portBox->currentText().isEmpty())
+            return;
+        if (!recognizor.connectEMGSensor(ui->portBox->currentText()))
+        {
+            ui->statusBar->showMessage(QString("Series port opened"));
+            ui->onEMGButton->setText(QString("Dis EMG"));
+        }
+        else
+            ui->statusBar->showMessage(QString("Failed to open series port"));
+    }else
+    {
+        recognizor.disconnectEMGSensor();
+        ui->onEMGButton->setText(QString("Connect EMG"));
+    }
 }
 
-
-
-void MainWindow::on_closeButton_clicked()
-{
-    serialport.close();
-    updatetimer.stop();
-}
 
 void MainWindow::on_beginButton_clicked()
 {
+    isplaying=false;
+    recognizor.initRealtimeRecognition();
+    recognizor.ralsensor.startMeasurement();
+    recognizor.timerbegin();
 
+    if (!updatetimer.isActive())
+        updatetimer.start(100);
 }
 
 void MainWindow::on_stopButton_clicked()
 {
-
-}
-
-
-void MainWindow::response_received(ParserResult r)
-{
-    if (r==NEWCOMMANDRES)
-        ui->statusBar->showMessage(QString("Response received! res:%1").arg(parser.getLatestCommand()));
+    recognizor.ralsensor.stopMeasurement();
+    recognizor.timerstop();
+    if (updatetimer.isActive())
+        updatetimer.stop();
 }
 
 void MainWindow::on_ResetButton_clicked()
 {
-
+    recognizor.ralsensor.resetSensor();
 }
 
 void MainWindow::on_saveButton_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
-         tr("ä¿å­˜æ•°æ®"),
+         QString("±£´æÊı¾İ"),
          "",
-         tr("æ•°æ®æ–‡ä»¶ (*.dat)"));
-    QString fileName2=fileName+'1';
+         QString("Êı¾İÎÄ¼ş (*)"));
     if (!fileName.isNull())
     {
-        //fileNameæ˜¯æ–‡ä»¶å
-        QFile f(fileName);
-        QFile f2(fileName2);
-        if(!f.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            ui->statusBar->showMessage(QString("Open failed."));
-            return;
-        }
-        if(!f2.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            ui->statusBar->showMessage(QString("Open failed."));
-            return;
-        }
-        QTextStream txtOutput(&f);
-        QTextStream txtOutput2(&f2);
-        for (int i=0;i<emgcount;i++)
-        {
-            for (int j=0;j<8;j++)
-            {
-                txtOutput2<<filtered[j].at(i)<<' ';
-                txtOutput<<rawdata[j].at(i)<<' ';
-            }
-            txtOutput2<<endl;
-            txtOutput<<endl;
-        }
-
-        QString fileName3=fileName.split('.')[0]+".imu";
-        QFile f3(fileName3);
-        if(!f3.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            ui->statusBar->showMessage(QString("Open failed."));
-            return;
-        }
-        QTextStream txtOutput3(&f3);
-        for (int i=0;i<imucount;i++)
-        {
-            for (int j=0;j<12;j++)
-            {
-                txtOutput3<<quatRaw.at(i).at(j)<<' ';
-            }
-            txtOutput3<<endl;
-        }
-        ui->statusBar->showMessage(QString("data saved."));
-
+        int retval=recognizor.saveData(fileName);
+        if (retval>=0)
+            ui->statusBar->showMessage(QString("data saved."));
     }
 
     else
     {
-     //ç‚¹çš„æ˜¯å–æ¶ˆ
+     //µãµÄÊÇÈ¡Ïû
     }
      return;
 }
@@ -198,13 +172,18 @@ void MainWindow::on_clearButton_clicked()
     emgcount=0;
     for (int i=0;i<8;i++)
     {
-        rawdata[i].clear();
-        filtered[i].clear();
         plots[i]->graph(0)->clearData();
         plots[i]->replot();
     }
 
-    quatRaw.clear();
+    ui->shoulderPlot->graph(0)->clearData();
+    ui->shoulderPlot->graph(1)->clearData();
+    ui->shoulderPlot->graph(2)->clearData();
+    ui->elbowPlot->graph(0)->clearData();
+    ui->elbowPlot->graph(1)->clearData();
+    ui->shoulderPlot->replot();
+    ui->elbowPlot->replot();
+
     ui->statusBar->showMessage(QString("Raw data list cleared."));
 }
 
@@ -242,18 +221,119 @@ void MainWindow::on_pushButtonRLD_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
+    bool ok;
     unsigned char addr = ui->lineEditAddr->text().toInt(&ok,16);
     printf("%x\n",addr);
 }
 
 void MainWindow::on_noiseButton_clicked()
 {
-
+    recognizor.ralsensor.setNoiseTest();
 }
 
-void MainWindow::on_testButton_clicked()
+
+
+void MainWindow::on_normalMeaButton_clicked()
 {
+    recognizor.ralsensor.setNormalMeasurement();
+}
+
+void MainWindow::addDatatoEMGPlots(float *emgdata, int n_datacount)
+{
+    // add data to plots
+    // maximal NO. of data points is 100
+    if (isplaying)
+    {
+        if (n_datacount>ui->Slider->value())
+            ui->Slider->setValue(n_datacount);
+    }
+    for (int i=0;i<ELECTRODENUM;i++)
+    {
+        plots[i]->graph(0)->addData(n_datacount,emgdata[i]);
+        if (n_datacount>=100)
+            plots[i]->graph(0)->removeData(n_datacount-100);
+    }
+}
+
+void MainWindow::addDatatoIMUPlots(float *angles, int n_datacount)
+{
+    ui->elbowPlot->graph(0)->addData(n_datacount,angles[ELB]);
+    ui->elbowPlot->graph(1)->addData(n_datacount,angles[TWI]);
+    ui->shoulderPlot->graph(0)->addData(n_datacount,angles[POL]);
+    ui->shoulderPlot->graph(1)->addData(n_datacount,angles[AZI]);
+    ui->shoulderPlot->graph(2)->addData(n_datacount,angles[OME]);
+
+    if (n_datacount>ui->Slider->value())
+        ui->Slider->setValue(n_datacount);
+    if(n_datacount>=100)
+    {
+        ui->elbowPlot->graph(0)->removeData(n_datacount-100);
+        ui->elbowPlot->graph(1)->removeData(n_datacount-100);
+        ui->shoulderPlot->graph(0)->removeData(n_datacount-100);
+        ui->shoulderPlot->graph(1)->removeData(n_datacount-100);
+        ui->shoulderPlot->graph(2)->removeData(n_datacount-100);
+    }
 
 }
 
+void MainWindow::responseReceived(unsigned char res)
+{
+    ui->statusBar->showMessage(QString("Response received! res:%1").arg(res));
+}
 
+void MainWindow::on_onIMUButton_clicked()
+{
+    if (!recognizor.isIMUConnected())
+    {
+        recognizor.connectIMU(40);
+        ui->onIMUButton->setText(QString("Dis IMU"));
+    }else
+    {
+        recognizor.disconnectIMU();
+        ui->onIMUButton->setText(QString("Connect IMU"));
+    }
+}
+
+void MainWindow::on_loadButton_clicked()
+{
+    QString fileName=QFileDialog::getOpenFileName(this,
+                "´ò¿ª",
+                "",
+                "Êı¾İÎÄ¼ş (*.imu *.emg)");
+    if (!fileName.isNull())
+    {
+        fileLength=recognizor.initReplay(fileName);
+        ui->Slider->setMaximum(fileLength);
+        ui->Slider->setSingleStep(1);
+        ui->lengthLabel->setText(QString("Flie Length:%1").arg(fileLength));
+    }
+}
+
+void MainWindow::on_Slider_sliderReleased()
+{
+    int startpoint=ui->Slider->value();
+    recognizor.setReplayProcess(startpoint);
+    ui->lengthLabel->setText(QString("%1/%2").arg(startpoint).arg(fileLength));
+}
+
+void MainWindow::on_playButton_clicked()
+{
+    recognizor.timerbegin();
+    updatetimer.start(100);
+}
+
+void MainWindow::on_editorButton_clicked()
+{
+    gwin->show();
+}
+
+void MainWindow::on_pauseButton_clicked()
+{
+    recognizor.timerstop();
+    updatetimer.stop();
+}
+
+void MainWindow::on_squaretestButton_clicked()
+{
+    recognizor.ralsensor.setSquareWaveTest();
+}

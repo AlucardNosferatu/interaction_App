@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QTImer>
 #include "yei/yei_threespace_api.h"
-#include "quaternion.h"
+#include "imu/quaternion.h"
 #include <windows.h>
 #include <iostream>
 #include <iomanip>
@@ -14,6 +14,7 @@
 #include <QCameraInfo>
 #include <QFileDialog>
 #include "gesture_modeling/gesture.h"
+#include "ralsensor/ralsensor.h"
 
 //number of sensors
 #define SENSORNUM 3
@@ -34,37 +35,40 @@ using namespace std;
 class DataProcessor : public QObject
 {
     Q_OBJECT
+private:
 public:
     TSS_Device_Id  upperArm,foreArm,body;
     QTimer *timer;
     float fquat[4],uquat[4],bquat[4];
     MyQuaternion farm,uarm,uarm0,farm0,qbody;
     QString fileName;
-    qint64 filePos;
+    qint64 IMUfilePos,EMGfilePos;
+
     float twist;
     float direction;
     MyQuaternion x,y,z;
     double zeros[JOINTNUM];
 
-    QFile infile;
-    QTextStream textinput;
+    QFile IMUinfile,EMGinfile;
+    QTextStream IMUtextinput,EMGtextinput;
+
+    RalSensor *ralsensor;
 
     explicit DataProcessor(QObject *parent = 0);
     ~DataProcessor();
-    void initiate(int interval);
-    void disconnect();
-    int getData(double *angles, double axes[AXISNUM][3], double *quatRaw);
-    int getDataFromFile(double *angles, double axes[AXISNUM][3], double *quatRaw);
+
+    // IMU functions
+    void connectIMU(int interval);
+    void disconnectIMU();
+
+    int getIMUData(float *angles, float axes[][3], float *quatRaw);
+    int getIMUDataFromFile(float *angles, float axes[AXISNUM][3], float *quatRaw);
     int getOrientation(float *vector,float *forward,float *right,float *up);
 
-    int resetFileStream(QString fname);
-    int getFileLineNum();
-    int setFilePos(int newpos);
-
-    int process(double *angles, double axes[AXISNUM][3]);
-    int processForCalibration(double *angles);
+    int process(float *angles, float axes[][3]);
+    int processForCalibration(float *angles);
     int setZeros(double *angles);
-    int getZeros(double *angles);
+    int getZeros(float *angles);
     int setDirection(float d);
     double getPolarAngle(MyQuaternion zu, MyQuaternion xu);
     double getAziAngle(MyQuaternion zu);
@@ -73,6 +77,18 @@ public:
     double getTwistAngle(MyQuaternion ux, MyQuaternion fx, MyQuaternion uz, double elbow);
     float tare();
 
+    // EMG functions
+    void setRalSensor(RalSensor *r);
+    int connectEMGSensor(QString portname);
+    int disconnectEMGSensor();
+    int getEMGData(float *emgRaw);
+    int getEMGDataFromFile(float *emgRaw);
+
+    // File functions
+    bool IMUfileExists,EMGfileExists;
+    int resetFileStream(QString fname);
+    int getFileLineNum();
+    int setFilePos(int newpos);
 };
 
 #endif // DATAPROCESSOR_H

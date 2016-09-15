@@ -2,7 +2,9 @@
 
 Recognizor::Recognizor()
 {
-
+    EMGconnected=false;
+    dataprocessor.setRalSensor(&ralsensor);
+    connect(&timer,SIGNAL(timeout()),this,SLOT(update()));
 }
 
 QString Recognizor::getCurrentGesture()
@@ -10,22 +12,60 @@ QString Recognizor::getCurrentGesture()
     return currentGesture;
 }
 
-int Recognizor::update(bool FileMode, double *angles, double axes[][3])
+int Recognizor::setCameraWindow(CameraWindow *c)
 {
-    double quat_temp[SENSORNUM*4];
-    if (!FileMode)
+    cwin=c;
+    return 0;
+}
+
+int Recognizor::update()
+{
+    float quat_temp[SENSORNUM*4];
+    float angles[JOINTNUM],axes[AXISNUM][3];
+    float emgdata[ELECTRODENUM];
+
+    if (!fileMode)
     {
-        dataprocessor.getData(angles,axes,quat_temp);
-        QVector<double> qvector_temp;
-        for (int i=0;i<SENSORNUM*4;i++)
-            qvector_temp.append(quat_temp[i]);
-        quatRaw.append(qvector_temp);
+        if (IMUconnected)
+        {
+            // read IMU data and store it in QList
+            dataprocessor.getIMUData(angles,axes,quat_temp);
+            QList<float> qvector_temp;
+            for (int i=0;i<SENSORNUM*4;i++)
+                qvector_temp.append(quat_temp[i]);
+            quatRaw.append(qvector_temp);
+            emit newIMUData(angles,datacount);
+        }
+        if (EMGconnected)
+        {
+            // read EMG data and store it in QList
+            dataprocessor.getEMGData(emgdata);
+            QList<float> emgtmp;
+            for (int i=0;i<ELECTRODENUM;i++)
+                emgtmp.append(emgdata[i]);
+            emgraw.append(emgtmp);
+            emit newEMGData(emgdata,datacount);
+        }
     }
     else
     {
-        int retval = dataprocessor.getDataFromFile(angles,axes,quat_temp);
-        if (retval==-1)
-            return -1;
+        if (dataprocessor.IMUfileExists)
+        {
+            int retval = dataprocessor.getIMUDataFromFile(angles,axes,quat_temp);
+            if (retval>=0)
+                emit newIMUData(angles,datacount);
+            else
+                return -1;
+        }
+        if (dataprocessor.EMGfileExists)
+        {
+            int retval = dataprocessor.getEMGDataFromFile(emgdata);
+            if (retval>=0)
+                emit newEMGData(emgdata,datacount);
+            else
+                return -1;
+        }
+        cwin->loadPicture(datacount);
     }
 
     if(datacount==0 || datacount==startpoint)
@@ -39,13 +79,13 @@ int Recognizor::update(bool FileMode, double *angles, double axes[][3])
     else
     {
         if (angles[ELB]-lastangles[ELB]>4)
-            angles[ELB]-=2*3.1415926;
+            angles[ELB]-=2*3.1415926f;
         if (angles[ELB]-lastangles[ELB]<-4)
-            angles[ELB]+=2*3.1416926;
+            angles[ELB]+=2*3.1416926f;
         if (angles[TWI]-lastangles[TWI]>4)
-            angles[TWI]-=2*3.1415926;
+            angles[TWI]-=2*3.1415926f;
         if (angles[TWI]-lastangles[TWI]<-4)
-            angles[TWI]+=2*3.1415926;
+            angles[TWI]+=2*3.1415926f;
         int index=datacount % BUFFERLEN;
         //twistDeltas.append(angles[1]);
         deltas[index][TWI]=angles[TWI]-lastangles[TWI];
@@ -62,25 +102,11 @@ int Recognizor::update(bool FileMode, double *angles, double axes[][3])
     lastangles[OME]=angles[OME];
 
     //recognitnion
-    int retval=gestureRecognition(angles,axes);
+    //int retval=gestureRecognition(angles,axes);
 
     datacount++;
 
-    if (datacount %10==0)
-    {
-        //do the control things
-#ifdef CONTROL
-        QByteArray writedate;
-        QString writestr;
-        //writestr.append(QString("{X%1 Y%2 Z%3 D0 E0 G0 S}").arg((int)hy).arg((int)-hx).arg((int)hz));
-        writestr.append(QString("{%1}").arg(gestureName[gestures.last()]));
-        writedate.append(writestr);
-        spWriter.write(writedate);
-        ui->controlMsg->clear();
-        ui->controlMsg->appendPlainText(writestr);
-#endif
-    }
-    return retval;
+    return 0;
 }
 int Recognizor::gestureRecognition(const double angles[JOINTNUM],const double axes[AXISNUM][3])
 {
@@ -95,8 +121,8 @@ int Recognizor::gestureRecognition(const double angles[JOINTNUM],const double ax
     hy=-axes[UZ][1]*LINK_LENGTH-axes[FZ][1]*LINK_LENGTH;
     hz=-axes[UZ][2]*LINK_LENGTH-axes[FZ][2]*LINK_LENGTH;
 #endif
-
-    int ret=gesturelib.updateBestGesture(angles,axes,newp);
+    // todo: include emg result
+    int ret=gesturelib.updateBestGesture(angles,axes,newp,0);
     if (ret==NEWGESTURE)
     {
         // if true, new best gesture is found
@@ -120,16 +146,20 @@ int Recognizor::gestureRecognition(const double angles[JOINTNUM],const double ax
 
 int Recognizor::initReplay(QString fileName)
 {
+    cwin->setPictPath(fileName);
     dataprocessor.resetFileStream(fileName);
     datacount=0;
+    fileMode=true;
     lasthead=0;
-    return 0;
+    cwin->switchToReplay();
+    return dataprocessor.getFileLineNum();
 }
 
 int Recognizor::setReplayProcess(int pos)
 {
     startpoint=pos;
     dataprocessor.setFilePos(startpoint);
+    datacount=startpoint;
     lasthead=startpoint;
     for (int joint=0;joint<JOINTNUM;joint++)
         for (int move=0;move<MOVEMENTNUM;move++)
@@ -141,17 +171,31 @@ int Recognizor::setReplayProcess(int pos)
     return 0;
 }
 
-int Recognizor::initialRealtimeRecognition()
+int Recognizor::initRealtimeRecognition()
 {
-    startpoint=0;
+    fileMode=false;
     datacount=0;
     lasthead=0;
+    cwin->switchToRealtimeVideo();
+    return 0;
+}
+
+int Recognizor::timerbegin()
+{
+    timer.start(40);
+    return 0;
+}
+
+int Recognizor::timerstop()
+{
+    timer.stop();
     return 0;
 }
 
 int Recognizor::saveData(const QString &filename)
 {
-    QFile f(filename);
+    QString fname=QString("%1.imu").arg(filename);
+    QFile f(fname);
     if(!f.open(QIODevice::WriteOnly | QIODevice::Text))
     {
      printf("Open failed.");
@@ -165,13 +209,29 @@ int Recognizor::saveData(const QString &filename)
         txtOutput<<endl;
     }
     f.close();
+
+    fname=QString("%1.emg").arg(filename);
+    if(!f.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+     printf("Open failed.");
+     return -1;
+    }
+    QTextStream txtOutput1(&f);
+    for (int i=0;i<emgraw.length();i++)
+    {
+        for (int j=0;j<ELECTRODENUM;j++)
+            txtOutput1<<emgraw[i][j]<<' ';
+        txtOutput1<<endl;
+    }
+    cwin->savePictures(filename);
+    f.close();
     return 0;
 }
 
 int Recognizor::loadFile(QString fileName)
 {
-    QString path=QFileInfo(fileName).path();
-    QString name=QFileInfo(fileName).baseName();
+
+    qDebug()<<fileName;
     dataprocessor.resetFileStream(fileName);
     int fileLength=dataprocessor.getFileLineNum()-1;
     datacount=0;
@@ -182,6 +242,7 @@ int Recognizor::loadFile(QString fileName)
 int Recognizor::reset()
 {
     quatRaw.clear();
+    emgraw.clear();
     datacount=0;
     lasthead=0;
     for (int joint=0;joint<JOINTNUM;joint++)
@@ -203,15 +264,41 @@ GestureLib &Recognizor::getGesturelib()
     return gesturelib;
 }
 
-int Recognizor::connectSensor(int interval)
+int Recognizor::connectIMU(int interval)
 {
-    dataprocessor.initiate(50);
+    dataprocessor.connectIMU(interval);
+    IMUconnected=true;
     return 0;
 }
 
-int Recognizor::disconnectSensor()
+int Recognizor::disconnectIMU()
 {
-    dataprocessor.disconnect();
+    dataprocessor.disconnectIMU();
+    IMUconnected=false;
     return 0;
+}
+
+bool Recognizor::isIMUConnected()
+{
+    return IMUconnected;
+}
+
+int Recognizor::connectEMGSensor(QString portname)
+{
+    int retval=dataprocessor.connectEMGSensor(portname);
+    EMGconnected=true;
+    return retval;
+}
+
+int Recognizor::disconnectEMGSensor()
+{
+    dataprocessor.disconnectEMGSensor();
+    EMGconnected=false;
+    return 0;
+}
+
+bool Recognizor::isEMGConnected()
+{
+    return EMGconnected;
 }
 

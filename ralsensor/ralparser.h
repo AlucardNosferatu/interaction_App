@@ -7,20 +7,23 @@ enum STATE{
     GET_HEAD,GET_HEAD2,GET_TYPE,GET_DATA,GET_SUM
 };
 
-typedef enum {
-    PARSING,NEWIMUDATA,NEWEMGDATA,NEWCOMMANDRES,ERROR
-}ParserResult;
 
 enum RESPONSETYPE{
     EMG,IMU,COMMAND
 };
 
-class Parser: public QObject
+//enum ParserResult{
+//    PARSING=0, NEWIMUDATA,NEWEMGDATA,NEWCOMMANDRES,ERROR
+//};
+
+enum ParserResult{INPROCESS, NEWIMUDATA,NEWEMGDATA,NEWCOMMANDRES,PARSINGERROR};
+
+class RalParser : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Parser(QObject *parent = 0);
+    explicit RalParser(QObject *parent = 0);
     int parse(unsigned char c);
     int getLatestIMUData(float quat[4]);
     int getLatestEMGData(float emgdata[8]);

@@ -1,12 +1,17 @@
 #ifndef RECOGNIZOR_H
 #define RECOGNIZOR_H
+#include <QObject>
 #include "gesture_modeling/gesture.h"
 #include "dataprocessor.h"
 #include <gesturelib.h>
-#include "movement.h"
+#include "imu/movement.h"
+#include "ralsensor/ralsensor.h"
+#include "windows/camerawindow.h"
 
-class Recognizor
+class Recognizor: public QObject
 {
+    Q_OBJECT;
+
 private:
     int datacount,lasthead,startpoint;
     double lastangles[JOINTNUM];
@@ -14,34 +19,75 @@ private:
     DataProcessor dataprocessor;
 
     double zeros[JOINTNUM],thresholds[JOINTNUM],motionRanges[JOINTNUM];
-    QVector<QVector<double>> quatRaw;
+    QList<QList<float>> quatRaw;
+    QList<QList<float>> emgraw;
+
     double deltas[BUFFERLEN][JOINTNUM];
     MovementType states[BUFFERLEN][JOINTNUM];
     double lastp[JOINTNUM][MOVEMENTNUM],newp[JOINTNUM][MOVEMENTNUM];
 
     GestureLib gesturelib;
-
-
     QString currentGesture;
+
+    // Timer
+    QTimer timer;
+
+    bool fileMode;
+
+    bool IMUconnected,EMGconnected;
 
 public:
     Recognizor();
     QString getCurrentGesture();
-    int gestureRecognition(const double angles[JOINTNUM], const double axes[JOINTNUM][3]);
-    int addRawdata();
-    int initialRealtimeRecognition();
+    RalSensor ralsensor;
+
+    // camera window
+    CameraWindow *cwin;
+    int setCameraWindow(CameraWindow *c);
+
+    // file functions
     int saveData(const QString &filename);
     int loadFile(QString fileName);
+
+    // reset, clear data
     int reset();
 
     //sensor functions
-    int connectSensor(int interval);
-    int disconnectSensor();
+    int connectIMU(int interval);
+    int disconnectIMU();
+    bool isIMUConnected();
+
+    int connectEMGSensor(QString portname);
+    int disconnectEMGSensor();
+    bool isEMGConnected();
+
+    // member variable functions
     DataProcessor &getDataprocessor();
-    int initReplay(QString fileName);
-    int setReplayProcess(int startpoint);
-    int update(bool FileMode, double *angles, double axes[][3]);
     GestureLib &getGesturelib();
+
+    // replay functions
+    int initReplay(QString fileName);
+    int setReplayProcess(int pos);
+
+    // realtime recognition function
+    int initRealtimeRecognition();
+
+    // timer update function
+    int timerbegin();
+    int timerstop();
+
+    // recognition function
+    int gestureRecognition(const double angles[JOINTNUM], const double axes[JOINTNUM][3]);
+
+
+signals:
+    void newEMGData(float *emgdata,int datacount);
+    void newIMUData(float *angles,int datacount);
+    void newGesture(QString gesture);
+
+private slots:
+    int update();
+
 };
 
 #endif // RECOGNIZOR_H

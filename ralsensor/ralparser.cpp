@@ -1,21 +1,21 @@
-#include "parser.h"
+#include "ralparser.h"
 
-Parser::Parser(QObject *parent): QObject(parent)
+RalParser::RalParser(QObject *parent): QObject(parent)
 {
     currentstate=GET_HEAD;
 }
 
-int Parser::parse(unsigned char c)
+int RalParser::parse(unsigned char c)
 {
     if (currentstate==GET_HEAD && c==0xff)
     {
         currentstate=GET_HEAD2;
-        return PARSING;
+        return INPROCESS;
     }
     if (currentstate==GET_HEAD2 && c==0xff)
     {
         currentstate=GET_TYPE;
-        return PARSING;
+        return INPROCESS;
     }
     if (currentstate==GET_TYPE)
     {
@@ -28,12 +28,12 @@ int Parser::parse(unsigned char c)
         else
         {
             currentstate=GET_HEAD;
-            return ERROR;
+            return PARSINGERROR;
         }
         currentstate=GET_DATA;
         dataindex=0;
         tmpsum=0;
-        return PARSING;
+        return INPROCESS;
     }
     if (currentstate==GET_DATA)
     {
@@ -56,7 +56,7 @@ int Parser::parse(unsigned char c)
                 currentstate=GET_SUM;
         }
         tmpsum+=c;
-        return PARSING;
+        return INPROCESS;
     }
     if (currentstate==GET_SUM)
     {
@@ -64,7 +64,6 @@ int Parser::parse(unsigned char c)
         currentstate=GET_HEAD;
         if (c==tmpsum)
         {
-
             if (type==IMU)
                 res = NEWIMUDATA;
             else if (type==EMG)
@@ -73,13 +72,14 @@ int Parser::parse(unsigned char c)
                 res = NEWCOMMANDRES;
         }
         else
-            res = ERROR;
+            res = PARSINGERROR;
         return res;
     }
+    return 0;
 }
 
 
-int Parser::getLatestIMUData(float quat[])
+int RalParser::getLatestIMUData(float quat[])
 {
     float *floatdata=(float*)(imuDataBuffer);
     for (int i=0;i<12;i++)
@@ -87,7 +87,7 @@ int Parser::getLatestIMUData(float quat[])
     return 0;
 }
 
-int Parser::getLatestEMGData(float emgdata[])
+int RalParser::getLatestEMGData(float emgdata[])
 {
     for (int i=0;i<8;i++)
     {
@@ -106,7 +106,7 @@ int Parser::getLatestEMGData(float emgdata[])
     return 0;
 }
 
-unsigned char Parser::getLatestCommand()
+unsigned char RalParser::getLatestCommand()
 {
     return commandBuffer[0];
 }

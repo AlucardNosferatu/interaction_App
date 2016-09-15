@@ -2,9 +2,9 @@
 #define CALIBRATIONWINDOW_H
 
 #include <QMainWindow>
-#include <movement.h>
-#include <dataprocessor.h>
-#include <gesture_modeling/gesture.h>
+#include <imu/movement.h>
+#include <../dataprocessor.h>
+#include <../gesture_modeling/gesture.h>
 #include <QLineEdit>
 
 namespace Ui {

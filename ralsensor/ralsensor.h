@@ -2,9 +2,19 @@
 #define RALSENSOR_H
 
 #include <QSerialPort>
+#include "../ralsensor/ralparser.h"
+#include "../ralsensor/ralfilter.h"
+#include "iirfilter.h"
+#include <QObject>
+#include <QTextStream>
+#include <QFile>
+#include <QDebug>
+#define ELECTRODENUM 8
+#define MAVLENGTH 30
 
-class RalSensor
+class RalSensor: public QObject
 {
+    Q_OBJECT
     /*
      * process of data reading:
      * 1. Receive Signal "ReadyRead" from serialport
@@ -15,39 +25,50 @@ class RalSensor
 
 public:
     RalSensor();
-    void setSerialPort(QString portname);
+    int setAndOpenSerialPort(QString portname);
     void closeSerialPort();
-    void setNormalMeasurement();
-    void setSquareWaveTest();
-    void setNoiseTest();
+    int setNormalMeasurement();
+    int setSquareWaveTest();
+    int setNoiseTest();
     int startMeasurement();
     int stopMeasurement();
     void resetSensor();
     int readRegister(int addr);
 
-    int getLatestIMUData(float *data);
-    int getLatestEMGData(float *rawdata,float *data);
+    int getLatestEMGData(float *rawdata);
+
+    // raw data functions
+    int clearRawDataBuffer();
+    int saveRawData(const QString &filename);
 
 private:
     QSerialPort serialport;
-    Parser parser;
+    RalParser parser;
     qint64 m_bytesWritten;
     qint64 m_bytesRead;
     QByteArray  m_readData;
-    Filter filter;
 
-    float imudata[4];
-    float rawemg[8],emgdata[8];
+    IIRFilter notchfilters[8];
+    IIRFilter hpfilters[8];
 
+    float rawemg[8];
+    int emgcount;
+
+    QList<float> emgdataBuffer[8];
+    QList<float> rawemgBuffer[8];
+    float emgMAV[8];
+
+
+    void handleNewEMGData(float emg[8]);
+
+signals:
+    void newEMGData();
+    void newCommandResponse(unsigned char res);
+
+private slots:
     // serial port functions
     void handleReadyRead();
     void handleBytesWritten(qint64 bytes);
-
-signals:
-    void newIMUData();
-    void newEMGData();
-    void newCommandResponse();
-
 };
 
 #endif // RALSENSOR_H

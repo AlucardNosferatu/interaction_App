@@ -1,4 +1,4 @@
-#include "filter.h"
+#include "ralfilter.h"
 
 Filter::Filter()
 {

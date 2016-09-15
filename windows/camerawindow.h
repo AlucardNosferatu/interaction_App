@@ -8,6 +8,7 @@
 #include <QCameraImageCapture>
 #include <QLabel>
 #include <QDir>
+#include <QDebug>
 
 namespace Ui {
 class CameraWindow;
