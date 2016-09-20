@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+ï»¿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "recognizor.h"
 
@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
         plots[i]->addGraph();
         plots[i]->graph(0)->setName(QString("channel %1").arg(i+1));
         plots[i]->xAxis->setRange(0,100);
-        plots[i]->yAxis->setRange(0,0.0005);
+        plots[i]->yAxis->setRange(0,MAXMAGNITUDE);
         plots[i]->legend->setVisible(true);
     }
 
@@ -90,6 +90,118 @@ void MainWindow::updateUI()
         ui->lengthLabel->setText(QString("%1/%2").arg(ui->Slider->value()).arg(fileLength));
 }
 
+/////////////////////////////////////////////////////////////////////////
+// Add data to plot
+
+void MainWindow::addDatatoEMGPlots(float *emgdata, int n_datacount)
+{
+    // add data to plots
+    // maximal NO. of data points is 100
+    if (isplaying)
+    {
+        if (n_datacount>ui->Slider->value())
+            ui->Slider->setValue(n_datacount);
+    }
+    for (int i=0;i<ELECTRODENUM;i++)
+    {
+        plots[i]->graph(0)->addData(n_datacount,emgdata[i]);
+        if (n_datacount>=100)
+            plots[i]->graph(0)->removeData(n_datacount-100);
+    }
+}
+
+void MainWindow::addDatatoIMUPlots(float *angles, int n_datacount)
+{
+    ui->elbowPlot->graph(0)->addData(n_datacount,angles[ELB]);
+    ui->elbowPlot->graph(1)->addData(n_datacount,angles[TWI]);
+    ui->shoulderPlot->graph(0)->addData(n_datacount,angles[POL]);
+    ui->shoulderPlot->graph(1)->addData(n_datacount,angles[AZI]);
+    ui->shoulderPlot->graph(2)->addData(n_datacount,angles[OME]);
+
+    if (n_datacount>ui->Slider->value())
+        ui->Slider->setValue(n_datacount);
+    if(n_datacount>=100)
+    {
+        ui->elbowPlot->graph(0)->removeData(n_datacount-100);
+        ui->elbowPlot->graph(1)->removeData(n_datacount-100);
+        ui->shoulderPlot->graph(0)->removeData(n_datacount-100);
+        ui->shoulderPlot->graph(1)->removeData(n_datacount-100);
+        ui->shoulderPlot->graph(2)->removeData(n_datacount-100);
+    }
+
+}
+
+void MainWindow::responseReceived(unsigned char res)
+{
+    ui->statusBar->showMessage(QString("Response received! res:%1").arg(res));
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+// Buttons and Slider slots
+
+void MainWindow::on_onIMUButton_clicked()
+{
+    if (!recognizor.isIMUConnected())
+    {
+        recognizor.connectIMU(40);
+        ui->onIMUButton->setText(QString("Dis IMU"));
+    }else
+    {
+        recognizor.disconnectIMU();
+        ui->onIMUButton->setText(QString("Connect IMU"));
+    }
+}
+
+void MainWindow::on_loadButton_clicked()
+{
+    QString fileName=QFileDialog::getOpenFileName(this,
+                "æ‰“å¼€",
+                "",
+                "æ•°æ®æ–‡ä»¶ (*.imu *.emg)");
+    if (!fileName.isNull())
+    {
+        fileLength=recognizor.initReplay(fileName);
+        ui->Slider->setMaximum(fileLength);
+        ui->Slider->setSingleStep(1);
+        ui->lengthLabel->setText(QString("Flie Length:%1").arg(fileLength));
+    }
+}
+
+void MainWindow::on_Slider_sliderReleased()
+{
+    int startpoint=ui->Slider->value();
+    recognizor.setReplayProcess(startpoint);
+    ui->lengthLabel->setText(QString("%1/%2").arg(startpoint).arg(fileLength));
+}
+
+void MainWindow::on_playButton_clicked()
+{
+    connect(&recognizor,SIGNAL(newGesture(QString)),this,SLOT(showGesture(QString)));
+    connect(&recognizor,SIGNAL(clearGesture()),this,SLOT(clearGesture()));
+    isplaying=true;
+    recognizor.timerbegin();
+    updatetimer.start(100);
+}
+
+void MainWindow::on_editorButton_clicked()
+{
+    gwin->show();
+}
+
+void MainWindow::on_pauseButton_clicked()
+{
+    disconnect(&recognizor,SIGNAL(newGesture(QString)),this,SLOT(showGesture(QString)));
+    disconnect(&recognizor,SIGNAL(clearGesture()),this,SLOT(clearGesture()));
+    recognizor.timerstop();
+    updatetimer.stop();
+}
+
+void MainWindow::on_squaretestButton_clicked()
+{
+    ui->statusBar->clearMessage();
+    recognizor.ralsensor.setSquareWaveTest();
+}
+
 void MainWindow::on_freshButton_clicked()
 {
     serialport.close();
@@ -144,15 +256,16 @@ void MainWindow::on_stopButton_clicked()
 
 void MainWindow::on_ResetButton_clicked()
 {
+    ui->statusBar->clearMessage();
     recognizor.ralsensor.resetSensor();
 }
 
 void MainWindow::on_saveButton_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
-         QString("±£´æÊı¾İ"),
+         QString("ä¿å­˜æ•°æ®"),
          "",
-         QString("Êı¾İÎÄ¼ş (*)"));
+         QString("æ•°æ®æ–‡ä»¶ (*)"));
     if (!fileName.isNull())
     {
         int retval=recognizor.saveData(fileName);
@@ -162,13 +275,15 @@ void MainWindow::on_saveButton_clicked()
 
     else
     {
-     //µãµÄÊÇÈ¡Ïû
+     //ç‚¹çš„æ˜¯å–æ¶ˆ
     }
      return;
 }
 
 void MainWindow::on_clearButton_clicked()
 {
+    recognizor.reset();
+    recognizor.ralsensor.clearRawDataBuffer();
     emgcount=0;
     for (int i=0;i<8;i++)
     {
@@ -196,15 +311,6 @@ void MainWindow::on_pushButtonRLD_clicked()
 {
     unsigned char rldcommand[6] = {0xff,0x03,0x03,0x00,0x00,0x00};
     unsigned char rldp = 0x00,rldn=0x00;
-//    if (ui->checkBox1P->isChecked()) rldp |= 0x01;
-//    if (ui->checkBox2P->isChecked()) rldp |= 0x02;
-//    if (ui->checkBox3P->isChecked()) rldp |= 0x04;
-//    if (ui->checkBox4P->isChecked()) rldp = rldp | 0x08;
-
-//    if (ui->checkBox1N->isChecked()) rldn |= 0x01;
-//    if (ui->checkBox2N->isChecked()) rldn |= 0x02;
-//    if (ui->checkBox3N->isChecked()) rldn |= 0x04;
-//    if (ui->checkBox4N->isChecked()) rldn |= 0x08;
 
     rldn=0xfe;
     rldp=0xfe;
@@ -228,112 +334,56 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_noiseButton_clicked()
 {
+    ui->statusBar->clearMessage();
     recognizor.ralsensor.setNoiseTest();
 }
 
-
-
 void MainWindow::on_normalMeaButton_clicked()
 {
+    ui->statusBar->clearMessage();
     recognizor.ralsensor.setNormalMeasurement();
 }
 
-void MainWindow::addDatatoEMGPlots(float *emgdata, int n_datacount)
+////////////////////////////////////////////////////////////////////////////////
+// gesture response slots
+
+void MainWindow::showGesture(QString gesture)
 {
-    // add data to plots
-    // maximal NO. of data points is 100
-    if (isplaying)
-    {
-        if (n_datacount>ui->Slider->value())
-            ui->Slider->setValue(n_datacount);
-    }
-    for (int i=0;i<ELECTRODENUM;i++)
-    {
-        plots[i]->graph(0)->addData(n_datacount,emgdata[i]);
-        if (n_datacount>=100)
-            plots[i]->graph(0)->removeData(n_datacount-100);
-    }
+    ui->statusBar->showMessage(gesture,1500);
+    ui->gestureLabel->setText(gesture);
 }
 
-void MainWindow::addDatatoIMUPlots(float *angles, int n_datacount)
+void MainWindow::clearGesture()
 {
-    ui->elbowPlot->graph(0)->addData(n_datacount,angles[ELB]);
-    ui->elbowPlot->graph(1)->addData(n_datacount,angles[TWI]);
-    ui->shoulderPlot->graph(0)->addData(n_datacount,angles[POL]);
-    ui->shoulderPlot->graph(1)->addData(n_datacount,angles[AZI]);
-    ui->shoulderPlot->graph(2)->addData(n_datacount,angles[OME]);
-
-    if (n_datacount>ui->Slider->value())
-        ui->Slider->setValue(n_datacount);
-    if(n_datacount>=100)
-    {
-        ui->elbowPlot->graph(0)->removeData(n_datacount-100);
-        ui->elbowPlot->graph(1)->removeData(n_datacount-100);
-        ui->shoulderPlot->graph(0)->removeData(n_datacount-100);
-        ui->shoulderPlot->graph(1)->removeData(n_datacount-100);
-        ui->shoulderPlot->graph(2)->removeData(n_datacount-100);
-    }
 
 }
 
-void MainWindow::responseReceived(unsigned char res)
+void MainWindow::on_fb1Button_clicked()
 {
-    ui->statusBar->showMessage(QString("Response received! res:%1").arg(res));
+    recognizor.ralsensor.triggerFeedback(0);
 }
 
-void MainWindow::on_onIMUButton_clicked()
+void MainWindow::on_fb2Button_clicked()
 {
-    if (!recognizor.isIMUConnected())
-    {
-        recognizor.connectIMU(40);
-        ui->onIMUButton->setText(QString("Dis IMU"));
-    }else
-    {
-        recognizor.disconnectIMU();
-        ui->onIMUButton->setText(QString("Connect IMU"));
-    }
+    recognizor.ralsensor.triggerFeedback(1);
 }
 
-void MainWindow::on_loadButton_clicked()
+void MainWindow::on_fb3Button_clicked()
 {
-    QString fileName=QFileDialog::getOpenFileName(this,
-                "´ò¿ª",
-                "",
-                "Êı¾İÎÄ¼ş (*.imu *.emg)");
-    if (!fileName.isNull())
-    {
-        fileLength=recognizor.initReplay(fileName);
-        ui->Slider->setMaximum(fileLength);
-        ui->Slider->setSingleStep(1);
-        ui->lengthLabel->setText(QString("Flie Length:%1").arg(fileLength));
-    }
+    recognizor.ralsensor.triggerFeedback(2);
 }
 
-void MainWindow::on_Slider_sliderReleased()
+void MainWindow::on_fb4Button_clicked()
 {
-    int startpoint=ui->Slider->value();
-    recognizor.setReplayProcess(startpoint);
-    ui->lengthLabel->setText(QString("%1/%2").arg(startpoint).arg(fileLength));
+    recognizor.ralsensor.triggerFeedback(3);
 }
 
-void MainWindow::on_playButton_clicked()
+void MainWindow::on_fb5Button_clicked()
 {
-    recognizor.timerbegin();
-    updatetimer.start(100);
+    recognizor.ralsensor.triggerFeedback(4);
 }
 
-void MainWindow::on_editorButton_clicked()
+void MainWindow::on_pushButton_clicked()
 {
-    gwin->show();
-}
-
-void MainWindow::on_pauseButton_clicked()
-{
-    recognizor.timerstop();
-    updatetimer.stop();
-}
-
-void MainWindow::on_squaretestButton_clicked()
-{
-    recognizor.ralsensor.setSquareWaveTest();
+    cawin->show();
 }

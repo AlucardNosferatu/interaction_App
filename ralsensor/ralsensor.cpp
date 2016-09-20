@@ -131,8 +131,8 @@ int RalSensor::getLatestEMGData(float *rawdata)
     for (int i=0;i<ELECTRODENUM;i++)
     {
         rawdata[i]=emgMAV[i]/emgdataBuffer[i].length();
-        if (rawdata[i]>0.0005)
-            rawdata[i]=0.0005f;
+        if (rawdata[i]>MAXMAGNITUDE)
+            rawdata[i]=MAXMAGNITUDE;
     }
     return 0;
 }
@@ -165,6 +165,19 @@ int RalSensor::saveRawData(const QString &filename)
         txtOutput1<<endl;
     }
     f.close();
+    return 0;
+}
+
+int RalSensor::triggerFeedback(int type)
+{
+    unsigned char fbcommand[4]={0xff,0x01,0x25,0x25};
+    fbcommand[2]+=type;
+    fbcommand[3]+=type;
+
+    if (!serialport.isOpen())
+        return -1;
+
+    serialport.write((char*)fbcommand,4);
     return 0;
 }
 

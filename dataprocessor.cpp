@@ -39,9 +39,9 @@ void DataProcessor::connectIMU(int interval)
     TSS_Error tss_error;
     unsigned int timestamp;
 
-    foreArm  = tss_createTSDeviceStr("COM31",  TSS_TIMESTAMP_SENSOR );  //31 for hub 15 for usb2
-    body     = tss_createTSDeviceStr("COM25", TSS_TIMESTAMP_SENSOR);    //25 for hub, 12 for usb2
-    upperArm = tss_createTSDeviceStr("COM30", TSS_TIMESTAMP_SENSOR); //30 for hub 16for usb2
+    foreArm  = tss_createTSDeviceStr("COM6",  TSS_TIMESTAMP_SENSOR );  //31 for hub 15 for usb2
+    body     = tss_createTSDeviceStr("COM7", TSS_TIMESTAMP_SENSOR);    //25 for hub, 12 for usb2
+    upperArm = tss_createTSDeviceStr("COM21", TSS_TIMESTAMP_SENSOR); //30 for hub 16for usb2
 
     TSS_Stream_Command stream_slots[8] = { TSS_GET_UNTARED_ORIENTATION_AS_QUATERNION,TSS_NULL,TSS_NULL, TSS_NULL,TSS_NULL,TSS_NULL,TSS_NULL,TSS_NULL};
 

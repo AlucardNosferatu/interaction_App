@@ -64,7 +64,7 @@ bool GestureLib::loadLib(const QString &filename)
     return true;
 }
 
-int GestureLib::updateBestGesture(const double *angles, const double axes[6][3], const double mprobability[5][4],int emg)
+int GestureLib::updateBestGesture(const float *angles, const float axes[6][3], const double mprobability[5][4],const float emg[EMGTYPENUM])
 {
     double maxp=0;
     int newBestIndex=-1;

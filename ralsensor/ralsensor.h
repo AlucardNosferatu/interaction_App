@@ -11,6 +11,7 @@
 #include <QDebug>
 #define ELECTRODENUM 8
 #define MAVLENGTH 30
+#define MAXMAGNITUDE 0.0005
 
 class RalSensor: public QObject
 {
@@ -40,6 +41,9 @@ public:
     // raw data functions
     int clearRawDataBuffer();
     int saveRawData(const QString &filename);
+
+    // feedback function
+    int triggerFeedback(int type);
 
 private:
     QSerialPort serialport;

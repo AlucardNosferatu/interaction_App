@@ -3,12 +3,13 @@
 //Functions of class Gesture
 Gesture::Gesture()
 {
-
+    emgCiterion=-1;
 }
 
 Gesture::Gesture(const QString &name)
 {
     mName=name;
+    emgCiterion=-1;
 }
 
 QString Gesture::name() const
@@ -231,7 +232,7 @@ QStringList Gesture::getMoveCiteriaList()
 }
 
 //likelihood function
-double Gesture::getLikelihood(const double angles[JOINTNUM],const double axes[AXISNUM][3],const double mprobability[JOINTNUM][MOVEMENTNUM],int emg)
+double Gesture::getLikelihood(const float angles[JOINTNUM],const float axes[AXISNUM][3],const double mprobability[JOINTNUM][MOVEMENTNUM],const float emg[EMGTYPENUM])
 {
     double p=1;
     for (int i=0;i<angleCiteria.size();i++)
@@ -255,10 +256,14 @@ double Gesture::getLikelihood(const double angles[JOINTNUM],const double axes[AX
             return 0;
     }
 
-    if (p<0.5 || (emgCiterion!=0 && emg!=emgCiterion))
+    if (p<0.5)
         p=0;
     else
         p=pow(p,1.0/(angleCiteria.size()+axisCiteria.size()+movementCiteria.size()));
+
+    if (emgCiterion!=-1 && emg[emgCiterion]<0.65)
+        p=0;
+
     return p;
 }
 

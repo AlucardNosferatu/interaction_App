@@ -41,6 +41,8 @@ private slots:
     void on_loadLibButton_clicked();
     void on_addDefaultButton_clicked();
 
+    void on_updateEMGButton_clicked();
+
 private:
     Ui::GestureEditor *ui;
 

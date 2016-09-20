@@ -29,6 +29,9 @@ GestureEditor::GestureEditor(QWidget *parent, GestureLib &g) :
 
     for (int i=0;i<MOVEMENTNUM;i++)
         ui->moveBox->addItem(QString(movementNames[i]));
+
+    for (int i=0;i<EMGTYPENUM+1;i++)
+        ui->EMGBox->addItem(QString(EMGNames[i]));
 }
 
 GestureEditor::~GestureEditor()
@@ -50,6 +53,9 @@ void GestureEditor::on_gestureList_clicked(const QModelIndex &index)
     ui->nameEdit->setText(gesturelib.getGestureAt(index.row()).name());
     ui->commandEdit->setText(gesturelib.getGestureAt(index.row()).command());
     ui->descriptionEdit->setPlainText(gesturelib.getGestureAt(index.row()).description());
+
+    Gesture g = gesturelib.getGestureAt(ui->gestureList->currentIndex().row());
+    ui->EMGBox->setCurrentIndex(g.getEMGGesture()+1);
 }
 
 void GestureEditor::on_angleCiteriaList_clicked(const QModelIndex &index)
@@ -107,7 +113,7 @@ void GestureEditor::on_updateAxisButton_clicked()
 void GestureEditor::on_saveLibButton_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
-         tr("淇濆瓨鏁版嵁"),
+         tr("Save"),
          "",
          tr("鏁版嵁鏂囦欢 (*.json)"));
     if (!fileName.isNull())
@@ -185,9 +191,9 @@ void GestureEditor::on_updateGestureButton_clicked()
 void GestureEditor::on_loadLibButton_clicked()
 {
     QString fileName=QFileDialog::getOpenFileName(this,
-                tr("鎵撳紑"),
+                tr("导入手势库"),
                 "",
-                tr("鏁版嵁鏂囦欢 (*.json)"));
+                tr("手势文件 (*.json)"));
     if (!fileName.isNull())
         gesturelib.loadLib(fileName);
     gestureModel.setStringList(gesturelib.getGestureList());
@@ -197,4 +203,10 @@ void GestureEditor::on_addDefaultButton_clicked()
 {
     gesturelib.addDefaultGestures();
     gestureModel.setStringList(gesturelib.getGestureList());
+}
+
+void GestureEditor::on_updateEMGButton_clicked()
+{
+    Gesture &g=gesturelib.getGestureAt(ui->gestureList->currentIndex().row());
+    g.setEMGCiterion(ui->EMGBox->currentIndex()-1);
 }

@@ -9,6 +9,8 @@
 #include "movementciterion.h"
 #include "math.h"
 
+#define EMGTYPENUM 3
+const char EMGNames[EMGTYPENUM+1][15]={"Arbitrary","Fist","Wave in","Wave out"};
 
 class Gesture
 {
@@ -49,7 +51,7 @@ public:
     QStringList getMoveCiteriaList();
 
     //likelihood
-    double getLikelihood(const double angles[JOINTNUM], const double axes[AXISNUM][3], const double mprobability[JOINTNUM][MOVEMENTNUM], int emg);
+    double getLikelihood(const float angles[JOINTNUM], const float axes[AXISNUM][3], const double mprobability[JOINTNUM][MOVEMENTNUM], const float emg[EMGTYPENUM]);
 
 private:
     QString mName;

@@ -36,6 +36,9 @@ private:
 
     bool IMUconnected,EMGconnected;
 
+    int ban[ELECTRODENUM];
+    float membership[ELECTRODENUM][3];
+
 public:
     Recognizor();
     QString getCurrentGesture();
@@ -77,13 +80,18 @@ public:
     int timerstop();
 
     // recognition function
-    int gestureRecognition(const double angles[JOINTNUM], const double axes[JOINTNUM][3]);
+    int gestureRecognition(const float angles[JOINTNUM], const float axes[AXISNUM][3], const float emg[ELECTRODENUM]);
+
+    // EMG gesture recognition functions
+    float getLikelihood(float data,float p0,float p1,float p2,float p3);
+    int EMGrecognition(float data[ELECTRODENUM],float result[3]);
 
 
 signals:
     void newEMGData(float *emgdata,int datacount);
     void newIMUData(float *angles,int datacount);
     void newGesture(QString gesture);
+    void clearGesture();
 
 private slots:
     int update();

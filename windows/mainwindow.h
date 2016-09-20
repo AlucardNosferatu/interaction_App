@@ -51,6 +51,10 @@ private slots:
     // command response slots
     void responseReceived(unsigned char res);
 
+    // gesture response slots
+    void showGesture(QString gesture);
+    void clearGesture();
+
     void on_onIMUButton_clicked();
     void on_loadButton_clicked();
 
@@ -63,6 +67,18 @@ private slots:
     void on_pauseButton_clicked();
 
     void on_squaretestButton_clicked();
+
+    void on_fb1Button_clicked();
+
+    void on_fb2Button_clicked();
+
+    void on_fb3Button_clicked();
+
+    void on_fb4Button_clicked();
+
+    void on_fb5Button_clicked();
+
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
