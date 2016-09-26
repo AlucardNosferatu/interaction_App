@@ -30,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&updatetimer,SIGNAL(timeout()),this,SLOT(updateUI()));
     connect(&recognizor,SIGNAL(newEMGData(float*,int)),this,SLOT(addDatatoEMGPlots(float*,int)));
     connect(&recognizor,SIGNAL(newIMUData(float*,int)),this,SLOT(addDatatoIMUPlots(float*,int)));
+    connect(&recognizor,SIGNAL(newGesture(QString)),this,SLOT(showGesture(QString)));
+    connect(&recognizor,SIGNAL(clearGesture()),this,SLOT(clearGesture()));
     connect(&(recognizor.ralsensor),SIGNAL(newCommandResponse(unsigned char)),this,SLOT(responseReceived(unsigned char)));
 
     cwin=new CameraWindow(this);
@@ -72,8 +74,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateUI()
 {
-    ui->emgNumber->display(emgcount);
-    ui->countNumber->display(imucount);
+    //ui->emgNumber->display(emgcount);
+    //ui->countNumber->display(imucount);
 
     ui->elbowPlot->rescaleAxes();
     ui->shoulderPlot->rescaleAxes();
@@ -164,6 +166,7 @@ void MainWindow::on_loadButton_clicked()
         ui->Slider->setMaximum(fileLength);
         ui->Slider->setSingleStep(1);
         ui->lengthLabel->setText(QString("Flie Length:%1").arg(fileLength));
+        ui->Slider->setValue(0);
     }
 }
 
@@ -176,10 +179,9 @@ void MainWindow::on_Slider_sliderReleased()
 
 void MainWindow::on_playButton_clicked()
 {
-    connect(&recognizor,SIGNAL(newGesture(QString)),this,SLOT(showGesture(QString)));
-    connect(&recognizor,SIGNAL(clearGesture()),this,SLOT(clearGesture()));
+
     isplaying=true;
-    recognizor.timerbegin();
+    recognizor.timerbegin(40);
     updatetimer.start(100);
 }
 
@@ -190,10 +192,8 @@ void MainWindow::on_editorButton_clicked()
 
 void MainWindow::on_pauseButton_clicked()
 {
-    disconnect(&recognizor,SIGNAL(newGesture(QString)),this,SLOT(showGesture(QString)));
-    disconnect(&recognizor,SIGNAL(clearGesture()),this,SLOT(clearGesture()));
     recognizor.timerstop();
-    updatetimer.stop();
+    //updatetimer.stop();
 }
 
 void MainWindow::on_squaretestButton_clicked()
@@ -240,7 +240,7 @@ void MainWindow::on_beginButton_clicked()
     isplaying=false;
     recognizor.initRealtimeRecognition();
     recognizor.ralsensor.startMeasurement();
-    recognizor.timerbegin();
+    recognizor.timerbegin(40);
 
     if (!updatetimer.isActive())
         updatetimer.start(100);
@@ -283,6 +283,7 @@ void MainWindow::on_saveButton_clicked()
 void MainWindow::on_clearButton_clicked()
 {
     recognizor.reset();
+    cwin->clearTemp();
     recognizor.ralsensor.clearRawDataBuffer();
     emgcount=0;
     for (int i=0;i<8;i++)
@@ -386,4 +387,52 @@ void MainWindow::on_fb5Button_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     cawin->show();
+}
+
+void MainWindow::on_onRobotButton_clicked()
+{
+    if (ui->onRobotButton->text()=="Connect Robot")
+    {
+        recognizor.robot.openSerial(QString("COM17"));
+        recognizor.robot.initPosition();
+        ui->onRobotButton->setText(QString("Disconnect"));
+        recognizor.connectRobot();
+    }else
+    {
+        recognizor.robot.closeSerial();
+        ui->onRobotButton->setText(QString("Connect Robot"));
+        recognizor.disconnectRobot();
+    }
+
+
+}
+
+void MainWindow::on_radioButton_toggled(bool checked)
+{
+    if (checked)
+        recognizor.disableGraspTest();
+}
+
+void MainWindow::on_radioButton_2_toggled(bool checked)
+{
+    if (checked)
+        recognizor.enableGraspTest();
+}
+
+void MainWindow::on_play3XButton_clicked()
+{
+    isplaying=true;
+    recognizor.timerbegin(14);
+    updatetimer.start(50);
+}
+
+void MainWindow::on_stepButton_clicked()
+{
+    recognizor.update();
+}
+
+void MainWindow::checkRadioButton()
+{
+    ui->radioButton_2->setChecked(true);
+    ui->radioButton->setChecked(false);
 }

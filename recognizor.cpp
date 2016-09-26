@@ -1,8 +1,11 @@
-#include "recognizor.h"
+﻿#include "recognizor.h"
 
 Recognizor::Recognizor()
 {
     EMGconnected=false;
+    IMUconnected=false;
+    grasptest=false;
+    robotConnected=false;
     dataprocessor.setRalSensor(&ralsensor);
     connect(&timer,SIGNAL(timeout()),this,SLOT(update()));
 }
@@ -71,11 +74,11 @@ int Recognizor::update()
 
     float emglikelihoods[3];
     EMGrecognition(emgdata,emglikelihoods);
-    if (emglikelihoods[1]>0.66)
-    {
-        emit newGesture(QString("Fist!"));
-        qDebug()<<emglikelihoods[1];
-    }
+//    if (emglikelihoods[1]>0.66)
+//    {
+//        emit newGesture(QString("Fist!"));
+//        qDebug()<<emglikelihoods[1];
+//    }
 
     if(datacount==0 || datacount==startpoint)
     {
@@ -124,16 +127,11 @@ int Recognizor::gestureRecognition(const float angles[JOINTNUM], const float axe
             lastp[joint][move]=newp[joint][move];
     getmProbability(lasthead,datacount,newp,lastp,deltas,states);
 
-#ifdef CONTROL
-    int LINK_LENGTH=150;
-    hx=-axes[UZ][0]*LINK_LENGTH-axes[FZ][0]*LINK_LENGTH;
-    hy=-axes[UZ][1]*LINK_LENGTH-axes[FZ][1]*LINK_LENGTH;
-    hz=-axes[UZ][2]*LINK_LENGTH-axes[FZ][2]*LINK_LENGTH;
-#endif
     // todo: include emg result
     int ret=gesturelib.updateBestGesture(angles,axes,newp,emg);
     if (ret==NEWGESTURE)
     {
+//        qDebug()<<"New Gesture";
         // if true, new best gesture is found
         if (gesturelib.getBestureGestureIndex()==-1)
         {
@@ -142,8 +140,56 @@ int Recognizor::gestureRecognition(const float angles[JOINTNUM], const float axe
         }
         else
         {
+            //qDebug()<<gesturelib.getBestGestureName();
             emit newGesture(gesturelib.getBestGestureName());
             currentGesture=gesturelib.getBestGestureName();
+
+            if (robotConnected)
+            {
+                //ralsensor.closeSerialPort();
+                //robot.openSerial(QString("COM17"));
+                if (!grasptest)
+                {
+                    // navigation
+                    if (gesturelib.getBestGestureCommand()=="SPEEDUP")
+                    {
+                        //qDebug()<<"speed up";
+                        robot.speedUp();
+                    }
+                    if (gesturelib.getBestGestureCommand()=="SLOWDOWN")
+                        robot.speedDown();
+                    if (gesturelib.getBestGestureCommand()=="TURNLEFT")
+                        robot.turn(1);
+                    if (gesturelib.getBestGestureCommand()=="TURNRIGHT")
+                        robot.turn(-1);
+                    //if (gesturelib.getBestGestureCommand()=="SHRINK")
+                    //    robot.postC();
+                    if (gesturelib.getBestGestureCommand()=="STOP")
+                        robot.move(0);
+                    if (gesturelib.getBestGestureCommand()=="GETREADY")
+                    {
+                        emit changeToGrasp();
+                        robot.bend_initial();
+                        grasptest=true;
+                    }
+                }else
+                {
+                    // grasp
+                    if (gesturelib.getBestGestureCommand()=="SPEEDUP")
+                        robot.motionA(0);
+                    if (gesturelib.getBestGestureCommand()=="SLOWDOWN")
+                        robot.motionA(1);
+                    if (gesturelib.getBestGestureCommand()=="TURNLEFT")
+                        robot.motionA(2);
+                    if (gesturelib.getBestGestureCommand()=="GETREADY")
+                        robot.motionA(3);
+
+                }
+                //robot.closeSerial();
+                //ralsensor.openSerialPort();
+                //ralsensor.triggerFeedback(1);
+            }
+
         }
     }
     if (ret==GESTUREEND)
@@ -198,9 +244,9 @@ int Recognizor::initRealtimeRecognition()
     return 0;
 }
 
-int Recognizor::timerbegin()
+int Recognizor::timerbegin(int interval)
 {
-    timer.start(40);
+    timer.start(interval);
     return 0;
 }
 
@@ -355,9 +401,9 @@ float Recognizor::getLikelihood(float data,float p0,float p1,float p2,float p3)
 
 int Recognizor::EMGrecognition(float data[ELECTRODENUM],float result[3])
 {
-    static int idx[3][ELECTRODENUM]={{2,2,1,1,1,4,1,1},
-                                     {1,2,2,0,0,0,5,1},
-                                     {0,0,0,0,1,2,2,2}};
+    static int idx[3][ELECTRODENUM]={{2,2,1,1,1,4,1,1},     // fist
+                                     {4,4,4,0,0,5,5,5},     // wave in
+                                     {0,0,0,0,1,2,2,2}};    // wave out
 
 
     int validNum=ELECTRODENUM;
@@ -404,4 +450,27 @@ int Recognizor::EMGrecognition(float data[ELECTRODENUM],float result[3])
     for (int g=0;g<3;g++)
         result[g]/=validNum;
     return 0;
+}
+
+int Recognizor::connectRobot()
+{
+    robotConnected=true;
+    return 0;
+}
+
+int Recognizor::disconnectRobot()
+{
+    robotConnected=false;
+    return 0;
+}
+
+void Recognizor::enableGraspTest()
+{
+    grasptest=true;
+    qDebug()<<"Grasp test!";
+}
+
+void Recognizor::disableGraspTest()
+{
+    grasptest=false;
 }

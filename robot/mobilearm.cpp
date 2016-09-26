@@ -1,4 +1,4 @@
-#include "mobilearm.h"
+﻿#include "mobilearm.h"
 
 
 
@@ -110,16 +110,21 @@ v=0 静止
 *****************************************************************/
 void MobileArm::move(int v)
 {
-    if(v>0)
+    switch(v)
     {
-        left = right = 255;
-    }
-    else if(v<0)
-    {
-        left = right = -255;
-    }
-    else
+    case 0:
         left = right = 0;
+        break;
+    case 1:
+        left = right = 150;
+        break;
+    case 2:
+        left = right = 255;
+        break;
+    case -1:
+        left = right = -255;
+        break;
+    }
     serialPort.write( wheel_command().toLatin1() );
 }
 
@@ -331,18 +336,22 @@ void MobileArm::safeT()
   T = 500;
   for(int i=0;i<6;i++)
   {
-    int Ti = 5*1000.0/HALF_PI*abs(angle[i]-oldAngle[i]);  //设置最快速度是 90度/5秒
+    int Ti = 2*1000.0/HALF_PI*abs(angle[i]-oldAngle[i]);  //设置最快速度是 90度/2秒
     T = T>Ti?T:Ti;
   }
+
 }
 
 int MobileArm::constrian(int pwm)
 {
-    if(pwm<1500)
-        pwm = 1500;
-    if(pwm>2500)
-        pwm = 2500;
-    return pwm;
+    int p;
+    if(pwm<500)
+        p = 500;
+    else if(pwm>2500)
+        p = 2500;
+    else
+        p = pwm;
+    return p;
 }
 
 void MobileArm::timeoutStop()
@@ -374,6 +383,8 @@ MobileArm::MobileArm()
 
     T = 500;
 
+    moveNum = 0;
+
     connect(&delayTimer,SIGNAL(timeout()),this,SLOT(timeoutStop()));
 }
 
@@ -387,9 +398,17 @@ void MobileArm::openSerial(QString &com)
 {
     serialPort.setBaudRate(9600);
     serialPort.setPortName(com);
-    serialPort.open(QIODevice::ReadWrite);
+    serialPort.open(QIODevice::WriteOnly);
 
-    bend_initial();
+    //bend_initial();
+}
+
+
+
+void MobileArm::closeSerial()
+{
+    if (serialPort.isOpen())
+        serialPort.close();
 }
 
 void MobileArm::compileMotion(int i)
@@ -423,6 +442,51 @@ void MobileArm::setServo(int i, int deg)
 {
     double rad = deg/180.0*PI;
     setServo(i,rad);
+}
+
+void MobileArm::postC()
+{
+    executeMotion(38);
+}
+
+void MobileArm::motionA(int i)
+{
+    switch(i)
+    {
+    case 0:
+        executeMotions(38,39);
+        break;
+    case 1:
+        executeMotions(39,43);
+        break;
+    case 2:
+        executeMotions(43,44);
+        break;
+    case 3:
+        executeMotions(44,49);
+        break;
+    }
+}
+
+void MobileArm::speedUp()
+{
+//    serialPort.write(QString("$DWA!").toLatin1());
+    if(moveNum<2)
+        ++moveNum;
+    move(moveNum);
+}
+
+void MobileArm::speedDown()
+{
+//    serialPort.write(QString("$DWD!").toLatin1());
+    if(moveNum>0)
+        moveNum--;
+    move(moveNum);
+}
+
+void MobileArm::initPosition()
+{
+    bend_initial();
 }
 
 void MobileArm::setArm(double *a)

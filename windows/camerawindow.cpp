@@ -94,3 +94,14 @@ int CameraWindow::switchToReplay()
 
     return 0;
 }
+
+int CameraWindow::clearTemp()
+{
+    QDir dir=QDir(pwd);
+    dir.cd(QString("temp"));
+    dir.removeRecursively();
+
+//    pwd.re(QString("temp"));
+    pwd.mkdir(QString("temp"));
+    return 0;
+}

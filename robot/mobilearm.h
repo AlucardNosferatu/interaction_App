@@ -1,4 +1,4 @@
-#ifndef MOBILEARM
+﻿#ifndef MOBILEARM
 #define MOBILEARM
 
 #include <cmath>
@@ -15,15 +15,16 @@ class MobileArm: public QObject
 public:
     MobileArm();
     ~MobileArm();
-    void bend_initial();
+    void bend_initial();    //初始姿势
     void straight_initial();
     void beepOn();
     void setArm(double,double,double);
     void setArm(double* a);
     void moveArm(double,double,double);
-    void move(int);
-    void turn(int);
+    void move(int);     //0 stop, 1 ahead, 2 fast ahead, -1 back
+    void turn(int);     // 1=45 degree, positve left
     void openSerial(QString &com);
+    void closeSerial();
     QSerialPort serialPort;
     double x,y,z;  //腕心坐标mm，垂直为z，向前为x，向左为y
     double PI, HALF_PI;//定义使用的常数
@@ -33,6 +34,12 @@ public:
     void executeMotion(int i);
     void setServo(int i, double rad);
     void setServo(int i, int deg);
+    void postC();       // 蜷缩，方便移动
+    void motionA(int i);    //0 c-->up; 1 up-->down and grasp --> up; 2:turn left; 3: put down back to c
+    void speedUp();
+    void speedDown();
+
+    void initPosition();
 
 
 private:
@@ -49,6 +56,7 @@ private:
     double oldAngle[6]; //记录之前的关节角
     int T; //每次角度改变的时间(ms)
     int left, right;  //占空比-255~255
+    int moveNum;
 
 
     QTimer delayTimer;

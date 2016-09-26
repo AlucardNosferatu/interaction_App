@@ -39,9 +39,9 @@ void DataProcessor::connectIMU(int interval)
     TSS_Error tss_error;
     unsigned int timestamp;
 
-    foreArm  = tss_createTSDeviceStr("COM6",  TSS_TIMESTAMP_SENSOR );  //31 for hub 15 for usb2
-    body     = tss_createTSDeviceStr("COM7", TSS_TIMESTAMP_SENSOR);    //25 for hub, 12 for usb2
-    upperArm = tss_createTSDeviceStr("COM21", TSS_TIMESTAMP_SENSOR); //30 for hub 16for usb2
+    foreArm  = tss_createTSDeviceStr("COM12",  TSS_TIMESTAMP_SENSOR );  //31 for hub 15 for usb2
+    body     = tss_createTSDeviceStr("COM11", TSS_TIMESTAMP_SENSOR);    //25 for hub, 12 for usb2
+    upperArm = tss_createTSDeviceStr("COM15", TSS_TIMESTAMP_SENSOR); //30 for hub 16for usb2
 
     TSS_Stream_Command stream_slots[8] = { TSS_GET_UNTARED_ORIENTATION_AS_QUATERNION,TSS_NULL,TSS_NULL, TSS_NULL,TSS_NULL,TSS_NULL,TSS_NULL,TSS_NULL};
 
@@ -49,7 +49,7 @@ void DataProcessor::connectIMU(int interval)
     tss_error=tss_setStreamingTiming(foreArm,interval*1000,TSS_INFINITE_DURATION,0,NULL);
     while(tss_error)
         tss_error=tss_setStreamingTiming(foreArm,interval*1000,TSS_INFINITE_DURATION,0,NULL);
-    printf("timing succeed");
+
     tss_error=tss_startStreaming(foreArm,NULL);
     while(tss_error)
     {
@@ -156,7 +156,7 @@ int DataProcessor::resetFileStream(QString fname)
         if (IMUinfile.isOpen())
             IMUinfile.close();
         IMUfilePos=0;
-        IMUinfile.setFileName(fname);
+        IMUinfile.setFileName(IMUfname);
         if(!IMUinfile.open( QIODevice::ReadOnly | QIODevice::Text))
             return -1;
         IMUtextinput.setDevice(&IMUinfile);
@@ -170,7 +170,7 @@ int DataProcessor::resetFileStream(QString fname)
         if (EMGinfile.isOpen())
             EMGinfile.close();
         EMGfilePos=0;
-        EMGinfile.setFileName(fname);
+        EMGinfile.setFileName(EMGfname);
         if(!EMGinfile.open( QIODevice::ReadOnly | QIODevice::Text))
             return -1;
         EMGtextinput.setDevice(&EMGinfile);
