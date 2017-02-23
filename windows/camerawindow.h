@@ -28,6 +28,7 @@ public:
     int setPictPath(QString fileName);
     int switchToRealtimeVideo();
     int switchToReplay();
+    int clearTemp();
 
 private:
     Ui::CameraWindow *ui;

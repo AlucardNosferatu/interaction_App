@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -79,6 +79,17 @@ private slots:
     void on_fb5Button_clicked();
 
     void on_pushButton_clicked();
+
+    void on_onRobotButton_clicked();
+
+    void on_radioButton_toggled(bool checked);
+
+    void on_radioButton_2_toggled(bool checked);
+
+    void on_play3XButton_clicked();
+
+    void on_stepButton_clicked();
+    void checkRadioButton();
 
 private:
     Ui::MainWindow *ui;

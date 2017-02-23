@@ -1,4 +1,4 @@
-#ifndef RECOGNIZOR_H
+﻿#ifndef RECOGNIZOR_H
 #define RECOGNIZOR_H
 #include <QObject>
 #include "gesture_modeling/gesture.h"
@@ -7,6 +7,7 @@
 #include "imu/movement.h"
 #include "ralsensor/ralsensor.h"
 #include "windows/camerawindow.h"
+#include "robot/mobilearm.h"
 
 class Recognizor: public QObject
 {
@@ -34,15 +35,20 @@ private:
 
     bool fileMode;
 
-    bool IMUconnected,EMGconnected;
+    bool IMUconnected,EMGconnected,robotConnected,grasptest;
 
     int ban[ELECTRODENUM];
     float membership[ELECTRODENUM][3];
+
+
 
 public:
     Recognizor();
     QString getCurrentGesture();
     RalSensor ralsensor;
+
+    // Robot
+    MobileArm robot;
 
     // camera window
     CameraWindow *cwin;
@@ -76,7 +82,7 @@ public:
     int initRealtimeRecognition();
 
     // timer update function
-    int timerbegin();
+    int timerbegin(int interval);
     int timerstop();
 
     // recognition function
@@ -86,14 +92,21 @@ public:
     float getLikelihood(float data,float p0,float p1,float p2,float p3);
     int EMGrecognition(float data[ELECTRODENUM],float result[3]);
 
+    // robot functions
+    int connectRobot();
+    int disconnectRobot();
+    void enableGraspTest();
+    void disableGraspTest();
+
 
 signals:
     void newEMGData(float *emgdata,int datacount);
     void newIMUData(float *angles,int datacount);
     void newGesture(QString gesture);
     void clearGesture();
+    void changeToGrasp();
 
-private slots:
+public slots:
     int update();
 
 };

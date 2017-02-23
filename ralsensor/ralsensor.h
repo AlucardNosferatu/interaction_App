@@ -1,4 +1,4 @@
-#ifndef RALSENSOR_H
+﻿#ifndef RALSENSOR_H
 #define RALSENSOR_H
 
 #include <QSerialPort>
@@ -27,6 +27,8 @@ class RalSensor: public QObject
 public:
     RalSensor();
     int setAndOpenSerialPort(QString portname);
+
+    int openSerialPort();
     void closeSerialPort();
     int setNormalMeasurement();
     int setSquareWaveTest();

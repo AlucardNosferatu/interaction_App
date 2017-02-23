@@ -1,4 +1,4 @@
-#include "ralsensor.h"
+﻿#include "ralsensor.h"
 
 RalSensor::RalSensor()
 {
@@ -23,6 +23,14 @@ int RalSensor::setAndOpenSerialPort(QString portname)
     }
 
     emgcount=0;
+    if (serialport.open(QIODevice::ReadWrite))
+        return 0;
+    else
+        return -1;
+}
+
+int RalSensor::openSerialPort()
+{
     if (serialport.open(QIODevice::ReadWrite))
         return 0;
     else

@@ -32,6 +32,7 @@ SOURCES += main.cpp\
     ralsensor/ralfilter.cpp \
     ralsensor/ralparser.cpp \
     ralsensor/iirfilter.cpp \
+    robot/mobilearm.cpp
 
 
 HEADERS  +=     plot/qcustomplot.h \
@@ -57,6 +58,7 @@ HEADERS  +=     plot/qcustomplot.h \
     ralsensor/ralfilter.h \
     ralsensor/ralparser.h \
     ralsensor/iirfilter.h \
+    robot/mobilearm.h
 
 win32: LIBS += -L$$PWD/yei/ -lThreeSpace_API
 INCLUDEPATH += $$PWD/yei
