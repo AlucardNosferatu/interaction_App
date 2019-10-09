@@ -12,6 +12,7 @@
 #include "camerawindow.h"
 #include "gestureeditor.h"
 #include "calibrationwindow.h"
+#include"dataprocessor.h"
 
 namespace Ui {
     class MainWindow;
@@ -47,7 +48,7 @@ private slots:
     // plot slots
     void addDatatoEMGPlots(float *emgdata,int n_datacount);
     void addDatatoIMUPlots(float *angles,int n_datacount);
-
+	void addDatatoaccelPlots(float *accel, int n_datacount);
     // command response slots
     void responseReceived(unsigned char res);
 

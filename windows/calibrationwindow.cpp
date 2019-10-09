@@ -68,7 +68,7 @@ void CalibrationWindow::on_calibrationButton_clicked()
         zeros[i]=0;
     for (int i=0;i<10;i++)
     {
-        dataprocessor.getIMUData(angles,NULL,NULL);
+        dataprocessor.getIMUData(angles,NULL,NULL,NULL);
         for (int j=0;j<5;j++)
             zeros[j]+=angles[j];
         Sleep(100);

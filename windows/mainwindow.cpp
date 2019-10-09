@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&updatetimer,SIGNAL(timeout()),this,SLOT(updateUI()));
     connect(&recognizor,SIGNAL(newEMGData(float*,int)),this,SLOT(addDatatoEMGPlots(float*,int)));
     connect(&recognizor,SIGNAL(newIMUData(float*,int)),this,SLOT(addDatatoIMUPlots(float*,int)));
+	connect(&recognizor,SIGNAL(newaccel(float*,int)),this,SLOT(addDatatoaccelPlots(float*,int)));
     connect(&recognizor,SIGNAL(newGesture(QString)),this,SLOT(showGesture(QString)));
     connect(&recognizor,SIGNAL(clearGesture()),this,SLOT(clearGesture()));
     connect(&(recognizor.ralsensor),SIGNAL(newCommandResponse(unsigned char)),this,SLOT(responseReceived(unsigned char)));
@@ -65,6 +66,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->shoulderPlot->xAxis->setRange(0,100);
     ui->shoulderPlot->legend->setVisible(true);
     ui->shoulderPlot->rescaleAxes(true);
+	//accelPlot
+	ui->accelPlot->addGraph();
+    ui->accelPlot->addGraph();
+    ui->accelPlot->addGraph();
+    ui->accelPlot->graph(0)->setName(QString("accel_x"));
+    ui->accelPlot->graph(1)->setName(QString("accel_y"));
+    ui->accelPlot->graph(2)->setName(QString("accel_z"));
+    ui->accelPlot->graph(1)->setPen((QPen(Qt::red)));
+    ui->accelPlot->graph(2)->setPen(QPen(Qt::black));
+    ui->accelPlot->xAxis->setRange(0,100);
+    ui->accelPlot->legend->setVisible(true);
+    ui->accelPlot->rescaleAxes(true);
 }
 
 MainWindow::~MainWindow()
@@ -79,8 +92,10 @@ void MainWindow::updateUI()
 
     ui->elbowPlot->rescaleAxes();
     ui->shoulderPlot->rescaleAxes();
+	 ui->accelPlot->rescaleAxes();
     ui->elbowPlot->replot();
     ui->shoulderPlot->replot();
+	 ui->accelPlot->replot();
 
     for (int i=0;i<8;i++)
     {
@@ -111,6 +126,26 @@ void MainWindow::addDatatoEMGPlots(float *emgdata, int n_datacount)
             plots[i]->graph(0)->removeData(n_datacount-100);
     }
 }
+void MainWindow::addDatatoaccelPlots(float *accel, int n_datacount)
+{
+    // add data to plots
+    // maximal NO. of data points is 100
+    
+        
+ 
+	 ui->accelPlot->graph(0)->addData(n_datacount,accel[0]);
+    ui->accelPlot->graph(1)->addData(n_datacount,accel[1]);
+	 ui->accelPlot->graph(2)->addData(n_datacount,accel[2]);
+	 if (n_datacount>ui->Slider->value())
+            ui->Slider->setValue(n_datacount);
+	  if(n_datacount>=100)
+    {
+		 ui->accelPlot->graph(0)->removeData(n_datacount-100);
+        ui->accelPlot->graph(1)->removeData(n_datacount-100);
+        ui->accelPlot->graph(2)->removeData(n_datacount-100);
+		 
+    }
+}
 
 void MainWindow::addDatatoIMUPlots(float *angles, int n_datacount)
 {
@@ -119,6 +154,9 @@ void MainWindow::addDatatoIMUPlots(float *angles, int n_datacount)
     ui->shoulderPlot->graph(0)->addData(n_datacount,angles[POL]);
     ui->shoulderPlot->graph(1)->addData(n_datacount,angles[AZI]);
     ui->shoulderPlot->graph(2)->addData(n_datacount,angles[OME]);
+	// ui->accelPlot->graph(0)->addData(n_datacount,accel[0]);
+   // ui->accelPlot->graph(1)->addData(n_datacount,accel[1]);
+	// ui->accelPlot->graph(2)->addData(n_datacount,accel[2]);
 
     if (n_datacount>ui->Slider->value())
         ui->Slider->setValue(n_datacount);
@@ -129,6 +167,7 @@ void MainWindow::addDatatoIMUPlots(float *angles, int n_datacount)
         ui->shoulderPlot->graph(0)->removeData(n_datacount-100);
         ui->shoulderPlot->graph(1)->removeData(n_datacount-100);
         ui->shoulderPlot->graph(2)->removeData(n_datacount-100);
+		 
     }
 
 }
@@ -143,6 +182,7 @@ void MainWindow::responseReceived(unsigned char res)
 
 void MainWindow::on_onIMUButton_clicked()
 {
+    std:cout << "";
     if (!recognizor.isIMUConnected())
     {
         recognizor.connectIMU(40);
@@ -295,9 +335,13 @@ void MainWindow::on_clearButton_clicked()
     ui->shoulderPlot->graph(0)->clearData();
     ui->shoulderPlot->graph(1)->clearData();
     ui->shoulderPlot->graph(2)->clearData();
+	 ui->accelPlot->graph(0)->clearData();
+    ui->accelPlot->graph(1)->clearData();
+    ui->accelPlot->graph(2)->clearData();
     ui->elbowPlot->graph(0)->clearData();
     ui->elbowPlot->graph(1)->clearData();
     ui->shoulderPlot->replot();
+	ui->accelPlot->replot();
     ui->elbowPlot->replot();
 
     ui->statusBar->showMessage(QString("Raw data list cleared."));
@@ -393,7 +437,7 @@ void MainWindow::on_onRobotButton_clicked()
 {
     if (ui->onRobotButton->text()=="Connect Robot")
     {
-        recognizor.robot.openSerial(QString("COM17"));
+        recognizor.robot.openSerial(QString("COM7"));
         recognizor.robot.initPosition();
         ui->onRobotButton->setText(QString("Disconnect"));
         recognizor.connectRobot();

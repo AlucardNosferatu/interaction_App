@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1147</width>
-    <height>778</height>
+    <height>1073</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -759,6 +759,16 @@
     </property>
     <property name="text">
      <string>Step</string>
+    </property>
+   </widget>
+   <widget class="QCustomPlot" name="accelPlot" native="true">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>850</y>
+      <width>361</width>
+      <height>201</height>
+     </rect>
     </property>
    </widget>
   </widget>

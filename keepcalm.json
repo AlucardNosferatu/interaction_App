@@ -1,0 +1,512 @@
+{
+    "gestures": [
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+                {
+                    "name": 1,
+                    "x": 0,
+                    "y": -1,
+                    "z": 0
+                },
+                {
+                    "name": 5,
+                    "x": 0,
+                    "y": -1,
+                    "z": 0
+                }
+            ],
+            "command": "",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 3,
+                    "name": 0
+                }
+            ],
+            "name": "来"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+                {
+                    "name": 0,
+                    "value": 1.5707963
+                },
+                {
+                    "name": 2,
+                    "value": 1
+                }
+            ],
+            "axisCiteria": [
+                {
+                    "name": 1,
+                    "x": 0,
+                    "y": 0,
+                    "z": -1
+                }
+            ],
+            "command": "STOP",
+            "description": "胸前交叉",
+            "movementCiteria": [
+                {
+                    "move": 0,
+                    "name": 0
+                },
+                {
+                    "move": 0,
+                    "name": 2
+                },
+                {
+                    "move": 0,
+                    "name": 4
+                }
+            ],
+            "name": "停止移动"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+                {
+                    "name": 1,
+                    "x": -1,
+                    "y": 0,
+                    "z": 0
+                },
+                {
+                    "name": 0,
+                    "x": 0,
+                    "y": 0,
+                    "z": 1
+                }
+            ],
+            "command": "TURNLEFT",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 3,
+                    "name": 4
+                }
+            ],
+            "name": "左转"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+                {
+                    "name": 2,
+                    "value": 1.5
+                }
+            ],
+            "axisCiteria": [
+                {
+                    "name": 1,
+                    "x": 1,
+                    "y": 0,
+                    "z": 0
+                }
+            ],
+            "command": "TURNRIGHT",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 3,
+                    "name": 0
+                }
+            ],
+            "name": "右转"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+                {
+                    "name": 2,
+                    "value": 0
+                }
+            ],
+            "axisCiteria": [
+                {
+                    "name": 1,
+                    "x": 0,
+                    "y": 0,
+                    "z": 1
+                }
+            ],
+            "command": "SPEEDUP",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 3,
+                    "name": 0
+                }
+            ],
+            "name": "加速"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+                {
+                    "name": 2,
+                    "value": 0
+                }
+            ],
+            "axisCiteria": [
+                {
+                    "name": 2,
+                    "x": -0.70710678118654757,
+                    "y": -0.70710678118654757,
+                    "z": 0
+                },
+                {
+                    "name": 1,
+                    "x": 0,
+                    "y": 0,
+                    "z": -1
+                }
+            ],
+            "command": "SLOWDOWN",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 3,
+                    "name": 0
+                }
+            ],
+            "name": "减速"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+                {
+                    "name": 2,
+                    "value": 0
+                }
+            ],
+            "axisCiteria": [
+                {
+                    "name": 1,
+                    "x": 0,
+                    "y": 0,
+                    "z": 1
+                },
+                {
+                    "name": 2,
+                    "x": -1,
+                    "y": 0,
+                    "z": 0
+                }
+            ],
+            "command": "OPEN",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 0,
+                    "name": 0
+                },
+                {
+                    "move": 0,
+                    "name": 2
+                },
+                {
+                    "move": 0,
+                    "name": 3
+                }
+            ],
+            "name": "打开手爪"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+                {
+                    "name": 2,
+                    "x": 0,
+                    "y": 0,
+                    "z": -1
+                },
+                {
+                    "name": 1,
+                    "x": -1,
+                    "y": 0,
+                    "z": 0
+                }
+            ],
+            "command": "GETREADY",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 0,
+                    "name": 0
+                },
+                {
+                    "move": 0,
+                    "name": 1
+                },
+                {
+                    "move": 0,
+                    "name": 2
+                }
+            ],
+            "name": "进入准备"
+        },
+        {
+            "EMG": 1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+                {
+                    "name": 5,
+                    "x": 0,
+                    "y": 0,
+                    "z": 1
+                },
+                {
+                    "name": 2,
+                    "x": 0,
+                    "y": -1,
+                    "z": 0
+                },
+                {
+                    "name": 1,
+                    "x": -1,
+                    "y": 0,
+                    "z": 0
+                }
+            ],
+            "command": "MOVELEFT",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 0,
+                    "name": 0
+                },
+                {
+                    "move": 0,
+                    "name": 2
+                }
+            ],
+            "name": "左移手爪"
+        },
+        {
+            "EMG": 2,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+                {
+                    "name": 5,
+                    "x": 0,
+                    "y": 0,
+                    "z": 1
+                },
+                {
+                    "name": 2,
+                    "x": 0,
+                    "y": -1,
+                    "z": 0
+                },
+                {
+                    "name": 1,
+                    "x": -1,
+                    "y": 0,
+                    "z": 0
+                }
+            ],
+            "command": "MOVERIGHT",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 0,
+                    "name": 0
+                },
+                {
+                    "move": 0,
+                    "name": 2
+                }
+            ],
+            "name": "右移手爪"
+        },
+        {
+            "EMG": 1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+                {
+                    "name": 5,
+                    "x": 0,
+                    "y": 0,
+                    "z": 1
+                },
+                {
+                    "name": 2,
+                    "x": 0,
+                    "y": -1,
+                    "z": 0
+                },
+                {
+                    "name": 1,
+                    "x": 0,
+                    "y": 0,
+                    "z": 1
+                }
+            ],
+            "command": "MOVEUP",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 0,
+                    "name": 0
+                },
+                {
+                    "move": 0,
+                    "name": 2
+                }
+            ],
+            "name": "上移手爪"
+        },
+        {
+            "EMG": 2,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+                {
+                    "name": 5,
+                    "x": 0,
+                    "y": 0,
+                    "z": 1
+                },
+                {
+                    "name": 2,
+                    "x": 0,
+                    "y": -1,
+                    "z": 0
+                },
+                {
+                    "name": 1,
+                    "x": 0,
+                    "y": 0,
+                    "z": 1
+                }
+            ],
+            "command": "MOVEDOWN",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 0,
+                    "name": 0
+                },
+                {
+                    "move": 0,
+                    "name": 2
+                }
+            ],
+            "name": "下移手爪"
+        },
+        {
+            "EMG": 0,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+                {
+                    "name": 5,
+                    "x": 0,
+                    "y": 0,
+                    "z": 1
+                },
+                {
+                    "name": 2,
+                    "x": 0,
+                    "y": 0,
+                    "z": 1
+                }
+            ],
+            "command": "CLOSE",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 0,
+                    "name": 0
+                },
+                {
+                    "move": 0,
+                    "name": 2
+                }
+            ],
+            "name": "闭合手爪"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+                {
+                    "name": 0,
+                    "value": 1.5700000000000001
+                },
+                {
+                    "name": 2,
+                    "value": 1
+                }
+            ],
+            "axisCiteria": [
+                {
+                    "name": 1,
+                    "x": 0,
+                    "y": -1,
+                    "z": 0
+                }
+            ],
+            "command": "SHRINK",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 0,
+                    "name": 0
+                },
+                {
+                    "move": 0,
+                    "name": 2
+                },
+                {
+                    "move": 0,
+                    "name": 4
+                }
+            ],
+            "name": "收起手爪"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+            ],
+            "command": "KEEPCALM",
+            "description": "",
+            "movementCiteria": [
+                {
+                    "move": 0,
+                    "name": 0
+                },
+                {
+                    "move": 0,
+                    "name": 1
+                },
+                {
+                    "move": 0,
+                    "name": 2
+                },
+                {
+                    "move": 0,
+                    "name": 3
+                },
+                {
+                    "move": 0,
+                    "name": 4
+                }
+            ],
+            "name": "保持静止"
+        }
+    ]
+}

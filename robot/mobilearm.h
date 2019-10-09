@@ -1,6 +1,7 @@
 ﻿#ifndef MOBILEARM
 #define MOBILEARM
-
+#define JOINTNUM 5
+#define AXISNUM 9
 #include <cmath>
 #include <QString>
 #include <QtSerialPort/QSerialPort>
@@ -17,6 +18,7 @@ public:
     ~MobileArm();
     void bend_initial();    //初始姿势
     void straight_initial();
+	void motion_map(const float angles[JOINTNUM],const float axes[AXISNUM][3]);
     void beepOn();
     void setArm(double,double,double);
     void setArm(double* a);

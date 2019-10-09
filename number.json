@@ -1,0 +1,124 @@
+{
+    "gestures": [
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+            ],
+            "command": "",
+            "description": "",
+            "movementCiteria": [
+            ],
+            "name": "数字0"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+            ],
+            "command": "",
+            "description": "",
+            "movementCiteria": [
+            ],
+            "name": "数字1"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+            ],
+            "command": "",
+            "description": "",
+            "movementCiteria": [
+            ],
+            "name": "数字2"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+            ],
+            "command": "",
+            "description": "",
+            "movementCiteria": [
+            ],
+            "name": "数字3"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+            ],
+            "command": "",
+            "description": "",
+            "movementCiteria": [
+            ],
+            "name": "数字4"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+            ],
+            "command": "",
+            "description": "",
+            "movementCiteria": [
+            ],
+            "name": "数字5"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+            ],
+            "command": "",
+            "description": "",
+            "movementCiteria": [
+            ],
+            "name": "数字6"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+            ],
+            "command": "",
+            "description": "",
+            "movementCiteria": [
+            ],
+            "name": "数字7"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+            ],
+            "command": "",
+            "description": "",
+            "movementCiteria": [
+            ],
+            "name": "数字8"
+        },
+        {
+            "EMG": -1,
+            "angleCiteria": [
+            ],
+            "axisCiteria": [
+            ],
+            "command": "",
+            "description": "",
+            "movementCiteria": [
+            ],
+            "name": "数字9"
+        }
+    ]
+}

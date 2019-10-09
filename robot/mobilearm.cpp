@@ -1,5 +1,5 @@
 ﻿#include "mobilearm.h"
-
+#include<cmath>
 
 
 /*****************************************************************
@@ -7,11 +7,11 @@
 *******************************************************************/
 void MobileArm::bend_initial()
 {
-  angle[0] = 0;
-  angle[1] = -HALF_PI*0.8;
-  angle[2] = PI*0.8;
-  angle[3] = PI/6;
-  angle[4] = 0;
+  angle[0] = -0.21878;
+  angle[1] = 0.3428;
+  angle[2] = 0.3428;
+  angle[3] = 1.05;
+  angle[4] = -1.667;
   angle[5] = 0;
 
   for(int i=0;i<6;i++)//记录命令
@@ -43,6 +43,27 @@ void MobileArm::straight_initial()
     T = 1000; //初始化，用较慢的速度
     QString cmd = "{G0" + arm_command() + "}";
     serialPort.write(cmd.toLatin1());
+}
+void MobileArm::motion_map(const float angles[JOINTNUM],const float axes[AXISNUM][3])
+{
+	//angle[0] = angles[4];
+	angle[0] = axes[5][0];
+	angle[1] = angles[0];
+	angle[2] = angles[0];
+	angle[3] = angles[3]+1.05;
+	angle[4] = angles[1];
+	angle[5] = abs(axes[2][0]*axes[8][0]+axes[2][1]*axes[8][1]+axes[2][2]*axes[8][2]);
+	
+
+  for(int i=0;i<6;i++)//记录命令
+  {
+    oldAngle[i] = angle[i];
+  }
+
+  angle2xyz(); //同步手心位置
+  T = 1000; //初始化，用较慢的速度
+  QString cmd = "{G0" + arm_command() + "}";
+  serialPort.write(cmd.toLatin1());
 }
 
 void MobileArm::beepOn()
@@ -82,15 +103,15 @@ void MobileArm::turn(int n)
     int delay = 370;
     if(n>0)
     {
-        left = -255;
-        right = 255;
+        left = -255*3;
+        right = 255*3;
         serialPort.write( wheel_command().toLatin1() );
         delayTimer.start(delay*m);
-    }
+    }		
     else if(n<0)
     {
-        left = 255;
-        right = -255;
+        left = 255*3;
+        right = -255*3;
         serialPort.write( wheel_command().toLatin1() );
         delayTimer.start(delay*m);
     }
@@ -116,13 +137,13 @@ void MobileArm::move(int v)
         left = right = 0;
         break;
     case 1:
-        left = right = 150;
+        left = right = 280*3;
         break;
     case 2:
-        left = right = 255;
+        left = right =150*6;
         break;
     case -1:
-        left = right = -255;
+        left = right = -280*3;
         break;
     }
     serialPort.write( wheel_command().toLatin1() );
@@ -201,43 +222,42 @@ void MobileArm::angle2xyz()
 QString MobileArm::arm_command()
 {
   //0号舵机，控制腰关节，采用数字舵机-135~135度,并加入齿隙补偿，一圈24个齿
-  int pwm = 1500 + ( angle[0]/PI+1.0/24)/1.5 * 2000;
+  int pwm = 1500 + ( angle[0]+1.0/24 +0.21878)/1.5 * 600;
   pwm = constrian(pwm);
   QString cmd0;
-  cmd0 = QString("#0P%1T%2!").arg(pwm).arg(T);
+  cmd0 = QString("#000P%1T%2!").arg(pwm).arg(T);
 
   //1号舵机，控制肩关节，采用数字舵机-90~90度
-  pwm = 1500 - ( angle[1]/PI+1.0/24) * 2000;
+  pwm = 1500 - ( angle[1]-0.3428-1.0/24 ) * 300;
   pwm = constrian(pwm);
   QString cmd1;
-  cmd1 = QString("#1P%1T%2!").arg(pwm).arg(T);
+  cmd1 = QString("#001P%1T%2!").arg(pwm).arg(T);
 
   //2号舵机，控制肘关节，采用数字舵机-90~90度
-  pwm = 1500 -((angle[2]-HALF_PI)/ PI-1.0/24) * 2000;
+  pwm = 1500 +((angle[2])-0.3428-1.0/24 ) * 300;
   pwm = constrian(pwm);
   QString cmd2;
-  cmd2 = QString("#2P%1T%2!").arg(pwm).arg(T);
+  cmd2 = QString("#002P%1T%2!").arg(pwm).arg(T);
 
   //3号舵机，控制腕关节，采用数字舵机-135~135度
-  pwm = 1500 -( angle[3]/PI/1.5 ) * 2000;
+  pwm = 1500 +( (angle[3]-1.05)/1.5 ) * 300;
   pwm = constrian(pwm);
   QString cmd3;
-  cmd3 = QString("#3P%1T%2!").arg(pwm).arg(T);
+  cmd3 = QString("#003P%1T%2!").arg(pwm).arg(T);
 
   //4号舵机，控制腕关节，采用模拟舵机-90~90度，方向为右手（增加向外）
-  pwm = 1500 +( angle[4]/PI ) * 2000;
+  pwm = 1500 +( angle[4] +1.667) * 600;
   pwm = constrian(pwm);
   QString cmd4;
-  cmd4 = QString("#4P%1T%2!").arg(pwm).arg(T);
+  cmd4 = QString("#004P%1T%2!").arg(pwm).arg(T);
 
-  //6号舵机，控制机械爪开合，采用模拟舵机-90~90度，增加为合，减小为开
-  pwm = 1500 +( angle[5]/PI ) * 2000;
+  //5号舵机，控制机械爪开合，采用模拟舵机-90~90度，增加为合，减小为开
+  pwm = 1500 -( angle[5] ) * 1000;
   pwm = constrian(pwm);
   QString cmd6;
-  cmd6 = QString("#6P%1T%2!").arg(pwm).arg(T);
+  cmd6 = QString("#005P%1T%2!").arg(pwm).arg(T);
 
   QString cmd = cmd0 + cmd1 + cmd2 + cmd3 + cmd4 + cmd6;
-
   return cmd;
 }
 
@@ -252,37 +272,37 @@ QString MobileArm::servo_command(int i)
         //0号舵机，控制腰关节，采用数字舵机-135~135度,并加入齿隙补偿，一圈24个齿
         pwm = 1500 + ( angle[0]/PI+1.0/24)/1.5 * 2000;
         pwm = constrian(pwm);
-        cmd = QString("#0P%1T%2!").arg(pwm).arg(T);
+        cmd = QString("#000P%1T%2!").arg(pwm).arg(T);
         break;
     case 1:
         //1号舵机，控制肩关节，采用数字舵机-90~90度
         pwm = 1500 - ( angle[1]/PI+1.0/24) * 2000;
         pwm = constrian(pwm);
-        cmd = QString("#1P%1T%2!").arg(pwm).arg(T);
+        cmd = QString("#001P%1T%2!").arg(pwm).arg(T);
         break;
     case 2:
         //2号舵机，控制肘关节，采用数字舵机-90~90度
         pwm = 1500 -((angle[2]-HALF_PI)/ PI-1.0/24) * 2000;
         pwm = constrian(pwm);
-        cmd = QString("#2P%1T%2!").arg(pwm).arg(T);
+        cmd = QString("#002P%1T%2!").arg(pwm).arg(T);
         break;
     case 3:
         //3号舵机，控制腕关节，采用数字舵机-135~135度
         pwm = 1500 -( angle[3]/PI/1.5 ) * 2000;
         pwm = constrian(pwm);
-        cmd = QString("#3P%1T%2!").arg(pwm).arg(T);
+        cmd = QString("#003P%1T%2!").arg(pwm).arg(T);
         break;
     case 4:
         //4号舵机，控制腕关节，采用模拟舵机-90~90度，方向为右手（增加向外）
         pwm = 1500 +( angle[4]/PI ) * 2000;
         pwm = constrian(pwm);
-        cmd = QString("#4P%1T%2!").arg(pwm).arg(T);
+        cmd = QString("#004P%1T%2!").arg(pwm).arg(T);
         break;
     case 5:
         //6号舵机，控制机械爪开合，采用模拟舵机-90~90度，增加为合，减小为开
         pwm = 1500 +( angle[5]/PI ) * 2000;
         pwm = constrian(pwm);
-        cmd = QString("#6P%1T%2!").arg(pwm).arg(T);
+        cmd = QString("#005P%1T%2!").arg(pwm).arg(T);
         break;
     }
 
@@ -298,7 +318,7 @@ QString MobileArm::servo_command(int i)
 QString MobileArm::wheel_command()
 {
   //确定左右轮的方向，左轮1-前，0-后，右轮相反
-  int leftDirect;
+  /*int leftDirect;
   if(left>0)
   {
     leftDirect = 1;
@@ -319,10 +339,11 @@ QString MobileArm::wheel_command()
     rightDirect = 1;
     right = -right;
   }
-
+  */
   //输出命令
   QString cmd;
-  cmd = QString("$DCR:%1-%2,%3-%4!").arg(left).arg(right).arg(leftDirect).arg(rightDirect);
+  //cmd = QString("$DCR:%1-%2,%3-%4!").arg(left).arg(right).arg(leftDirect).arg(rightDirect);
+  cmd = QString("$DCR:%1,%2!").arg(left).arg(right);
   return cmd;
 }
 
@@ -396,7 +417,7 @@ MobileArm::~MobileArm()
 //串口打开,并初始化
 void MobileArm::openSerial(QString &com)
 {
-    serialPort.setBaudRate(9600);
+    serialPort.setBaudRate(115200);
     serialPort.setPortName(com);
     serialPort.open(QIODevice::WriteOnly);
 
@@ -421,7 +442,7 @@ void MobileArm::compileMotion(int i)
 void MobileArm::executeMotions(int begin, int end)
 {
     QString cmd = QString("$DGT:%1-%2,1!").arg(begin).arg(end);
-    serialPort.write(cmd.toLatin1());
+    serialPort.write(cmd.toLatin1());  
 }
 
 void MobileArm::executeMotion(int i)

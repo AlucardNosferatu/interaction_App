@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>手势编辑器</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QListView" name="angleCiteriaList">

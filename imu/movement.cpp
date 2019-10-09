@@ -32,7 +32,7 @@ bool getmProbability(int head,int datacount,double newp[JOINTNUM][MOVEMENTNUM],d
     {
         currentIndex=datacount;
         //case 1 |delta|<thresholds
-        if (deltas[currentIndex][joint]>-thresholds[joint] && deltas[currentIndex][joint]<thresholds[joint])
+		if (deltas[currentIndex][joint]>-thresholds[joint] && deltas[currentIndex][joint]<thresholds[joint])
         {
             newp[joint][FM]=lastp[joint][FM]-0.1;
             newp[joint][BM]=lastp[joint][BM]-0.1;

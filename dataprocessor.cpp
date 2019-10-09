@@ -1,4 +1,6 @@
 ﻿#include "dataprocessor.h"
+#include"qdebug"
+
 
 DataProcessor::DataProcessor(QObject *parent) : QObject(parent)
 {
@@ -22,9 +24,11 @@ float DataProcessor::tare()
 
     tss_error = tss_tareWithCurrentOrientation(upperArm,&timestamp);
     tss_error = tss_tareWithCurrentOrientation(foreArm,&timestamp);
+	tss_error = tss_tareWithCurrentOrientation(wristHand,&timestamp);
 
     tss_getTaredOrientationAsQuaternion(upperArm,uquat,&timestamp);
     tss_getTaredOrientationAsQuaternion(foreArm,fquat,&timestamp);
+	tss_getTaredOrientationAsQuaternion(wristHand,aquat,&timestamp);
     return 0;
 }
 
@@ -38,14 +42,17 @@ void DataProcessor::connectIMU(int interval)
 {
     TSS_Error tss_error;
     unsigned int timestamp;
-
-    foreArm  = tss_createTSDeviceStr("COM12",  TSS_TIMESTAMP_SENSOR );  //31 for hub 15 for usb2
-    body     = tss_createTSDeviceStr("COM11", TSS_TIMESTAMP_SENSOR);    //25 for hub, 12 for usb2
-    upperArm = tss_createTSDeviceStr("COM15", TSS_TIMESTAMP_SENSOR); //30 for hub 16for usb2
-
-    TSS_Stream_Command stream_slots[8] = { TSS_GET_UNTARED_ORIENTATION_AS_QUATERNION,TSS_NULL,TSS_NULL, TSS_NULL,TSS_NULL,TSS_NULL,TSS_NULL,TSS_NULL};
+	//tss_error=tss_setAxisDirections(body,000,NULL);
+    foreArm  = tss_createTSDeviceStr("COM10",  TSS_TIMESTAMP_SENSOR);  //31 for hub 15 for usb2
+    body     = tss_createTSDeviceStr("COM13", TSS_TIMESTAMP_SENSOR);    //25 for hub, 12 for usb2 COM30
+    upperArm = tss_createTSDeviceStr("COM8", TSS_TIMESTAMP_SENSOR); //30 for hub 16for usb2
+	//wristHand = tss_createTSDeviceStr("COM26", TSS_TIMESTAMP_SENSOR); //30 for hub 16for usb2||COM26||COM27
+	
+  
+    TSS_Stream_Command stream_slots[8] = { TSS_GET_UNTARED_ORIENTATION_AS_QUATERNION,TSS_GET_CORRECTED_ACCELEROMETER_VECTOR,TSS_NULL, TSS_NULL,TSS_NULL,TSS_NULL,TSS_NULL,TSS_NULL};
 
     tss_setStreamingSlots(foreArm, stream_slots, NULL);
+	
     tss_error=tss_setStreamingTiming(foreArm,interval*1000,TSS_INFINITE_DURATION,0,NULL);
     while(tss_error)
         tss_error=tss_setStreamingTiming(foreArm,interval*1000,TSS_INFINITE_DURATION,0,NULL);
@@ -57,7 +64,7 @@ void DataProcessor::connectIMU(int interval)
         tss_error=tss_startStreaming(foreArm,NULL);
     }
 
-
+	
     tss_setStreamingSlots(body, stream_slots, NULL);
     tss_error=tss_setStreamingTiming(body,interval*1000,TSS_INFINITE_DURATION,0,NULL);
     while(tss_error)
@@ -79,8 +86,19 @@ void DataProcessor::connectIMU(int interval)
         Sleep(10);
         tss_error=tss_startStreaming(upperArm,NULL);
     }
+	/* tss_setStreamingSlots(wristHand, stream_slots, NULL);
+	tss_error=tss_setStreamingTiming(wristHand,interval*1000,TSS_INFINITE_DURATION,0,NULL);
+    while(tss_error)
+        tss_error=tss_setStreamingTiming(wristHand,interval*1000,TSS_INFINITE_DURATION,0,NULL);
 
+    tss_error=tss_startStreaming(wristHand,NULL);
+    while(tss_error)
+    {
+        Sleep(10);
+        tss_error=tss_startStreaming(wristHand,NULL);
+    }
     //QueryPerformanceCounter(&t1);
+	*/
     twist=0;
 }
 int DataProcessor::setZeros(double *angles)
@@ -95,12 +113,14 @@ void DataProcessor::disconnectIMU()
     tss_stopStreaming(upperArm,NULL);
     tss_stopStreaming(foreArm,NULL);
     tss_stopStreaming(body,NULL);
+	tss_stopStreaming(wristHand,NULL);
     tss_closeTSDevice(upperArm);
     tss_closeTSDevice(foreArm);
     tss_closeTSDevice(body);
+	 tss_closeTSDevice(wristHand);
 }
 
-int DataProcessor::getIMUData(float *angles, float axes[AXISNUM][3], float *quatRaw)
+int DataProcessor::getIMUData(float *angles, float axes[AXISNUM][3], float *quatRaw,float*accel)
 {
     TSS_Error tss_error;
     unsigned int timestamp;
@@ -111,18 +131,23 @@ int DataProcessor::getIMUData(float *angles, float axes[AXISNUM][3], float *quat
     tss_error = tss_getLastStreamData(body, (char*)&bquat,sizeof(bquat),&timestamp);
     tss_error = tss_getLastStreamData(foreArm, (char*)&fquat,sizeof(fquat), &timestamp);
     tss_error = tss_getLastStreamData(upperArm,(char*)&uquat,sizeof(uquat),&timestamp);
-
+	 tss_error = tss_getLastStreamData(wristHand,(char*)&aquat,sizeof(aquat),&timestamp);
     if (axes==NULL && quatRaw==NULL)
         processForCalibration(angles);
     else
     {
+		//fquat[0]=faquat[0];fquat[1]=faquat[1];fquat[2]=faquat[2];fquat[3]=faquat[3];
         //body
         quatRaw[0]=bquat[0];quatRaw[1]=bquat[1];quatRaw[2]=bquat[2];quatRaw[3]=bquat[3];
         //upperarm
         quatRaw[4]=uquat[0];quatRaw[5]=uquat[1];quatRaw[6]=uquat[2];quatRaw[7]=uquat[3];
         //forearm
         quatRaw[8]=fquat[0];quatRaw[9]=fquat[1];quatRaw[10]=fquat[2];quatRaw[11]=fquat[3];
-        process(angles,axes);
+		//accel of forearm
+		quatRaw[12]=fquat[4];quatRaw[13]=fquat[5];quatRaw[14]=fquat[6];quatRaw[15] = aquat[0];
+		quatRaw[16]=aquat[1];quatRaw[17] = aquat[2];quatRaw[18] = aquat[3];
+		accel[0]=quatRaw[12];accel[1]=quatRaw[13];accel[2]=quatRaw[14];
+        process(angles,axes,accel);
     }
     return 0;
 }
@@ -133,7 +158,7 @@ int DataProcessor::getZeros(float *angles)
     unsigned int timestamp;
     tss_error = tss_getLastStreamData(foreArm, (char*)&fquat,sizeof(fquat), &timestamp);
     tss_error = tss_getLastStreamData(upperArm,(char*)&uquat,sizeof(uquat), &timestamp);
-    process(angles,NULL);
+    process(angles,NULL,NULL);
     return 0;
 }
 
@@ -218,7 +243,7 @@ int DataProcessor::setFilePos(int newpos)
     return 0;
 }
 
-int DataProcessor::getIMUDataFromFile(float *angles, float axes[][3], float *quatRaw)
+int DataProcessor::getIMUDataFromFile(float *angles, float axes[][3], float *quatRaw,float*accel)
 {
     if (IMUfileExists)
     {
@@ -226,14 +251,15 @@ int DataProcessor::getIMUDataFromFile(float *angles, float axes[][3], float *qua
         IMUtextinput.seek(IMUfilePos);
         IMUtextinput>>bquat[0]>>bquat[1]>>bquat[2]>>bquat[3]
                 >>uquat[0]>>uquat[1]>>uquat[2]>>uquat[3]
-                >>fquat[0]>>fquat[1]>>fquat[2]>>fquat[3];
+                >>fquat[0]>>fquat[1]>>fquat[2]>>fquat[3]
+				>>fquat[4]>>fquat[5]>>fquat[6];
 
         if(IMUtextinput.atEnd())
         {
             return -1;
         }
         IMUfilePos=IMUtextinput.pos();
-        process(angles,axes);
+        process(angles,axes,accel);
     }
     return 0;
 }
@@ -268,19 +294,23 @@ int DataProcessor::getOrientation(float *vector,float *forward,float *right,floa
 
 int DataProcessor::processForCalibration(float *angles)
 {
-    MyQuaternion fz,fx,fy,uz,ux,ux0,fx0,farmc,uarmc,uy;
+    MyQuaternion fz,fx,fy,uz,ux,ux0,fx0,farmc,uarmc,uy,ax,ay,az,ax0,wristc;
     ux0=uarm.conjugate()*x*uarm;    //former xaxis
     fx0=farm.conjugate()*x*farm;
-
+	ax0=wrist.conjugate()*x*wrist;
     qbody= MyQuaternion(bquat[3],bquat[0],bquat[1],bquat[2]);
     farm = MyQuaternion(fquat[3],fquat[0],fquat[1],fquat[2]);
     uarm = MyQuaternion(uquat[3],uquat[0],uquat[1],uquat[2]);
+	wrist = MyQuaternion(aquat[3],aquat[0],aquat[1],aquat[2]);
 
+	
     qbody=qbody.conjugate();
     farm=qbody*farm;
     uarm=qbody*uarm;
+	wrist=qbody*wrist;
     farmc=farm.conjugate();
     uarmc=uarm.conjugate();
+	wristc=wrist.conjugate();
 
     fz=farm*z*farmc;
     fx=farm*x*farmc;
@@ -289,6 +319,10 @@ int DataProcessor::processForCalibration(float *angles)
     uz=uarm*z*uarmc;
     ux=uarm*x*uarmc;
     uy=uarm*y*uarmc;
+
+	az=wrist*z*wristc;
+	ax=wrist*x*wristc;
+	ay=wrist*y*wristc;
 
     //angles=[epsilon,tau,theta,phi,omega]
     //angles=[elbow,twist,polar,amuzithal,utwist]
@@ -303,55 +337,84 @@ int DataProcessor::processForCalibration(float *angles)
     return 0;
 }
 
-int DataProcessor::process(float *angles, float axes[AXISNUM][3])
+int DataProcessor::process(float *angles, float axes[AXISNUM][3],float*accel)
 {
-    MyQuaternion fz,fx,fy,uz,ux,ux0,fx0,farmc,uarmc,uy;
+    MyQuaternion fz,fx,fy,uz,ux,ux0,fx0,farmc,uarmc,uy,q1,q2,q3,q1c,q2c,q3c,q4,ax,ay,az,ax0,wristc;
     ux0=uarm.conjugate()*x*uarm;    //former xaxis
     fx0=farm.conjugate()*x*farm;
 
     qbody= MyQuaternion(bquat[3],bquat[0],bquat[1],bquat[2]);
     farm = MyQuaternion(fquat[3],fquat[0],fquat[1],fquat[2]);
     uarm = MyQuaternion(uquat[3],uquat[0],uquat[1],uquat[2]);
+	wrist = MyQuaternion(aquat[3],aquat[0],aquat[1],aquat[2]);
 
+	accel[0]=fquat[4];accel[1]=fquat[5];accel[2]=fquat[6];
+/*	q1= MyQuaternion(0.614307,0.0188239,0.788762,-0.0112587);//相对坐标转换
+	q2= MyQuaternion(0.671501,0.006259,-0.740751,-0.0183077);
+	q3= MyQuaternion(-0.417578,-0.0220954,-0.906284,-0.417578);
+	q1c=q1.conjugate();
+	q2c=q2.conjugate();
+	q3c=q3.conjugate();
+	qbody=qbody*q2c*q3;
+	farm=farm*q1c*q3;
+	*/
     qbody=qbody.conjugate();
     farm=qbody*farm;
     uarm=qbody*uarm;
+	wrist = qbody*wrist;
     farmc=farm.conjugate();
     uarmc=uarm.conjugate();
-
+	wristc=wrist.conjugate();
+	q4=MyQuaternion(0,0,0,0);
     fz=farm*z*farmc;
-    fx=farm*x*farmc;
+    fx=(farm*x*farmc);
     fy=farm*y*farmc;
-
+	
     uz=uarm*z*uarmc;
     ux=uarm*x*uarmc;
     uy=uarm*y*uarmc;
 
+	az=wrist*z*wristc;
+	ax=wrist*x*wristc;
+	ay=wrist*y*wristc;
+
     if (axes!=NULL)
     {
-        axes[0][0]=direction*fx.e.e[0];
+        axes[0][0]=fx.e.e[0];
         axes[0][1]=direction*fx.e.e[1];
-        axes[0][2]=direction*fx.e.e[2];
+        axes[0][2]=fx.e.e[2];
 
-        axes[1][0]=direction*fy.e.e[0];
+        axes[1][0]=fy.e.e[0];
         axes[1][1]=direction*fy.e.e[1];
         axes[1][2]=direction*fy.e.e[2];
 
-        axes[2][0]=fz.e.e[0];
+        axes[2][0]=direction*fz.e.e[0];
         axes[2][1]=fz.e.e[1];
         axes[2][2]=fz.e.e[2];
 
-        axes[3][0]=ux.e.e[0];
+        axes[3][0]=direction*ux.e.e[0];
         axes[3][1]=ux.e.e[1];
         axes[3][2]=ux.e.e[2];
 
-        axes[4][0]=uy.e.e[0];
+        axes[4][0]=direction*uy.e.e[0];
         axes[4][1]=uy.e.e[1];
         axes[4][2]=uy.e.e[2];
 
-        axes[5][0]=uz.e.e[0];
+        axes[5][0]=direction*uz.e.e[0];
         axes[5][1]=uz.e.e[1];
         axes[5][2]=uz.e.e[2];
+
+		axes[6][0]=ax.e.e[0];
+        axes[6][1]=direction*ax.e.e[1];
+        axes[6][2]=ax.e.e[2];
+
+        axes[7][0]=ay.e.e[0];
+        axes[7][1]=direction*ay.e.e[1];
+        axes[7][2]=direction*ay.e.e[2];
+
+        axes[8][0]=direction*az.e.e[0];
+        axes[8][1]=az.e.e[1];
+        axes[8][2]=az.e.e[2];
     }
 
 

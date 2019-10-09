@@ -3,7 +3,7 @@
 
 #include <QJsonObject>
 
-#define AXISNUM 6
+#define AXISNUM 9
 const char axisNames[AXISNUM+1][10]={"FX","FY","FZ","UX","UY","UZ","NEW AXIS"};
 
 enum Axes{

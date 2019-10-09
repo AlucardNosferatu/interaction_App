@@ -1,5 +1,5 @@
 ﻿#include "recognizor.h"
-
+extern int i = 0;
 Recognizor::Recognizor()
 {
     EMGconnected=false;
@@ -25,6 +25,7 @@ int Recognizor::update()
 {
     float quat_temp[SENSORNUM*4];
     float angles[JOINTNUM],axes[AXISNUM][3];
+	float accel[3];
     float emgdata[ELECTRODENUM];
 
     if (!fileMode)
@@ -32,12 +33,13 @@ int Recognizor::update()
         if (IMUconnected)
         {
             // read IMU data and store it in QList
-            dataprocessor.getIMUData(angles,axes,quat_temp);
+            dataprocessor.getIMUData(angles,axes,quat_temp,accel);
             QList<float> qvector_temp;
-            for (int i=0;i<SENSORNUM*4;i++)
+            for (int i=0;i<SENSORNUM*5;i++)
                 qvector_temp.append(quat_temp[i]);
             quatRaw.append(qvector_temp);
             emit newIMUData(angles,datacount);
+			emit newaccel(accel,datacount);
         }
         if (EMGconnected)
         {
@@ -55,9 +57,12 @@ int Recognizor::update()
     {
         if (dataprocessor.IMUfileExists)
         {
-            int retval = dataprocessor.getIMUDataFromFile(angles,axes,quat_temp);
+            int retval = dataprocessor.getIMUDataFromFile(angles,axes,quat_temp,accel);
             if (retval>=0)
+			{
                 emit newIMUData(angles,datacount);
+				emit newaccel(accel,datacount);
+			}
             else
                 return -1;
         }
@@ -122,11 +127,29 @@ int Recognizor::update()
 }
 int Recognizor::gestureRecognition(const float angles[JOINTNUM], const float axes[AXISNUM][3], const float emg[ELECTRODENUM])
 {
+
+	qDebug()<<axes[2][0]<<axes[8][0]<<axes[2][1]<<axes[8][1]<<axes[2][2]<<axes[8][2];
+
+	if(i == 0){
+		for(int j=0;j<6;j++){
+			Angle[j] = 0;
+		}
+		//第一次控制手爪时使其长大到-1弧度
+		Angle[5] = -1;
+        Angle[2] = 1.5;
+        Angle[3] = 0.5;
+        Angle[1] = 0.1;
+	}
+
+    //输出语音
+    //voiceOutPut("这个很nice");
+
     for (int joint=0;joint<JOINTNUM;joint++)
         for (int move=0;move<MOVEMENTNUM;move++)
             lastp[joint][move]=newp[joint][move];
     getmProbability(lasthead,datacount,newp,lastp,deltas,states);
-
+	//if(grasptest)
+			//robot.motion_map( angles,axes);
     // todo: include emg result
     int ret=gesturelib.updateBestGesture(angles,axes,newp,emg);
     if (ret==NEWGESTURE)
@@ -137,6 +160,11 @@ int Recognizor::gestureRecognition(const float angles[JOINTNUM], const float axe
         {
             emit newGesture(QString(""));
             currentGesture=QString("");
+			//if(grasptest)
+			//{
+			//	robot.motion_map( angles,axes);
+			//}
+			
         }
         else
         {
@@ -162,6 +190,8 @@ int Recognizor::gestureRecognition(const float angles[JOINTNUM], const float axe
                         robot.turn(1);
                     if (gesturelib.getBestGestureCommand()=="TURNRIGHT")
                         robot.turn(-1);
+					if (gesturelib.getBestGestureCommand()=="BACK")
+                        robot.move(-1);
                     //if (gesturelib.getBestGestureCommand()=="SHRINK")
                     //    robot.postC();
                     if (gesturelib.getBestGestureCommand()=="STOP")
@@ -169,20 +199,86 @@ int Recognizor::gestureRecognition(const float angles[JOINTNUM], const float axe
                     if (gesturelib.getBestGestureCommand()=="GETREADY")
                     {
                         emit changeToGrasp();
-                        robot.bend_initial();
+                        //robot.bend_initial();
                         grasptest=true;
                     }
                 }else
                 {
+					i = 1;
                     // grasp
                     if (gesturelib.getBestGestureCommand()=="SPEEDUP")
-                        robot.motionA(0);
+                        //robot.motionA(0);
+					{
+						Angle[3] = Angle[3] + 0.2;
+						robot.setServo(3,Angle[3] );
+					}
                     if (gesturelib.getBestGestureCommand()=="SLOWDOWN")
-                        robot.motionA(1);
+                        //robot.motionA(1);
+					{
+					Angle[3] = Angle[3] - 0.2;
+						robot.setServo(3,Angle[3] );
+					}
                     if (gesturelib.getBestGestureCommand()=="TURNLEFT")
-                        robot.motionA(2);
-                    if (gesturelib.getBestGestureCommand()=="GETREADY")
-                        robot.motionA(3);
+                        //robot.motionA(2);
+					{
+						Angle[0] = Angle[0] + 0.2;
+						robot.setServo(0,Angle[0] );
+					}
+                    if (gesturelib.getBestGestureCommand()=="TURNRIGHT")
+                        //robot.motionA(3);
+					{
+						Angle[0] = Angle[0] - 0.2;
+						robot.setServo(0,Angle[0] );
+					}
+					if (gesturelib.getBestGestureCommand()=="GO")
+                        //robot.motionA(3);
+					{
+						//Angle[1] = Angle[1] + 0.1;
+						//robot.setServo(1,Angle[1] );
+						Angle[2] = Angle[2] + 0.1;
+						robot.setServo(2,Angle[2] );
+					}
+					if (gesturelib.getBestGestureCommand()=="BACK")
+                        //robot.motionA(3);
+					{
+						//Angle[1] = Angle[1] - 0.05;
+						//robot.setServo(1,Angle[1] );
+						Angle[2] = Angle[2] - 0.1;
+						robot.setServo(2,Angle[2] );
+					}
+					if (gesturelib.getBestGestureCommand()=="TURNHAND")
+                        //robot.motionA(3);
+					{
+						Angle[1] = Angle[1] + 0.2;
+						robot.setServo(1,Angle[1] );
+//                        if(Angle[1]>=1)
+//						{
+//							Angle[1] = -1;
+//						}
+					}
+					if (gesturelib.getBestGestureCommand()=="SHRINK")
+                        //robot.motionA(3);
+					{
+						Angle[5] = Angle[5] + 0.1;
+						robot.setServo(5, Angle[5]);
+					}
+					if (gesturelib.getBestGestureCommand()=="OPEN")
+                        //robot.motionA(3);
+					{
+						Angle[5] = Angle[5] - 0.1;
+						robot.setServo(5, Angle[5]);
+					}
+					
+					//if(gesturelib.getBestGestureCommand()=="KEEPCALM")
+					//if((newp[0][0]>0.5&&newp[1][0]>0.5)&&((newp[2][0]>0.5)&&(newp[3][0]>0.5))&&(newp[4][0]>0.5))
+							//robot.motion_map( angles);
+					if (gesturelib.getBestGestureCommand()=="GETREADY")//change mode
+                    {
+                        emit changeToGrasp();
+                        //robot.bend_initial();
+                        grasptest=false;
+                        //==TODO
+                    }
 
                 }
                 //robot.closeSerial();
@@ -268,7 +364,7 @@ int Recognizor::saveData(const QString &filename)
     QTextStream txtOutput(&f);
     for (int i=0;i<quatRaw.length();i++)
     {
-        for (int j=0;j<SENSORNUM*4;j++)
+        for (int j=0;j<SENSORNUM*5;j++)
             txtOutput<<quatRaw[i][j]<<' ';
         txtOutput<<endl;
     }
@@ -474,3 +570,49 @@ void Recognizor::disableGraspTest()
 {
     grasptest=false;
 }
+
+//int Recognizor::voiceOutPut(std::string voice)
+//{
+//    ISpVoice* pVoice = NULL;
+
+//    if (FAILED(::CoInitialize(NULL)))
+//        return FALSE;
+
+//    HRESULT hr = CoCreateInstance(CLSID_SpVoice, NULL, CLSCTX_ALL, IID_ISpVoice, (void**)&pVoice);
+//    if (SUCCEEDED(hr))
+//    {
+//        hr = pVoice->Speak(stringToLPCWSTR(voice), 0, NULL);
+//        pVoice->Release();
+//        pVoice = NULL;
+//    }
+//    std::cout << "done" << std::endl;
+//    ::CoUninitialize();
+//    return TRUE;
+//}
+
+
+//LPCWSTR Recognizor::stringToLPCWSTR(std::string orig)
+//{
+//    wchar_t *wcstring = 0;
+//    try
+//    {
+//        size_t origsize = orig.length() + 1;
+//        const size_t newsize = 100;
+//        size_t convertedChars = 0;
+//        if (orig == "")
+//        {
+//            wcstring = (wchar_t *)malloc(0);
+//            mbstowcs_s(&convertedChars, wcstring, origsize, orig.c_str(), _TRUNCATE);
+//        }
+//        else
+//        {
+//            wcstring = (wchar_t *)malloc(sizeof(wchar_t)*(orig.length() - 1));
+//            mbstowcs_s(&convertedChars, wcstring, origsize, orig.c_str(), _TRUNCATE);
+//        }
+//    }
+//    catch (std::exception e)
+//    {
+//    }
+//    return wcstring;
+
+//}

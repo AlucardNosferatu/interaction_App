@@ -1,0 +1,65 @@
+﻿生成启动时间为 2019/9/5 14:14:05。
+     1>项目“E:\interaction_App\emgserver.vcxproj”在节点 2 上(Build 个目标)。
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.CppBuild.targets(345,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
+     1>CustomBuild:
+         Moc'ing calibrationwindow.h...
+         Moc'ing camerawindow.h...
+         Moc'ing dataprocessor.h...
+         Moc'ing gestureeditor.h...
+         Moc'ing mainwindow.h...
+         Moc'ing mobilearm.h...
+         Moc'ing qcustomplot.h...
+         Moc'ing ralparser.h...
+         Moc'ing ralsensor.h...
+         Moc'ing recognizor.h...
+       ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I. /Iyei /ID:\woksoft\QT\5.5\msvc2012\include /ID:\woksoft\QT\5.5\msvc2012\include\QtMultimediaWidgets /ID:\woksoft\QT\5.5\msvc2012\include\QtMultimedia /ID:\woksoft\QT\5.5\msvc2012\include\QtPrintSupport /ID:\woksoft\QT\5.5\msvc2012\include\QtWidgets /ID:\woksoft\QT\5.5\msvc2012\include\QtGui /ID:\woksoft\QT\5.5\msvc2012\include\QtANGLE /ID:\woksoft\QT\5.5\msvc2012\include\QtSerialPort /ID:\woksoft\QT\5.5\msvc2012\include\QtNetwork /ID:\woksoft\QT\5.5\msvc2012\include\QtCore /Idebug /I. /I"D:\woksoft\QT\5.5\msvc2012\mkspecs\win32-msvc2012" /I.\GeneratedFiles /Zi /nologo /W3 /WX- /Od /Oy- /D _WINDOWS /D UNICODE /D WIN32 /D QT_MULTIMEDIAWIDGETS_LIB /D QT_MULTIMEDIA_LIB /D QT_PRINTSUPPORT_LIB /D QT_WIDGETS_LIB /D QT_GUI_LIB /D QT_SERIALPORT_LIB /D QT_NETWORK_LIB /D QT_CORE_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Win32\Debug\\" /Fd"Win32\Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt -w34100 -w34189 -w44996 Debug\moc_calibrationwindow.cpp Debug\moc_camerawindow.cpp Debug\moc_dataprocessor.cpp Debug\moc_gestureeditor.cpp Debug\moc_mainwindow.cpp Debug\moc_mobilearm.cpp Debug\moc_qcustomplot.cpp Debug\moc_ralparser.cpp Debug\moc_ralsensor.cpp Debug\moc_recognizor.cpp
+         moc_calibrationwindow.cpp
+         moc_camerawindow.cpp
+         moc_dataprocessor.cpp
+         moc_gestureeditor.cpp
+         moc_mainwindow.cpp
+         moc_mobilearm.cpp
+         moc_qcustomplot.cpp
+         moc_ralparser.cpp
+         moc_ralsensor.cpp
+         moc_recognizor.cpp
+         正在生成代码...
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"debug\\emgserver.exe" /NOLOGO /LIBPATH:D:\woksoft\QT\5.5\msvc2012\lib /LIBPATH:D:/woksoft/qt/5.5/msvc2012/lib /LIBPATH:D:\woksoft\QT\5.5\msvc2012\lib /LIBPATH:E:\interaction_App\yei\ D:\woksoft\QT\5.5\msvc2012\lib\qtmaind.lib shell32.lib D:/woksoft/qt/5.5/msvc2012/lib\Qt5Cored.lib E:\interaction_App\yei\\ThreeSpace_API.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5MultimediaWidgetsd.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5Multimediad.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5PrintSupportd.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5Widgetsd.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5Guid.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5SerialPortd.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5Networkd.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5Cored.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"debug\emgserver.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /MACHINE:X86 /SAFESEH "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" Win32\Debug\moc_calibrationwindow.obj
+         Win32\Debug\moc_camerawindow.obj
+         Win32\Debug\moc_dataprocessor.obj
+         Win32\Debug\moc_gestureeditor.obj
+         Win32\Debug\moc_mainwindow.obj
+         Win32\Debug\moc_mobilearm.obj
+         Win32\Debug\moc_qcustomplot.obj
+         Win32\Debug\moc_ralparser.obj
+         Win32\Debug\moc_ralsensor.obj
+         Win32\Debug\moc_recognizor.obj
+         Win32\Debug\angleciterion.obj
+         Win32\Debug\axisciterion.obj
+         Win32\Debug\calibrationwindow.obj
+         Win32\Debug\camerawindow.obj
+         Win32\Debug\cyclequeue.obj
+         Win32\Debug\dataprocessor.obj
+         Win32\Debug\gesture.obj
+         Win32\Debug\gestureeditor.obj
+         Win32\Debug\gesturelib.obj
+         Win32\Debug\iirfilter.obj
+         Win32\Debug\main.obj
+         Win32\Debug\mainwindow.obj
+         Win32\Debug\mobilearm.obj
+         Win32\Debug\movement.obj
+         Win32\Debug\movementciterion.obj
+         Win32\Debug\qcustomplot.obj
+         Win32\Debug\quaternion.obj
+         Win32\Debug\ralfilter.obj
+         Win32\Debug\ralparser.obj
+         Win32\Debug\ralsensor.obj
+         Win32\Debug\recognizor.obj
+         emgserver.vcxproj -> E:\interaction_App\debug\emgserver.exe
+     1>已完成生成项目“E:\interaction_App\emgserver.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:18.07

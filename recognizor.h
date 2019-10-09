@@ -8,6 +8,18 @@
 #include "ralsensor/ralsensor.h"
 #include "windows/camerawindow.h"
 #include "robot/mobilearm.h"
+#include<iostream>
+using namespace std;
+#include <string>
+
+#define _ATL_APARTMENT_THREADED
+
+#include <atlbase.h>
+//You may derive a class from CComModule and use it if you want to override something,
+//but do not change the name of _Module
+extern CComModule _Module;
+#include <atlcom.h>
+#include <sapi.h>
 
 class Recognizor: public QObject
 {
@@ -20,8 +32,9 @@ private:
     DataProcessor dataprocessor;
 
     double zeros[JOINTNUM],thresholds[JOINTNUM],motionRanges[JOINTNUM];
-    QList<QList<float>> quatRaw;
-    QList<QList<float>> emgraw;
+    QList<QList<float> > quatRaw;
+    QList<QList<float> > accel;
+    QList<QList<float> > emgraw;
 
     double deltas[BUFFERLEN][JOINTNUM];
     MovementType states[BUFFERLEN][JOINTNUM];
@@ -32,16 +45,12 @@ private:
 
     // Timer
     QTimer timer;
-
     bool fileMode;
-
     bool IMUconnected,EMGconnected,robotConnected,grasptest;
-
     int ban[ELECTRODENUM];
     float membership[ELECTRODENUM][3];
-
-
-
+	double oldAngle[6]; //记录之前的关节角
+	double Angle[6]; //记录之前的关节角
 public:
     Recognizor();
     QString getCurrentGesture();
@@ -98,9 +107,13 @@ public:
     void enableGraspTest();
     void disableGraspTest();
 
+    //int voiceOutPut(std::string voice);
+    //LPCWSTR stringToLPCWSTR(std::string orig);
+
 
 signals:
     void newEMGData(float *emgdata,int datacount);
+	void newaccel(float *accel,int datacount);
     void newIMUData(float *angles,int datacount);
     void newGesture(QString gesture);
     void clearGesture();
