@@ -352,41 +352,11 @@ void MainWindow::on_initButton_clicked()
 
 }
 
-void MainWindow::on_pushButtonRLD_clicked()
-{
-    unsigned char rldcommand[6] = {0xff,0x03,0x03,0x00,0x00,0x00};
-    unsigned char rldp = 0x00,rldn=0x00;
-
-    rldn=0xfe;
-    rldp=0xfe;
-
-    if (!serialport.isOpen())
-        return;
-
-    rldcommand[3]=rldp;
-    rldcommand[4]=rldn;
-    rldcommand[5]=rldcommand[3]+rldcommand[4]+rldcommand[2];
-
-    serialport.write((char*)rldcommand,6);
-}
-
 void MainWindow::on_pushButton_2_clicked()
 {
     bool ok;
     unsigned char addr = ui->lineEditAddr->text().toInt(&ok,16);
     printf("%x\n",addr);
-}
-
-void MainWindow::on_noiseButton_clicked()
-{
-    ui->statusBar->clearMessage();
-    recognizor.ralsensor.setNoiseTest();
-}
-
-void MainWindow::on_normalMeaButton_clicked()
-{
-    ui->statusBar->clearMessage();
-    recognizor.ralsensor.setNormalMeasurement();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -396,36 +366,6 @@ void MainWindow::showGesture(QString gesture)
 {
     ui->statusBar->showMessage(gesture,1500);
     ui->gestureLabel->setText(gesture);
-}
-
-void MainWindow::clearGesture()
-{
-
-}
-
-void MainWindow::on_fb1Button_clicked()
-{
-    recognizor.ralsensor.triggerFeedback(0);
-}
-
-void MainWindow::on_fb2Button_clicked()
-{
-    recognizor.ralsensor.triggerFeedback(1);
-}
-
-void MainWindow::on_fb3Button_clicked()
-{
-    recognizor.ralsensor.triggerFeedback(2);
-}
-
-void MainWindow::on_fb4Button_clicked()
-{
-    recognizor.ralsensor.triggerFeedback(3);
-}
-
-void MainWindow::on_fb5Button_clicked()
-{
-    recognizor.ralsensor.triggerFeedback(4);
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -447,8 +387,6 @@ void MainWindow::on_onRobotButton_clicked()
         ui->onRobotButton->setText(QString("Connect Robot"));
         recognizor.disconnectRobot();
     }
-
-
 }
 
 void MainWindow::on_radioButton_toggled(bool checked)
