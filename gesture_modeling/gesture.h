@@ -51,7 +51,7 @@ public:
     QStringList getMoveCiteriaList();
 
     //likelihood
-    double getLikelihood(const float angles[JOINTNUM], const float axes[AXISNUM][3], const double mprobability[JOINTNUM][MOVEMENTNUM], const float emg[EMGTYPENUM]);
+    double getLikelihood(const float angles[JOINTNUM], const float axes[AXISNUM][3], const double mprobability[JOINTNUM][MOVEMENTNUM]);
 
 private:
     QString mName;

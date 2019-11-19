@@ -21,7 +21,7 @@ public:
     // gesture, probability
     QString getBestGestureName();
     int updateBestGesture(const float *angles, const float axes[AXISNUM][3],
-                          const double mprobability[JOINTNUM][4], const float emg[EMGTYPENUM]);
+                          const double mprobability[JOINTNUM][4]);
     QString getBestGestureCommand();
     int getBestureGestureIndex();
     int resetGestureLikelihoods();

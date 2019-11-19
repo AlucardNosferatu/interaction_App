@@ -232,7 +232,7 @@ QStringList Gesture::getMoveCiteriaList()
 }
 
 //likelihood function
-double Gesture::getLikelihood(const float angles[JOINTNUM],const float axes[AXISNUM][3],const double mprobability[JOINTNUM][MOVEMENTNUM],const float emg[EMGTYPENUM])
+double Gesture::getLikelihood(const float angles[JOINTNUM],const float axes[AXISNUM][3],const double mprobability[JOINTNUM][MOVEMENTNUM])
 {
     double p=1;
     for (int i=0;i<angleCiteria.size();i++)

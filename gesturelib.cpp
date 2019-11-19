@@ -64,7 +64,7 @@ bool GestureLib::loadLib(const QString &filename)
     return true;
 }
 
-int GestureLib::updateBestGesture(const float *angles, const float axes[6][3], const double mprobability[5][4],const float emg[EMGTYPENUM])
+int GestureLib::updateBestGesture(const float *angles, const float axes[6][3], const double mprobability[5][4])
 {
     double maxp=0;
     int newBestIndex=-1;
@@ -72,7 +72,7 @@ int GestureLib::updateBestGesture(const float *angles, const float axes[6][3], c
     // find the current best gesture for this data frame
     for (int i=0;i<gestures.size();i++)
     {
-        double p=gestures[i].getLikelihood(angles,axes,mprobability,emg);
+        double p=gestures[i].getLikelihood(angles,axes,mprobability);
         if (p>maxp && p>0.8)
         {
             maxp=p;
