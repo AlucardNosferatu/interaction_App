@@ -41,7 +41,6 @@ private slots:
 
     // gesture response slots
     void showGesture(QString gesture);
-    void clearGesture();
 
     void on_onIMUButton_clicked();
     void on_loadButton_clicked();

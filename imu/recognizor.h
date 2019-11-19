@@ -101,7 +101,6 @@ signals:
 	void newaccel(float *accel,int datacount);
     void newIMUData(float *angles,int datacount);
     void newGesture(QString gesture);
-    void clearGesture();
     void changeToGrasp();
 
 public slots:

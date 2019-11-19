@@ -31,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&recognizor,SIGNAL(newIMUData(float*,int)),this,SLOT(addDatatoIMUPlots(float*,int)));
 	connect(&recognizor,SIGNAL(newaccel(float*,int)),this,SLOT(addDatatoaccelPlots(float*,int)));
     connect(&recognizor,SIGNAL(newGesture(QString)),this,SLOT(showGesture(QString)));
-    connect(&recognizor,SIGNAL(clearGesture()),this,SLOT(clearGesture()));
 
     cwin=new CameraWindow(this);
     cwin->move(100,300);

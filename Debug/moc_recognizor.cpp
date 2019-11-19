@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Recognizor_t {
-    QByteArrayData data[15];
-    char stringdata0[134];
+    QByteArrayData data[14];
+    char stringdata0[121];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -41,15 +41,14 @@ QT_MOC_LITERAL(8, 63, 10), // "newIMUData"
 QT_MOC_LITERAL(9, 74, 6), // "angles"
 QT_MOC_LITERAL(10, 81, 10), // "newGesture"
 QT_MOC_LITERAL(11, 92, 7), // "gesture"
-QT_MOC_LITERAL(12, 100, 12), // "clearGesture"
-QT_MOC_LITERAL(13, 113, 13), // "changeToGrasp"
-QT_MOC_LITERAL(14, 127, 6) // "update"
+QT_MOC_LITERAL(12, 100, 13), // "changeToGrasp"
+QT_MOC_LITERAL(13, 114, 6) // "update"
 
     },
     "Recognizor\0newEMGData\0\0float*\0emgdata\0"
     "datacount\0newaccel\0accel\0newIMUData\0"
-    "angles\0newGesture\0gesture\0clearGesture\0"
-    "changeToGrasp\0update"
+    "angles\0newGesture\0gesture\0changeToGrasp\0"
+    "update"
 };
 #undef QT_MOC_LITERAL
 
@@ -59,30 +58,28 @@ static const uint qt_meta_data_Recognizor[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       7,   14, // methods
+       6,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       6,       // signalCount
+       5,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    2,   49,    2, 0x06 /* Public */,
-       6,    2,   54,    2, 0x06 /* Public */,
-       8,    2,   59,    2, 0x06 /* Public */,
-      10,    1,   64,    2, 0x06 /* Public */,
-      12,    0,   67,    2, 0x06 /* Public */,
-      13,    0,   68,    2, 0x06 /* Public */,
+       1,    2,   44,    2, 0x06 /* Public */,
+       6,    2,   49,    2, 0x06 /* Public */,
+       8,    2,   54,    2, 0x06 /* Public */,
+      10,    1,   59,    2, 0x06 /* Public */,
+      12,    0,   62,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      14,    0,   69,    2, 0x0a /* Public */,
+      13,    0,   63,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3, QMetaType::Int,    4,    5,
     QMetaType::Void, 0x80000000 | 3, QMetaType::Int,    7,    5,
     QMetaType::Void, 0x80000000 | 3, QMetaType::Int,    9,    5,
     QMetaType::Void, QMetaType::QString,   11,
-    QMetaType::Void,
     QMetaType::Void,
 
  // slots: parameters
@@ -101,9 +98,8 @@ void Recognizor::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 1: _t->newaccel((*reinterpret_cast< float*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 2: _t->newIMUData((*reinterpret_cast< float*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 3: _t->newGesture((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 4: _t->clearGesture(); break;
-        case 5: _t->changeToGrasp(); break;
-        case 6: { int _r = _t->update();
+        case 4: _t->changeToGrasp(); break;
+        case 5: { int _r = _t->update();
             if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
         default: ;
         }
@@ -136,14 +132,8 @@ void Recognizor::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         }
         {
             typedef void (Recognizor::*_t)();
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&Recognizor::clearGesture)) {
-                *result = 4;
-            }
-        }
-        {
-            typedef void (Recognizor::*_t)();
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&Recognizor::changeToGrasp)) {
-                *result = 5;
+                *result = 4;
             }
         }
     }
@@ -174,13 +164,13 @@ int Recognizor::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 7)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 7;
+        _id -= 6;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 7)
+        if (_id < 6)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 7;
+        _id -= 6;
     }
     return _id;
 }
@@ -214,14 +204,8 @@ void Recognizor::newGesture(QString _t1)
 }
 
 // SIGNAL 4
-void Recognizor::clearGesture()
-{
-    QMetaObject::activate(this, &staticMetaObject, 4, Q_NULLPTR);
-}
-
-// SIGNAL 5
 void Recognizor::changeToGrasp()
 {
-    QMetaObject::activate(this, &staticMetaObject, 5, Q_NULLPTR);
+    QMetaObject::activate(this, &staticMetaObject, 4, Q_NULLPTR);
 }
 QT_END_MOC_NAMESPACE

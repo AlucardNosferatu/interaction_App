@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[32];
-    char stringdata0[541];
+    QByteArrayData data[29];
+    char stringdata0[507];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -42,37 +42,33 @@ QT_MOC_LITERAL(9, 137, 6), // "angles"
 QT_MOC_LITERAL(10, 144, 11), // "n_datacount"
 QT_MOC_LITERAL(11, 156, 19), // "addDatatoaccelPlots"
 QT_MOC_LITERAL(12, 176, 5), // "accel"
-QT_MOC_LITERAL(13, 182, 16), // "responseReceived"
-QT_MOC_LITERAL(14, 199, 3), // "res"
-QT_MOC_LITERAL(15, 203, 11), // "showGesture"
-QT_MOC_LITERAL(16, 215, 7), // "gesture"
-QT_MOC_LITERAL(17, 223, 12), // "clearGesture"
-QT_MOC_LITERAL(18, 236, 22), // "on_onIMUButton_clicked"
-QT_MOC_LITERAL(19, 259, 21), // "on_loadButton_clicked"
-QT_MOC_LITERAL(20, 281, 24), // "on_Slider_sliderReleased"
-QT_MOC_LITERAL(21, 306, 21), // "on_playButton_clicked"
-QT_MOC_LITERAL(22, 328, 23), // "on_editorButton_clicked"
-QT_MOC_LITERAL(23, 352, 22), // "on_pauseButton_clicked"
-QT_MOC_LITERAL(24, 375, 21), // "on_pushButton_clicked"
-QT_MOC_LITERAL(25, 397, 24), // "on_onRobotButton_clicked"
-QT_MOC_LITERAL(26, 422, 22), // "on_radioButton_toggled"
-QT_MOC_LITERAL(27, 445, 7), // "checked"
-QT_MOC_LITERAL(28, 453, 24), // "on_radioButton_2_toggled"
-QT_MOC_LITERAL(29, 478, 23), // "on_play3XButton_clicked"
-QT_MOC_LITERAL(30, 502, 21), // "on_stepButton_clicked"
-QT_MOC_LITERAL(31, 524, 16) // "checkRadioButton"
+QT_MOC_LITERAL(13, 182, 11), // "showGesture"
+QT_MOC_LITERAL(14, 194, 7), // "gesture"
+QT_MOC_LITERAL(15, 202, 22), // "on_onIMUButton_clicked"
+QT_MOC_LITERAL(16, 225, 21), // "on_loadButton_clicked"
+QT_MOC_LITERAL(17, 247, 24), // "on_Slider_sliderReleased"
+QT_MOC_LITERAL(18, 272, 21), // "on_playButton_clicked"
+QT_MOC_LITERAL(19, 294, 23), // "on_editorButton_clicked"
+QT_MOC_LITERAL(20, 318, 22), // "on_pauseButton_clicked"
+QT_MOC_LITERAL(21, 341, 21), // "on_pushButton_clicked"
+QT_MOC_LITERAL(22, 363, 24), // "on_onRobotButton_clicked"
+QT_MOC_LITERAL(23, 388, 22), // "on_radioButton_toggled"
+QT_MOC_LITERAL(24, 411, 7), // "checked"
+QT_MOC_LITERAL(25, 419, 24), // "on_radioButton_2_toggled"
+QT_MOC_LITERAL(26, 444, 23), // "on_play3XButton_clicked"
+QT_MOC_LITERAL(27, 468, 21), // "on_stepButton_clicked"
+QT_MOC_LITERAL(28, 490, 16) // "checkRadioButton"
 
     },
     "MainWindow\0updateUI\0\0on_clearButton_clicked\0"
     "on_saveButton_clicked\0on_initButton_clicked\0"
     "on_pushButton_2_clicked\0addDatatoIMUPlots\0"
     "float*\0angles\0n_datacount\0addDatatoaccelPlots\0"
-    "accel\0responseReceived\0res\0showGesture\0"
-    "gesture\0clearGesture\0on_onIMUButton_clicked\0"
-    "on_loadButton_clicked\0on_Slider_sliderReleased\0"
-    "on_playButton_clicked\0on_editorButton_clicked\0"
-    "on_pauseButton_clicked\0on_pushButton_clicked\0"
-    "on_onRobotButton_clicked\0"
+    "accel\0showGesture\0gesture\0"
+    "on_onIMUButton_clicked\0on_loadButton_clicked\0"
+    "on_Slider_sliderReleased\0on_playButton_clicked\0"
+    "on_editorButton_clicked\0on_pauseButton_clicked\0"
+    "on_pushButton_clicked\0on_onRobotButton_clicked\0"
     "on_radioButton_toggled\0checked\0"
     "on_radioButton_2_toggled\0"
     "on_play3XButton_clicked\0on_stepButton_clicked\0"
@@ -86,7 +82,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      23,   14, // methods
+      21,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -94,29 +90,27 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  129,    2, 0x08 /* Private */,
-       3,    0,  130,    2, 0x08 /* Private */,
-       4,    0,  131,    2, 0x08 /* Private */,
-       5,    0,  132,    2, 0x08 /* Private */,
-       6,    0,  133,    2, 0x08 /* Private */,
-       7,    2,  134,    2, 0x08 /* Private */,
-      11,    2,  139,    2, 0x08 /* Private */,
-      13,    1,  144,    2, 0x08 /* Private */,
-      15,    1,  147,    2, 0x08 /* Private */,
-      17,    0,  150,    2, 0x08 /* Private */,
-      18,    0,  151,    2, 0x08 /* Private */,
-      19,    0,  152,    2, 0x08 /* Private */,
-      20,    0,  153,    2, 0x08 /* Private */,
-      21,    0,  154,    2, 0x08 /* Private */,
-      22,    0,  155,    2, 0x08 /* Private */,
-      23,    0,  156,    2, 0x08 /* Private */,
-      24,    0,  157,    2, 0x08 /* Private */,
-      25,    0,  158,    2, 0x08 /* Private */,
-      26,    1,  159,    2, 0x08 /* Private */,
-      28,    1,  162,    2, 0x08 /* Private */,
-      29,    0,  165,    2, 0x08 /* Private */,
-      30,    0,  166,    2, 0x08 /* Private */,
-      31,    0,  167,    2, 0x08 /* Private */,
+       1,    0,  119,    2, 0x08 /* Private */,
+       3,    0,  120,    2, 0x08 /* Private */,
+       4,    0,  121,    2, 0x08 /* Private */,
+       5,    0,  122,    2, 0x08 /* Private */,
+       6,    0,  123,    2, 0x08 /* Private */,
+       7,    2,  124,    2, 0x08 /* Private */,
+      11,    2,  129,    2, 0x08 /* Private */,
+      13,    1,  134,    2, 0x08 /* Private */,
+      15,    0,  137,    2, 0x08 /* Private */,
+      16,    0,  138,    2, 0x08 /* Private */,
+      17,    0,  139,    2, 0x08 /* Private */,
+      18,    0,  140,    2, 0x08 /* Private */,
+      19,    0,  141,    2, 0x08 /* Private */,
+      20,    0,  142,    2, 0x08 /* Private */,
+      21,    0,  143,    2, 0x08 /* Private */,
+      22,    0,  144,    2, 0x08 /* Private */,
+      23,    1,  145,    2, 0x08 /* Private */,
+      25,    1,  148,    2, 0x08 /* Private */,
+      26,    0,  151,    2, 0x08 /* Private */,
+      27,    0,  152,    2, 0x08 /* Private */,
+      28,    0,  153,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -126,8 +120,7 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 8, QMetaType::Int,    9,   10,
     QMetaType::Void, 0x80000000 | 8, QMetaType::Int,   12,   10,
-    QMetaType::Void, QMetaType::UChar,   14,
-    QMetaType::Void, QMetaType::QString,   16,
+    QMetaType::Void, QMetaType::QString,   14,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -136,9 +129,8 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void, QMetaType::Bool,   27,
-    QMetaType::Void, QMetaType::Bool,   27,
+    QMetaType::Void, QMetaType::Bool,   24,
+    QMetaType::Void, QMetaType::Bool,   24,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -159,22 +151,20 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 4: _t->on_pushButton_2_clicked(); break;
         case 5: _t->addDatatoIMUPlots((*reinterpret_cast< float*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 6: _t->addDatatoaccelPlots((*reinterpret_cast< float*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 7: _t->responseReceived((*reinterpret_cast< unsigned char(*)>(_a[1]))); break;
-        case 8: _t->showGesture((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 9: _t->clearGesture(); break;
-        case 10: _t->on_onIMUButton_clicked(); break;
-        case 11: _t->on_loadButton_clicked(); break;
-        case 12: _t->on_Slider_sliderReleased(); break;
-        case 13: _t->on_playButton_clicked(); break;
-        case 14: _t->on_editorButton_clicked(); break;
-        case 15: _t->on_pauseButton_clicked(); break;
-        case 16: _t->on_pushButton_clicked(); break;
-        case 17: _t->on_onRobotButton_clicked(); break;
-        case 18: _t->on_radioButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 19: _t->on_radioButton_2_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 20: _t->on_play3XButton_clicked(); break;
-        case 21: _t->on_stepButton_clicked(); break;
-        case 22: _t->checkRadioButton(); break;
+        case 7: _t->showGesture((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 8: _t->on_onIMUButton_clicked(); break;
+        case 9: _t->on_loadButton_clicked(); break;
+        case 10: _t->on_Slider_sliderReleased(); break;
+        case 11: _t->on_playButton_clicked(); break;
+        case 12: _t->on_editorButton_clicked(); break;
+        case 13: _t->on_pauseButton_clicked(); break;
+        case 14: _t->on_pushButton_clicked(); break;
+        case 15: _t->on_onRobotButton_clicked(); break;
+        case 16: _t->on_radioButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 17: _t->on_radioButton_2_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 18: _t->on_play3XButton_clicked(); break;
+        case 19: _t->on_stepButton_clicked(); break;
+        case 20: _t->checkRadioButton(); break;
         default: ;
         }
     }
@@ -205,13 +195,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 23)
+        if (_id < 21)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 23;
+        _id -= 21;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 23)
+        if (_id < 21)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 23;
+        _id -= 21;
     }
     return _id;
 }
