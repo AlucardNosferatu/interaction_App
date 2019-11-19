@@ -261,9 +261,6 @@ double Gesture::getLikelihood(const float angles[JOINTNUM],const float axes[AXIS
     else
         p=pow(p,1.0/(angleCiteria.size()+axisCiteria.size()+movementCiteria.size()));
 
-    if (emgCiterion!=-1 && emg[emgCiterion]<0.65)
-        p=0;
-
     return p;
 }
 

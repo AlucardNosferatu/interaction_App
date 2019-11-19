@@ -89,10 +89,6 @@ public:
     // recognition function
     int gestureRecognition(const float angles[JOINTNUM], const float axes[AXISNUM][3], const float emg[ELECTRODENUM]);
 
-    // EMG gesture recognition functions
-    float getLikelihood(float data,float p0,float p1,float p2,float p3);
-    int EMGrecognition(float data[ELECTRODENUM],float result[3]);
-
     // robot functions
     int connectRobot();
     int disconnectRobot();

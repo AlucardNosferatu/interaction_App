@@ -14,55 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QComboBox" name="portBox">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>10</y>
-      <width>69</width>
-      <height>22</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="freshButton">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>10</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Fresh</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="onEMGButton">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>50</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Connect EMG</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ResetButton">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>50</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Reset</string>
-    </property>
-   </widget>
    <widget class="QCustomPlot" name="c1Plot" native="true">
     <property name="geometry">
      <rect>
@@ -123,19 +74,6 @@
     </property>
     <property name="text">
      <string>Clear</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="squaretestButton">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>50</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>SquareTest</string>
     </property>
    </widget>
    <widget class="QPushButton" name="initButton">
@@ -360,32 +298,6 @@
      <string>Addr</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="noiseButton">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>50</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>NoiseTest</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="normalMeaButton">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>50</y>
-      <width>91</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>NormalMeasure</string>
-    </property>
-   </widget>
    <widget class="QCustomPlot" name="c2Plot" native="true">
     <property name="geometry">
      <rect>
@@ -594,71 +506,6 @@
       <family>Courier New</family>
       <pointsize>10</pointsize>
      </font>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="fb1Button">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>90</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>FeedBack1</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="fb2Button">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>90</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>FeedBack2</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="fb3Button">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>90</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>FeedBack3</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="fb4Button">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>90</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>FeedBack4</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="fb5Button">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>90</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>FeedBack5</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox">

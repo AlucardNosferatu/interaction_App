@@ -34,7 +34,6 @@ private:
     double zeros[JOINTNUM],thresholds[JOINTNUM],motionRanges[JOINTNUM];
     QList<QList<float> > quatRaw;
     QList<QList<float> > accel;
-    QList<QList<float> > emgraw;
 
     double deltas[BUFFERLEN][JOINTNUM];
     MovementType states[BUFFERLEN][JOINTNUM];
@@ -46,9 +45,7 @@ private:
     // Timer
     QTimer timer;
     bool fileMode;
-    bool IMUconnected,EMGconnected,robotConnected,grasptest;
-    int ban[ELECTRODENUM];
-    float membership[ELECTRODENUM][3];
+    bool IMUconnected,robotConnected,grasptest;
 	double oldAngle[6]; //记录之前的关节角
 	double Angle[6]; //记录之前的关节角
 public:
@@ -75,10 +72,6 @@ public:
     int disconnectIMU();
     bool isIMUConnected();
 
-    int connectEMGSensor(QString portname);
-    int disconnectEMGSensor();
-    bool isEMGConnected();
-
     // member variable functions
     DataProcessor &getDataprocessor();
     GestureLib &getGesturelib();
@@ -95,11 +88,7 @@ public:
     int timerstop();
 
     // recognition function
-    int gestureRecognition(const float angles[JOINTNUM], const float axes[AXISNUM][3], const float emg[ELECTRODENUM]);
-
-    // EMG gesture recognition functions
-    float getLikelihood(float data,float p0,float p1,float p2,float p3);
-    int EMGrecognition(float data[ELECTRODENUM],float result[3]);
+    int gestureRecognition(const float angles[JOINTNUM], const float axes[AXISNUM][3]);
 
     // robot functions
     int connectRobot();
@@ -112,11 +101,9 @@ public:
 
 
 signals:
-    void newEMGData(float *emgdata,int datacount);
 	void newaccel(float *accel,int datacount);
     void newIMUData(float *angles,int datacount);
     void newGesture(QString gesture);
-    void clearGesture();
     void changeToGrasp();
 
 public slots:

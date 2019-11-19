@@ -28,12 +28,10 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     connect(&updatetimer,SIGNAL(timeout()),this,SLOT(updateUI()));
-    connect(&recognizor,SIGNAL(newEMGData(float*,int)),this,SLOT(addDatatoEMGPlots(float*,int)));
     connect(&recognizor,SIGNAL(newIMUData(float*,int)),this,SLOT(addDatatoIMUPlots(float*,int)));
 	connect(&recognizor,SIGNAL(newaccel(float*,int)),this,SLOT(addDatatoaccelPlots(float*,int)));
     connect(&recognizor,SIGNAL(newGesture(QString)),this,SLOT(showGesture(QString)));
     connect(&recognizor,SIGNAL(clearGesture()),this,SLOT(clearGesture()));
-    connect(&(recognizor.ralsensor),SIGNAL(newCommandResponse(unsigned char)),this,SLOT(responseReceived(unsigned char)));
 
     cwin=new CameraWindow(this);
     cwin->move(100,300);
@@ -89,14 +87,12 @@ void MainWindow::updateUI()
 {
     //ui->emgNumber->display(emgcount);
     //ui->countNumber->display(imucount);
-
     ui->elbowPlot->rescaleAxes();
     ui->shoulderPlot->rescaleAxes();
-	 ui->accelPlot->rescaleAxes();
+    ui->accelPlot->rescaleAxes();
     ui->elbowPlot->replot();
     ui->shoulderPlot->replot();
-	 ui->accelPlot->replot();
-
+    ui->accelPlot->replot();
     for (int i=0;i<8;i++)
     {
         plots[i]->xAxis->rescale();
@@ -110,33 +106,15 @@ void MainWindow::updateUI()
 /////////////////////////////////////////////////////////////////////////
 // Add data to plot
 
-void MainWindow::addDatatoEMGPlots(float *emgdata, int n_datacount)
-{
-    // add data to plots
-    // maximal NO. of data points is 100
-    if (isplaying)
-    {
-        if (n_datacount>ui->Slider->value())
-            ui->Slider->setValue(n_datacount);
-    }
-    for (int i=0;i<ELECTRODENUM;i++)
-    {
-        plots[i]->graph(0)->addData(n_datacount,emgdata[i]);
-        if (n_datacount>=100)
-            plots[i]->graph(0)->removeData(n_datacount-100);
-    }
-}
+
 void MainWindow::addDatatoaccelPlots(float *accel, int n_datacount)
 {
     // add data to plots
     // maximal NO. of data points is 100
-    
-        
- 
-	 ui->accelPlot->graph(0)->addData(n_datacount,accel[0]);
+    ui->accelPlot->graph(0)->addData(n_datacount,accel[0]);
     ui->accelPlot->graph(1)->addData(n_datacount,accel[1]);
-	 ui->accelPlot->graph(2)->addData(n_datacount,accel[2]);
-	 if (n_datacount>ui->Slider->value())
+    ui->accelPlot->graph(2)->addData(n_datacount,accel[2]);
+    if (n_datacount>ui->Slider->value())
             ui->Slider->setValue(n_datacount);
 	  if(n_datacount>=100)
     {
@@ -154,9 +132,6 @@ void MainWindow::addDatatoIMUPlots(float *angles, int n_datacount)
     ui->shoulderPlot->graph(0)->addData(n_datacount,angles[POL]);
     ui->shoulderPlot->graph(1)->addData(n_datacount,angles[AZI]);
     ui->shoulderPlot->graph(2)->addData(n_datacount,angles[OME]);
-	// ui->accelPlot->graph(0)->addData(n_datacount,accel[0]);
-   // ui->accelPlot->graph(1)->addData(n_datacount,accel[1]);
-	// ui->accelPlot->graph(2)->addData(n_datacount,accel[2]);
 
     if (n_datacount>ui->Slider->value())
         ui->Slider->setValue(n_datacount);
@@ -166,15 +141,8 @@ void MainWindow::addDatatoIMUPlots(float *angles, int n_datacount)
         ui->elbowPlot->graph(1)->removeData(n_datacount-100);
         ui->shoulderPlot->graph(0)->removeData(n_datacount-100);
         ui->shoulderPlot->graph(1)->removeData(n_datacount-100);
-        ui->shoulderPlot->graph(2)->removeData(n_datacount-100);
-		 
+        ui->shoulderPlot->graph(2)->removeData(n_datacount-100);	 
     }
-
-}
-
-void MainWindow::responseReceived(unsigned char res)
-{
-    ui->statusBar->showMessage(QString("Response received! res:%1").arg(res));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -236,70 +204,6 @@ void MainWindow::on_pauseButton_clicked()
     //updatetimer.stop();
 }
 
-void MainWindow::on_squaretestButton_clicked()
-{
-    ui->statusBar->clearMessage();
-    recognizor.ralsensor.setSquareWaveTest();
-}
-
-void MainWindow::on_freshButton_clicked()
-{
-    serialport.close();
-    QList<QSerialPortInfo> ports=portinfo.availablePorts();
-    ui->portBox->clear();
-    for (int i=0;i<ports.length();i++)
-    {
-        ui->portBox->addItem(ports.at(i).portName());
-    }
-}
-
-void MainWindow::on_onEMGButton_clicked()
-{
-    // Connect to RALSensor (Serial Port)
-    if (!recognizor.isEMGConnected())
-    {
-        if (ui->portBox->currentText().isEmpty())
-            return;
-        if (!recognizor.connectEMGSensor(ui->portBox->currentText()))
-        {
-            ui->statusBar->showMessage(QString("Series port opened"));
-            ui->onEMGButton->setText(QString("Dis EMG"));
-        }
-        else
-            ui->statusBar->showMessage(QString("Failed to open series port"));
-    }else
-    {
-        recognizor.disconnectEMGSensor();
-        ui->onEMGButton->setText(QString("Connect EMG"));
-    }
-}
-
-
-void MainWindow::on_beginButton_clicked()
-{
-    isplaying=false;
-    recognizor.initRealtimeRecognition();
-    recognizor.ralsensor.startMeasurement();
-    recognizor.timerbegin(40);
-
-    if (!updatetimer.isActive())
-        updatetimer.start(100);
-}
-
-void MainWindow::on_stopButton_clicked()
-{
-    recognizor.ralsensor.stopMeasurement();
-    recognizor.timerstop();
-    if (updatetimer.isActive())
-        updatetimer.stop();
-}
-
-void MainWindow::on_ResetButton_clicked()
-{
-    ui->statusBar->clearMessage();
-    recognizor.ralsensor.resetSensor();
-}
-
 void MainWindow::on_saveButton_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
@@ -324,8 +228,6 @@ void MainWindow::on_clearButton_clicked()
 {
     recognizor.reset();
     cwin->clearTemp();
-    recognizor.ralsensor.clearRawDataBuffer();
-    emgcount=0;
     for (int i=0;i<8;i++)
     {
         plots[i]->graph(0)->clearData();

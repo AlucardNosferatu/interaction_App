@@ -30,27 +30,14 @@ private slots:
     void updateUI();
 
     // serial port list slots
-    void on_freshButton_clicked();
-    void on_onEMGButton_clicked();
-
-    void on_beginButton_clicked();
-    void on_stopButton_clicked();
-
-    void on_ResetButton_clicked();
     void on_clearButton_clicked();
     void on_saveButton_clicked();
     void on_initButton_clicked();
-    void on_pushButtonRLD_clicked();
     void on_pushButton_2_clicked();
-    void on_noiseButton_clicked();
-    void on_normalMeaButton_clicked();
 
     // plot slots
-    void addDatatoEMGPlots(float *emgdata,int n_datacount);
     void addDatatoIMUPlots(float *angles,int n_datacount);
 	void addDatatoaccelPlots(float *accel, int n_datacount);
-    // command response slots
-    void responseReceived(unsigned char res);
 
     // gesture response slots
     void showGesture(QString gesture);
@@ -66,18 +53,6 @@ private slots:
     void on_editorButton_clicked();
 
     void on_pauseButton_clicked();
-
-    void on_squaretestButton_clicked();
-
-    void on_fb1Button_clicked();
-
-    void on_fb2Button_clicked();
-
-    void on_fb3Button_clicked();
-
-    void on_fb4Button_clicked();
-
-    void on_fb5Button_clicked();
 
     void on_pushButton_clicked();
 

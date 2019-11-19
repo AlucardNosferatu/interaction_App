@@ -155,83 +155,58 @@ int Recognizor::gestureRecognition(const float angles[JOINTNUM], const float axe
                     i = 1;
                     // grasp
                     if (gesturelib.getBestGestureCommand()=="SPEEDUP")
-                        //robot.motionA(0);
                     {
                         Angle[3] = Angle[3] + 0.2;
                         robot.setServo(3,Angle[3] );
                     }
                     if (gesturelib.getBestGestureCommand()=="SLOWDOWN")
-                        //robot.motionA(1);
                     {
                     Angle[3] = Angle[3] - 0.2;
                         robot.setServo(3,Angle[3] );
                     }
                     if (gesturelib.getBestGestureCommand()=="TURNLEFT")
-                        //robot.motionA(2);
                     {
                         Angle[0] = Angle[0] + 0.2;
                         robot.setServo(0,Angle[0] );
                     }
                     if (gesturelib.getBestGestureCommand()=="TURNRIGHT")
-                        //robot.motionA(3);
                     {
                         Angle[0] = Angle[0] - 0.2;
                         robot.setServo(0,Angle[0] );
                     }
                     if (gesturelib.getBestGestureCommand()=="GO")
-                        //robot.motionA(3);
                     {
-                        //Angle[1] = Angle[1] + 0.1;
-                        //robot.setServo(1,Angle[1] );
                         Angle[2] = Angle[2] + 0.1;
                         robot.setServo(2,Angle[2] );
                     }
                     if (gesturelib.getBestGestureCommand()=="BACK")
-                        //robot.motionA(3);
                     {
-                        //Angle[1] = Angle[1] - 0.05;
-                        //robot.setServo(1,Angle[1] );
                         Angle[2] = Angle[2] - 0.1;
                         robot.setServo(2,Angle[2] );
                     }
                     if (gesturelib.getBestGestureCommand()=="TURNHAND")
-                        //robot.motionA(3);
                     {
                         Angle[1] = Angle[1] + 0.2;
                         robot.setServo(1,Angle[1] );
-//                        if(Angle[1]>=1)
-//						{
-//							Angle[1] = -1;
-//						}
                     }
                     if (gesturelib.getBestGestureCommand()=="SHRINK")
-                        //robot.motionA(3);
                     {
                         Angle[5] = Angle[5] + 0.1;
                         robot.setServo(5, Angle[5]);
                     }
                     if (gesturelib.getBestGestureCommand()=="OPEN")
-                        //robot.motionA(3);
                     {
                         Angle[5] = Angle[5] - 0.1;
                         robot.setServo(5, Angle[5]);
                     }
-
-                    //if(gesturelib.getBestGestureCommand()=="KEEPCALM")
-                    //if((newp[0][0]>0.5&&newp[1][0]>0.5)&&((newp[2][0]>0.5)&&(newp[3][0]>0.5))&&(newp[4][0]>0.5))
-                            //robot.motion_map( angles);
                     if (gesturelib.getBestGestureCommand()=="GETREADY")//change mode
                     {
                         emit changeToGrasp();
-                        //robot.bend_initial();
                         grasptest=false;
                         //==TODO
                     }
 
                 }
-                //robot.closeSerial();
-                //ralsensor.openSerialPort();
-                //ralsensor.triggerFeedback(1);
             }
 
         }
@@ -258,8 +233,6 @@ int Recognizor::initReplay(QString fileName)
     fileMode=true;
     lasthead=0;
     cwin->switchToReplay();
-    for (int c=0;c<ELECTRODENUM;c++)
-        ban[c]=0;
     return dataprocessor.getFileLineNum();
 }
 
@@ -373,23 +346,6 @@ int Recognizor::disconnectIMU()
 bool Recognizor::isIMUConnected()
 {
     return IMUconnected;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-float Recognizor::getLikelihood(float data,float p0,float p1,float p2,float p3)
-{
-//    data=data*10000;
-    if (data<p0)
-        return 0;
-    if (data>=p0 && data<p1)
-        return (data-p0)/(p1-p0);
-    if (data>=p1 && data<p2)
-        return 1;
-    if (data>=p2 && data<p3)
-        return 1-(data-p2)/(p3-p2);
-    if (data>=p3)
-        return 0;
 }
 
 int Recognizor::connectRobot()
