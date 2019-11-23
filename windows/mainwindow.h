@@ -32,7 +32,6 @@ private slots:
     // serial port list slots
     void on_clearButton_clicked();
     void on_saveButton_clicked();
-    void on_initButton_clicked();
     void on_pushButton_2_clicked();
 
     // plot slots
@@ -65,6 +64,10 @@ private slots:
 
     void on_stepButton_clicked();
     void checkRadioButton();
+
+    void on_beginButton_clicked();
+
+    void on_stopButton_clicked();
 
 private:
     Ui::MainWindow *ui;

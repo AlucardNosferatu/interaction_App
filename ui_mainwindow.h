@@ -40,7 +40,6 @@ public:
     QPushButton *stopButton;
     QPushButton *saveButton;
     QPushButton *clearButton;
-    QPushButton *initButton;
     QTextEdit *GestureEdit;
     QTextEdit *Mav0;
     QTextEdit *Threshold;
@@ -109,9 +108,6 @@ public:
         clearButton = new QPushButton(centralWidget);
         clearButton->setObjectName(QStringLiteral("clearButton"));
         clearButton->setGeometry(QRect(510, 90, 75, 23));
-        initButton = new QPushButton(centralWidget);
-        initButton->setObjectName(QStringLiteral("initButton"));
-        initButton->setGeometry(QRect(170, 780, 75, 23));
         GestureEdit = new QTextEdit(centralWidget);
         GestureEdit->setObjectName(QStringLiteral("GestureEdit"));
         GestureEdit->setGeometry(QRect(30, 770, 111, 31));
@@ -271,7 +267,6 @@ public:
         stopButton->setText(QApplication::translate("MainWindow", "Stop", 0));
         saveButton->setText(QApplication::translate("MainWindow", "Save", 0));
         clearButton->setText(QApplication::translate("MainWindow", "Clear", 0));
-        initButton->setText(QApplication::translate("MainWindow", "Initialize", 0));
         lineEdit_2->setText(QApplication::translate("MainWindow", "mav0", 0));
         lineEdit_3->setText(QApplication::translate("MainWindow", "threshold", 0));
         checkBox1P->setText(QApplication::translate("MainWindow", "1P", 0));

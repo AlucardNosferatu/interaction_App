@@ -76,19 +76,6 @@
      <string>Clear</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="initButton">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>780</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Initialize</string>
-    </property>
-   </widget>
    <widget class="QTextEdit" name="GestureEdit">
     <property name="geometry">
      <rect>

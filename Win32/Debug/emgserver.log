@@ -1,5 +1,5 @@
-﻿生成启动时间为 2019/9/5 14:14:05。
-     1>项目“E:\interaction_App\emgserver.vcxproj”在节点 2 上(Build 个目标)。
+﻿生成启动时间为 2019/11/21 15:48:28。
+     1>项目“C:\Users\16413\Desktop\interaction_App\emgserver.vcxproj”在节点 2 上(Rebuild 个目标)。
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.CppBuild.targets(345,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
      1>CustomBuild:
          Moc'ing calibrationwindow.h...
@@ -12,8 +12,12 @@
          Moc'ing ralparser.h...
          Moc'ing ralsensor.h...
          Moc'ing recognizor.h...
+         Uic'ing windows\calibrationwindow.ui...
+         Uic'ing windows\camerawindow.ui...
+         Uic'ing windows\gestureeditor.ui...
+         Uic'ing windows\mainwindow.ui...
        ClCompile:
-         D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I. /Iyei /ID:\woksoft\QT\5.5\msvc2012\include /ID:\woksoft\QT\5.5\msvc2012\include\QtMultimediaWidgets /ID:\woksoft\QT\5.5\msvc2012\include\QtMultimedia /ID:\woksoft\QT\5.5\msvc2012\include\QtPrintSupport /ID:\woksoft\QT\5.5\msvc2012\include\QtWidgets /ID:\woksoft\QT\5.5\msvc2012\include\QtGui /ID:\woksoft\QT\5.5\msvc2012\include\QtANGLE /ID:\woksoft\QT\5.5\msvc2012\include\QtSerialPort /ID:\woksoft\QT\5.5\msvc2012\include\QtNetwork /ID:\woksoft\QT\5.5\msvc2012\include\QtCore /Idebug /I. /I"D:\woksoft\QT\5.5\msvc2012\mkspecs\win32-msvc2012" /I.\GeneratedFiles /Zi /nologo /W3 /WX- /Od /Oy- /D _WINDOWS /D UNICODE /D WIN32 /D QT_MULTIMEDIAWIDGETS_LIB /D QT_MULTIMEDIA_LIB /D QT_PRINTSUPPORT_LIB /D QT_WIDGETS_LIB /D QT_GUI_LIB /D QT_SERIALPORT_LIB /D QT_NETWORK_LIB /D QT_CORE_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Win32\Debug\\" /Fd"Win32\Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt -w34100 -w34189 -w44996 Debug\moc_calibrationwindow.cpp Debug\moc_camerawindow.cpp Debug\moc_dataprocessor.cpp Debug\moc_gestureeditor.cpp Debug\moc_mainwindow.cpp Debug\moc_mobilearm.cpp Debug\moc_qcustomplot.cpp Debug\moc_ralparser.cpp Debug\moc_ralsensor.cpp Debug\moc_recognizor.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I. /Iyei /IC:\Qt\Qt5.5.1\5.5\msvc2012\include /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtMultimediaWidgets /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtMultimedia /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtPrintSupport /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtANGLE /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore /Idebug /I. /I"C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\win32-msvc2012" /I.\GeneratedFiles /Zi /nologo /W3 /WX- /Od /Oy- /D _WINDOWS /D UNICODE /D WIN32 /D QT_MULTIMEDIAWIDGETS_LIB /D QT_MULTIMEDIA_LIB /D QT_PRINTSUPPORT_LIB /D QT_WIDGETS_LIB /D QT_GUI_LIB /D QT_SERIALPORT_LIB /D QT_NETWORK_LIB /D QT_CORE_LIB /D QT_DLL /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Win32\Debug\\" /Fd"Win32\Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt -w34100 -w34189 -w44996 Debug\moc_calibrationwindow.cpp Debug\moc_camerawindow.cpp Debug\moc_dataprocessor.cpp Debug\moc_gestureeditor.cpp Debug\moc_mainwindow.cpp Debug\moc_mobilearm.cpp Debug\moc_qcustomplot.cpp Debug\moc_ralparser.cpp Debug\moc_ralsensor.cpp Debug\moc_recognizor.cpp gesture_modeling\angleciterion.cpp gesture_modeling\axisciterion.cpp windows\calibrationwindow.cpp windows\camerawindow.cpp imu\cyclequeue.cpp dataprocessor.cpp gesture_modeling\gesture.cpp windows\gestureeditor.cpp gesturelib.cpp ralsensor\iirfilter.cpp main.cpp windows\mainwindow.cpp robot\mobilearm.cpp imu\movement.cpp gesture_modeling\movementciterion.cpp plot\qcustomplot.cpp imu\quaternion.cpp ralsensor\ralfilter.cpp ralsensor\ralparser.cpp ralsensor\ralsensor.cpp recognizor.cpp
          moc_calibrationwindow.cpp
          moc_camerawindow.cpp
          moc_dataprocessor.cpp
@@ -24,9 +28,61 @@
          moc_ralparser.cpp
          moc_ralsensor.cpp
          moc_recognizor.cpp
+         angleciterion.cpp
+         axisciterion.cpp
+         calibrationwindow.cpp
+         camerawindow.cpp
+         cyclequeue.cpp
+     1>imu\cyclequeue.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+         dataprocessor.cpp
+     1>dataprocessor.cpp(44): warning C4101: “timestamp”: 未引用的局部变量
+     1>dataprocessor.cpp(246): warning C4100: “quatRaw”: 未引用的形参
+         gesture.cpp
+         gestureeditor.cpp
+         gesturelib.cpp
+     1>gesturelib.cpp(226): warning C4172: 返回局部变量或临时变量的地址
+         iirfilter.cpp
+         正在生成代码...
+         正在编译...
+         main.cpp
+         mainwindow.cpp
+     1>windows\mainwindow.cpp(152): warning C4102: “std”: 未引用的标签
+         mobilearm.cpp
+         movement.cpp
+         movementciterion.cpp
+         qcustomplot.cpp
+         quaternion.cpp
+         ralfilter.cpp
+     1>ralsensor\ralfilter.cpp(24): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>ralsensor\ralfilter.cpp(25): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>ralsensor\ralfilter.cpp(34): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(35): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(36): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(37): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(38): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(39): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(40): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(41): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(42): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(43): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(44): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(45): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(46): warning C4305: “初始化”: 从“double”到“float”截断
+         ralparser.cpp
+         ralsensor.cpp
+     1>ralsensor\ralsensor.cpp(77): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralsensor.cpp(78): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralsensor.cpp(79): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralsensor.cpp(80): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralsensor.cpp(81): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralsensor.cpp(124): warning C4101: “ok”: 未引用的局部变量
+     1>ralsensor\ralsensor.cpp(143): warning C4305: “=”: 从“double”到“float”截断
+     1>ralsensor\ralsensor.cpp(195): warning C4189: “gesture”: 局部变量已初始化但不引用
+         recognizor.cpp
+     1>recognizor.cpp(92): warning C4189: “retval”: 局部变量已初始化但不引用
          正在生成代码...
        Link:
-         D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"debug\\emgserver.exe" /NOLOGO /LIBPATH:D:\woksoft\QT\5.5\msvc2012\lib /LIBPATH:D:/woksoft/qt/5.5/msvc2012/lib /LIBPATH:D:\woksoft\QT\5.5\msvc2012\lib /LIBPATH:E:\interaction_App\yei\ D:\woksoft\QT\5.5\msvc2012\lib\qtmaind.lib shell32.lib D:/woksoft/qt/5.5/msvc2012/lib\Qt5Cored.lib E:\interaction_App\yei\\ThreeSpace_API.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5MultimediaWidgetsd.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5Multimediad.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5PrintSupportd.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5Widgetsd.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5Guid.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5SerialPortd.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5Networkd.lib D:\woksoft\QT\5.5\msvc2012\lib\Qt5Cored.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"debug\emgserver.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /MACHINE:X86 /SAFESEH "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" Win32\Debug\moc_calibrationwindow.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"debug\\emgserver.exe" /NOLOGO /LIBPATH:C:\Qt\Qt5.5.1\5.5\msvc2012\lib /LIBPATH:C:\Qt\Qt5.5.1\5.5\msvc2012\lib /LIBPATH:C:\Users\16413\Desktop\interaction_App\yei C:\Qt\Qt5.5.1\5.5\msvc2012\lib\qtmaind.lib shell32.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5Cored.lib C:\Users\16413\Desktop\interaction_App\yei\ThreeSpace_API.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5MultimediaWidgetsd.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5Multimediad.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5PrintSupportd.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5Widgetsd.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5Guid.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5SerialPortd.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5Networkd.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5Cored.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"debug\emgserver.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /MACHINE:X86 /SAFESEH "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" Win32\Debug\moc_calibrationwindow.obj
          Win32\Debug\moc_camerawindow.obj
          Win32\Debug\moc_dataprocessor.obj
          Win32\Debug\moc_gestureeditor.obj
@@ -57,9 +113,9 @@
          Win32\Debug\ralparser.obj
          Win32\Debug\ralsensor.obj
          Win32\Debug\recognizor.obj
-         emgserver.vcxproj -> E:\interaction_App\debug\emgserver.exe
-     1>已完成生成项目“E:\interaction_App\emgserver.vcxproj”(Build 个目标)的操作。
+         emgserver.vcxproj -> C:\Users\16413\Desktop\interaction_App\debug\emgserver.exe
+     1>已完成生成项目“C:\Users\16413\Desktop\interaction_App\emgserver.vcxproj”(Rebuild 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:18.07
+已用时间 00:00:34.35

@@ -1,0 +1,121 @@
+﻿生成启动时间为 2019/11/21 15:43:50。
+     1>项目“C:\Users\16413\Desktop\interaction_App\emgserver.vcxproj”在节点 2 上(Build 个目标)。
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.CppBuild.targets(345,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
+     1>CustomBuild:
+         Moc'ing calibrationwindow.h...
+         Moc'ing camerawindow.h...
+         Moc'ing dataprocessor.h...
+         Moc'ing gestureeditor.h...
+         Moc'ing mainwindow.h...
+         Moc'ing mobilearm.h...
+         Moc'ing qcustomplot.h...
+         Moc'ing ralparser.h...
+         Moc'ing ralsensor.h...
+         Moc'ing recognizor.h...
+         Uic'ing windows\calibrationwindow.ui...
+         Uic'ing windows\camerawindow.ui...
+         Uic'ing windows\gestureeditor.ui...
+         Uic'ing windows\mainwindow.ui...
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I. /Iyei /IC:\Qt\Qt5.5.1\5.5\msvc2012\include /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtMultimediaWidgets /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtMultimedia /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtPrintSupport /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtANGLE /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork /IC:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore /Irelease /I. /I"C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\win32-msvc2012" /I.\GeneratedFiles /nologo /W3 /WX- /O2 /Oy- /D _WINDOWS /D UNICODE /D WIN32 /D QT_NO_DEBUG /D QT_MULTIMEDIAWIDGETS_LIB /D QT_MULTIMEDIA_LIB /D QT_PRINTSUPPORT_LIB /D QT_WIDGETS_LIB /D QT_GUI_LIB /D QT_SERIALPORT_LIB /D QT_NETWORK_LIB /D QT_CORE_LIB /D NDEBUG /D QT_DLL /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Win32\Release\\" /Fd"Win32\Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt -w34100 -w34189 -w44996 gesture_modeling\angleciterion.cpp gesture_modeling\axisciterion.cpp Release\moc_calibrationwindow.cpp Release\moc_camerawindow.cpp Release\moc_dataprocessor.cpp Release\moc_gestureeditor.cpp Release\moc_mainwindow.cpp Release\moc_mobilearm.cpp Release\moc_qcustomplot.cpp Release\moc_ralparser.cpp Release\moc_ralsensor.cpp Release\moc_recognizor.cpp windows\calibrationwindow.cpp windows\camerawindow.cpp imu\cyclequeue.cpp dataprocessor.cpp gesture_modeling\gesture.cpp windows\gestureeditor.cpp gesturelib.cpp ralsensor\iirfilter.cpp main.cpp windows\mainwindow.cpp robot\mobilearm.cpp imu\movement.cpp gesture_modeling\movementciterion.cpp plot\qcustomplot.cpp imu\quaternion.cpp ralsensor\ralfilter.cpp ralsensor\ralparser.cpp ralsensor\ralsensor.cpp recognizor.cpp
+         angleciterion.cpp
+         axisciterion.cpp
+         moc_calibrationwindow.cpp
+         moc_camerawindow.cpp
+         moc_dataprocessor.cpp
+         moc_gestureeditor.cpp
+         moc_mainwindow.cpp
+         moc_mobilearm.cpp
+         moc_qcustomplot.cpp
+         moc_ralparser.cpp
+         moc_ralsensor.cpp
+         moc_recognizor.cpp
+         calibrationwindow.cpp
+         camerawindow.cpp
+         cyclequeue.cpp
+     1>imu\cyclequeue.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+         dataprocessor.cpp
+     1>dataprocessor.cpp(44): warning C4101: “timestamp”: 未引用的局部变量
+     1>dataprocessor.cpp(246): warning C4100: “quatRaw”: 未引用的形参
+         gesture.cpp
+         gestureeditor.cpp
+         gesturelib.cpp
+     1>gesturelib.cpp(226): warning C4172: 返回局部变量或临时变量的地址
+         iirfilter.cpp
+         正在生成代码...
+         正在编译...
+         main.cpp
+         mainwindow.cpp
+     1>windows\mainwindow.cpp(152): warning C4102: “std”: 未引用的标签
+         mobilearm.cpp
+         movement.cpp
+         movementciterion.cpp
+         qcustomplot.cpp
+         quaternion.cpp
+         ralfilter.cpp
+     1>ralsensor\ralfilter.cpp(24): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>ralsensor\ralfilter.cpp(25): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>ralsensor\ralfilter.cpp(34): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(35): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(36): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(37): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(38): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(39): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(40): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(41): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(42): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(43): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(44): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(45): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralfilter.cpp(46): warning C4305: “初始化”: 从“double”到“float”截断
+         ralparser.cpp
+         ralsensor.cpp
+     1>ralsensor\ralsensor.cpp(77): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralsensor.cpp(78): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralsensor.cpp(79): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralsensor.cpp(80): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralsensor.cpp(81): warning C4305: “初始化”: 从“double”到“float”截断
+     1>ralsensor\ralsensor.cpp(124): warning C4101: “ok”: 未引用的局部变量
+     1>ralsensor\ralsensor.cpp(143): warning C4305: “=”: 从“double”到“float”截断
+     1>ralsensor\ralsensor.cpp(195): warning C4189: “gesture”: 局部变量已初始化但不引用
+         recognizor.cpp
+     1>recognizor.cpp(92): warning C4189: “retval”: 局部变量已初始化但不引用
+         正在生成代码...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"release\\emgserver.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Qt\Qt5.5.1\5.5\msvc2012\lib /LIBPATH:D:/woksoft/qt/5.5/msvc2012/lib /LIBPATH:C:\Qt\Qt5.5.1\5.5\msvc2012\lib /LIBPATH:E:\interaction_App\yei\ C:\Qt\Qt5.5.1\5.5\msvc2012\lib\qtmain.lib shell32.lib D:/woksoft/qt/5.5/msvc2012/lib\Qt5Core.lib E:\interaction_App\yei\\ThreeSpace_API.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5MultimediaWidgets.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5Multimedia.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5PrintSupport.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5Widgets.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5Gui.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5SerialPort.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5Network.lib C:\Qt\Qt5.5.1\5.5\msvc2012\lib\Qt5Core.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"release\emgserver.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /MACHINE:X86 /SAFESEH "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" Win32\Release\angleciterion.obj
+         Win32\Release\axisciterion.obj
+         Win32\Release\moc_calibrationwindow.obj
+         Win32\Release\moc_camerawindow.obj
+         Win32\Release\moc_dataprocessor.obj
+         Win32\Release\moc_gestureeditor.obj
+         Win32\Release\moc_mainwindow.obj
+         Win32\Release\moc_mobilearm.obj
+         Win32\Release\moc_qcustomplot.obj
+         Win32\Release\moc_ralparser.obj
+         Win32\Release\moc_ralsensor.obj
+         Win32\Release\moc_recognizor.obj
+         Win32\Release\calibrationwindow.obj
+         Win32\Release\camerawindow.obj
+         Win32\Release\cyclequeue.obj
+         Win32\Release\dataprocessor.obj
+         Win32\Release\gesture.obj
+         Win32\Release\gestureeditor.obj
+         Win32\Release\gesturelib.obj
+         Win32\Release\iirfilter.obj
+         Win32\Release\main.obj
+         Win32\Release\mainwindow.obj
+         Win32\Release\mobilearm.obj
+         Win32\Release\movement.obj
+         Win32\Release\movementciterion.obj
+         Win32\Release\qcustomplot.obj
+         Win32\Release\quaternion.obj
+         Win32\Release\ralfilter.obj
+         Win32\Release\ralparser.obj
+         Win32\Release\ralsensor.obj
+         Win32\Release\recognizor.obj
+     1>LINK : fatal error LNK1181: 无法打开输入文件“D:/woksoft/qt/5.5/msvc2012/lib\Qt5Core.lib”
+     1>已完成生成项目“C:\Users\16413\Desktop\interaction_App\emgserver.vcxproj”(Build 个目标)的操作 - 失败。
+
+生成失败。
+
+已用时间 00:00:30.69

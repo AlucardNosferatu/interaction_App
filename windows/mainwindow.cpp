@@ -177,6 +177,16 @@ void MainWindow::on_loadButton_clicked()
     }
 }
 
+void MainWindow::on_beginButton_clicked()
+{
+    isplaying=false;
+    recognizor.initRealtimeRecognition();
+    recognizor.timerbegin(40);
+
+    if (!updatetimer.isActive())
+        updatetimer.start(100);
+}
+
 void MainWindow::on_Slider_sliderReleased()
 {
     int startpoint=ui->Slider->value();
@@ -215,7 +225,6 @@ void MainWindow::on_saveButton_clicked()
         if (retval>=0)
             ui->statusBar->showMessage(QString("data saved."));
     }
-
     else
     {
      //点的是取消
@@ -246,11 +255,6 @@ void MainWindow::on_clearButton_clicked()
     ui->elbowPlot->replot();
 
     ui->statusBar->showMessage(QString("Raw data list cleared."));
-}
-
-void MainWindow::on_initButton_clicked()
-{
-
 }
 
 void MainWindow::on_pushButton_2_clicked()
@@ -318,4 +322,11 @@ void MainWindow::checkRadioButton()
 {
     ui->radioButton_2->setChecked(true);
     ui->radioButton->setChecked(false);
+}
+
+void MainWindow::on_stopButton_clicked()
+{
+	recognizor.timerstop();
+    if (updatetimer.isActive())
+        updatetimer.stop();
 }
