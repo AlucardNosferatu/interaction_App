@@ -13,8 +13,8 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QGroupBox>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
@@ -24,8 +24,10 @@
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include "plot/qcustomplot.h"
 
@@ -45,15 +47,6 @@ public:
     QTextEdit *Threshold;
     QLineEdit *lineEdit_2;
     QLineEdit *lineEdit_3;
-    QCheckBox *checkBox1P;
-    QCheckBox *checkBox2P;
-    QCheckBox *checkBox3P;
-    QCheckBox *checkBox4P;
-    QCheckBox *checkBox1N;
-    QCheckBox *checkBox2N;
-    QCheckBox *checkBox3N;
-    QCheckBox *checkBox4N;
-    QPushButton *pushButtonRLD;
     QPushButton *pushButton_2;
     QLineEdit *lineEditAddr;
     QLabel *label;
@@ -83,6 +76,15 @@ public:
     QPushButton *play3XButton;
     QPushButton *stepButton;
     QCustomPlot *accelPlot;
+    QWidget *layoutWidget;
+    QHBoxLayout *horizontalLayout_9;
+    QVBoxLayout *verticalLayout_2;
+    QPushButton *pushButton_close;
+    QPushButton *pushButton_connectWifi;
+    QLineEdit *lineEdit_port;
+    QVBoxLayout *verticalLayout_5;
+    QTextBrowser *textBrowser_log;
+    QPushButton *pushButton_clearLog;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -95,19 +97,19 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         c1Plot = new QCustomPlot(centralWidget);
         c1Plot->setObjectName(QStringLiteral("c1Plot"));
-        c1Plot->setGeometry(QRect(20, 130, 361, 131));
+        c1Plot->setGeometry(QRect(20, 100, 361, 131));
         beginButton = new QPushButton(centralWidget);
         beginButton->setObjectName(QStringLiteral("beginButton"));
-        beginButton->setGeometry(QRect(510, 60, 75, 23));
+        beginButton->setGeometry(QRect(390, 40, 91, 23));
         stopButton = new QPushButton(centralWidget);
         stopButton->setObjectName(QStringLiteral("stopButton"));
-        stopButton->setGeometry(QRect(590, 60, 75, 23));
+        stopButton->setGeometry(QRect(390, 70, 91, 23));
         saveButton = new QPushButton(centralWidget);
         saveButton->setObjectName(QStringLiteral("saveButton"));
-        saveButton->setGeometry(QRect(590, 90, 75, 23));
+        saveButton->setGeometry(QRect(490, 70, 81, 23));
         clearButton = new QPushButton(centralWidget);
         clearButton->setObjectName(QStringLiteral("clearButton"));
-        clearButton->setGeometry(QRect(510, 90, 75, 23));
+        clearButton->setGeometry(QRect(490, 40, 81, 23));
         GestureEdit = new QTextEdit(centralWidget);
         GestureEdit->setObjectName(QStringLiteral("GestureEdit"));
         GestureEdit->setGeometry(QRect(30, 770, 111, 31));
@@ -123,33 +125,6 @@ public:
         lineEdit_3 = new QLineEdit(centralWidget);
         lineEdit_3->setObjectName(QStringLiteral("lineEdit_3"));
         lineEdit_3->setGeometry(QRect(570, 780, 71, 21));
-        checkBox1P = new QCheckBox(centralWidget);
-        checkBox1P->setObjectName(QStringLiteral("checkBox1P"));
-        checkBox1P->setGeometry(QRect(30, 820, 71, 16));
-        checkBox2P = new QCheckBox(centralWidget);
-        checkBox2P->setObjectName(QStringLiteral("checkBox2P"));
-        checkBox2P->setGeometry(QRect(90, 820, 71, 16));
-        checkBox3P = new QCheckBox(centralWidget);
-        checkBox3P->setObjectName(QStringLiteral("checkBox3P"));
-        checkBox3P->setGeometry(QRect(150, 820, 71, 16));
-        checkBox4P = new QCheckBox(centralWidget);
-        checkBox4P->setObjectName(QStringLiteral("checkBox4P"));
-        checkBox4P->setGeometry(QRect(210, 820, 71, 16));
-        checkBox1N = new QCheckBox(centralWidget);
-        checkBox1N->setObjectName(QStringLiteral("checkBox1N"));
-        checkBox1N->setGeometry(QRect(270, 820, 71, 16));
-        checkBox2N = new QCheckBox(centralWidget);
-        checkBox2N->setObjectName(QStringLiteral("checkBox2N"));
-        checkBox2N->setGeometry(QRect(330, 820, 71, 16));
-        checkBox3N = new QCheckBox(centralWidget);
-        checkBox3N->setObjectName(QStringLiteral("checkBox3N"));
-        checkBox3N->setGeometry(QRect(390, 820, 71, 16));
-        checkBox4N = new QCheckBox(centralWidget);
-        checkBox4N->setObjectName(QStringLiteral("checkBox4N"));
-        checkBox4N->setGeometry(QRect(450, 820, 71, 16));
-        pushButtonRLD = new QPushButton(centralWidget);
-        pushButtonRLD->setObjectName(QStringLiteral("pushButtonRLD"));
-        pushButtonRLD->setGeometry(QRect(500, 820, 75, 23));
         pushButton_2 = new QPushButton(centralWidget);
         pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
         pushButton_2->setGeometry(QRect(720, 820, 91, 23));
@@ -161,40 +136,40 @@ public:
         label->setGeometry(QRect(620, 820, 31, 21));
         c2Plot = new QCustomPlot(centralWidget);
         c2Plot->setObjectName(QStringLiteral("c2Plot"));
-        c2Plot->setGeometry(QRect(390, 130, 361, 131));
+        c2Plot->setGeometry(QRect(390, 100, 361, 131));
         c3Plot = new QCustomPlot(centralWidget);
         c3Plot->setObjectName(QStringLiteral("c3Plot"));
-        c3Plot->setGeometry(QRect(20, 270, 361, 131));
+        c3Plot->setGeometry(QRect(20, 240, 361, 131));
         c4Plot = new QCustomPlot(centralWidget);
         c4Plot->setObjectName(QStringLiteral("c4Plot"));
-        c4Plot->setGeometry(QRect(390, 270, 361, 131));
+        c4Plot->setGeometry(QRect(390, 240, 361, 131));
         c5Plot = new QCustomPlot(centralWidget);
         c5Plot->setObjectName(QStringLiteral("c5Plot"));
-        c5Plot->setGeometry(QRect(20, 410, 361, 131));
+        c5Plot->setGeometry(QRect(20, 380, 361, 131));
         c6Plot = new QCustomPlot(centralWidget);
         c6Plot->setObjectName(QStringLiteral("c6Plot"));
-        c6Plot->setGeometry(QRect(390, 410, 361, 131));
+        c6Plot->setGeometry(QRect(390, 380, 361, 131));
         c7Plot = new QCustomPlot(centralWidget);
         c7Plot->setObjectName(QStringLiteral("c7Plot"));
-        c7Plot->setGeometry(QRect(20, 550, 361, 131));
+        c7Plot->setGeometry(QRect(20, 520, 361, 131));
         c8Plot = new QCustomPlot(centralWidget);
         c8Plot->setObjectName(QStringLiteral("c8Plot"));
-        c8Plot->setGeometry(QRect(390, 550, 361, 131));
+        c8Plot->setGeometry(QRect(390, 520, 361, 131));
         elbowPlot = new QCustomPlot(centralWidget);
         elbowPlot->setObjectName(QStringLiteral("elbowPlot"));
-        elbowPlot->setGeometry(QRect(760, 90, 361, 201));
+        elbowPlot->setGeometry(QRect(760, 100, 361, 201));
         shoulderPlot = new QCustomPlot(centralWidget);
         shoulderPlot->setObjectName(QStringLiteral("shoulderPlot"));
-        shoulderPlot->setGeometry(QRect(760, 300, 361, 201));
+        shoulderPlot->setGeometry(QRect(760, 310, 361, 201));
         editorButton = new QPushButton(centralWidget);
         editorButton->setObjectName(QStringLiteral("editorButton"));
-        editorButton->setGeometry(QRect(620, 20, 80, 21));
+        editorButton->setGeometry(QRect(490, 10, 80, 21));
         onIMUButton = new QPushButton(centralWidget);
         onIMUButton->setObjectName(QStringLiteral("onIMUButton"));
-        onIMUButton->setGeometry(QRect(760, 60, 80, 21));
+        onIMUButton->setGeometry(QRect(580, 40, 80, 21));
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(710, 20, 80, 21));
+        pushButton->setGeometry(QRect(580, 10, 80, 21));
         loadButton = new QPushButton(centralWidget);
         loadButton->setObjectName(QStringLiteral("loadButton"));
         loadButton->setGeometry(QRect(60, 700, 61, 23));
@@ -213,14 +188,14 @@ public:
         pauseButton->setGeometry(QRect(200, 700, 61, 23));
         gestureText = new QPlainTextEdit(centralWidget);
         gestureText->setObjectName(QStringLiteral("gestureText"));
-        gestureText->setGeometry(QRect(760, 510, 361, 131));
+        gestureText->setGeometry(QRect(760, 520, 361, 131));
         QFont font;
         font.setFamily(QStringLiteral("Courier New"));
         font.setPointSize(10);
         gestureText->setFont(font);
         groupBox = new QGroupBox(centralWidget);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setGeometry(QRect(930, 650, 191, 80));
+        groupBox->setGeometry(QRect(930, 660, 191, 80));
         gestureLabel = new QLabel(groupBox);
         gestureLabel->setObjectName(QStringLiteral("gestureLabel"));
         gestureLabel->setGeometry(QRect(20, 20, 151, 41));
@@ -230,7 +205,7 @@ public:
         gestureLabel->setFont(font1);
         onRobotButton = new QPushButton(centralWidget);
         onRobotButton->setObjectName(QStringLiteral("onRobotButton"));
-        onRobotButton->setGeometry(QRect(510, 20, 91, 21));
+        onRobotButton->setGeometry(QRect(390, 10, 91, 21));
         radioButton = new QRadioButton(centralWidget);
         radioButton->setObjectName(QStringLiteral("radioButton"));
         radioButton->setGeometry(QRect(860, 20, 89, 16));
@@ -247,6 +222,52 @@ public:
         accelPlot = new QCustomPlot(centralWidget);
         accelPlot->setObjectName(QStringLiteral("accelPlot"));
         accelPlot->setGeometry(QRect(50, 850, 361, 201));
+        layoutWidget = new QWidget(centralWidget);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(20, 10, 361, 81));
+        horizontalLayout_9 = new QHBoxLayout(layoutWidget);
+        horizontalLayout_9->setSpacing(6);
+        horizontalLayout_9->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
+        horizontalLayout_9->setContentsMargins(0, 0, 0, 0);
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        pushButton_close = new QPushButton(layoutWidget);
+        pushButton_close->setObjectName(QStringLiteral("pushButton_close"));
+
+        verticalLayout_2->addWidget(pushButton_close);
+
+        pushButton_connectWifi = new QPushButton(layoutWidget);
+        pushButton_connectWifi->setObjectName(QStringLiteral("pushButton_connectWifi"));
+
+        verticalLayout_2->addWidget(pushButton_connectWifi);
+
+        lineEdit_port = new QLineEdit(layoutWidget);
+        lineEdit_port->setObjectName(QStringLiteral("lineEdit_port"));
+
+        verticalLayout_2->addWidget(lineEdit_port);
+
+
+        horizontalLayout_9->addLayout(verticalLayout_2);
+
+        verticalLayout_5 = new QVBoxLayout();
+        verticalLayout_5->setSpacing(6);
+        verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
+        textBrowser_log = new QTextBrowser(layoutWidget);
+        textBrowser_log->setObjectName(QStringLiteral("textBrowser_log"));
+        textBrowser_log->setMaximumSize(QSize(16777215, 71));
+
+        verticalLayout_5->addWidget(textBrowser_log);
+
+        pushButton_clearLog = new QPushButton(layoutWidget);
+        pushButton_clearLog->setObjectName(QStringLiteral("pushButton_clearLog"));
+
+        verticalLayout_5->addWidget(pushButton_clearLog);
+
+
+        horizontalLayout_9->addLayout(verticalLayout_5);
+
         MainWindow->setCentralWidget(centralWidget);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -269,15 +290,6 @@ public:
         clearButton->setText(QApplication::translate("MainWindow", "Clear", 0));
         lineEdit_2->setText(QApplication::translate("MainWindow", "mav0", 0));
         lineEdit_3->setText(QApplication::translate("MainWindow", "threshold", 0));
-        checkBox1P->setText(QApplication::translate("MainWindow", "1P", 0));
-        checkBox2P->setText(QApplication::translate("MainWindow", "2P", 0));
-        checkBox3P->setText(QApplication::translate("MainWindow", "3P", 0));
-        checkBox4P->setText(QApplication::translate("MainWindow", "4P", 0));
-        checkBox1N->setText(QApplication::translate("MainWindow", "1N", 0));
-        checkBox2N->setText(QApplication::translate("MainWindow", "2N", 0));
-        checkBox3N->setText(QApplication::translate("MainWindow", "3N", 0));
-        checkBox4N->setText(QApplication::translate("MainWindow", "4N", 0));
-        pushButtonRLD->setText(QApplication::translate("MainWindow", "Set RLD", 0));
         pushButton_2->setText(QApplication::translate("MainWindow", "Read Register", 0));
         label->setText(QApplication::translate("MainWindow", "Addr", 0));
         editorButton->setText(QApplication::translate("MainWindow", "Editor", 0));
@@ -294,6 +306,10 @@ public:
         radioButton_2->setText(QApplication::translate("MainWindow", "Grasp Test", 0));
         play3XButton->setText(QApplication::translate("MainWindow", "3X", 0));
         stepButton->setText(QApplication::translate("MainWindow", "Step", 0));
+        pushButton_close->setText(QApplication::translate("MainWindow", "\345\205\263\351\227\255", 0));
+        pushButton_connectWifi->setText(QApplication::translate("MainWindow", "\350\277\236\346\216\245", 0));
+        lineEdit_port->setText(QApplication::translate("MainWindow", "8081;8082;8083;8084", 0));
+        pushButton_clearLog->setText(QString());
     } // retranslateUi
 
 };

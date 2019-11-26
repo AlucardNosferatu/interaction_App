@@ -63,7 +63,6 @@ private slots:
     void on_play3XButton_clicked();
 
     void on_stepButton_clicked();
-    void checkRadioButton();
 
     void on_beginButton_clicked();
 

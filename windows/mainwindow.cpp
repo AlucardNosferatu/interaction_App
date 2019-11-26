@@ -318,12 +318,6 @@ void MainWindow::on_stepButton_clicked()
     recognizor.update();
 }
 
-void MainWindow::checkRadioButton()
-{
-    ui->radioButton_2->setChecked(true);
-    ui->radioButton->setChecked(false);
-}
-
 void MainWindow::on_stopButton_clicked()
 {
 	recognizor.timerstop();
