@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[30];
-    char stringdata0[547];
+    QByteArrayData data[37];
+    char stringdata0[643];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -58,7 +58,14 @@ QT_MOC_LITERAL(25, 422, 23), // "on_play3XButton_clicked"
 QT_MOC_LITERAL(26, 446, 21), // "on_stepButton_clicked"
 QT_MOC_LITERAL(27, 468, 22), // "on_beginButton_clicked"
 QT_MOC_LITERAL(28, 491, 21), // "on_stopButton_clicked"
-QT_MOC_LITERAL(29, 513, 33) // "on_pushButton_connectWifi_cli..."
+QT_MOC_LITERAL(29, 513, 33), // "on_pushButton_connectWifi_cli..."
+QT_MOC_LITERAL(30, 547, 22), // "handleHasNewDataPacket"
+QT_MOC_LITERAL(31, 570, 5), // "index"
+QT_MOC_LITERAL(32, 576, 7), // "double*"
+QT_MOC_LITERAL(33, 584, 5), // "newDP"
+QT_MOC_LITERAL(34, 590, 20), // "handleHasNewCmdReply"
+QT_MOC_LITERAL(35, 611, 4), // "cmdR"
+QT_MOC_LITERAL(36, 616, 26) // "handleHasNewWifiConnection"
 
     },
     "MainWindow\0updateUI\0\0on_clearButton_clicked\0"
@@ -74,7 +81,10 @@ QT_MOC_LITERAL(29, 513, 33) // "on_pushButton_connectWifi_cli..."
     "on_radioButton_2_toggled\0"
     "on_play3XButton_clicked\0on_stepButton_clicked\0"
     "on_beginButton_clicked\0on_stopButton_clicked\0"
-    "on_pushButton_connectWifi_clicked"
+    "on_pushButton_connectWifi_clicked\0"
+    "handleHasNewDataPacket\0index\0double*\0"
+    "newDP\0handleHasNewCmdReply\0cmdR\0"
+    "handleHasNewWifiConnection"
 };
 #undef QT_MOC_LITERAL
 
@@ -84,7 +94,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      22,   14, // methods
+      25,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -92,28 +102,31 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  124,    2, 0x08 /* Private */,
-       3,    0,  125,    2, 0x08 /* Private */,
-       4,    0,  126,    2, 0x08 /* Private */,
-       5,    0,  127,    2, 0x08 /* Private */,
-       6,    2,  128,    2, 0x08 /* Private */,
-      10,    2,  133,    2, 0x08 /* Private */,
-      12,    1,  138,    2, 0x08 /* Private */,
-      14,    0,  141,    2, 0x08 /* Private */,
-      15,    0,  142,    2, 0x08 /* Private */,
-      16,    0,  143,    2, 0x08 /* Private */,
-      17,    0,  144,    2, 0x08 /* Private */,
-      18,    0,  145,    2, 0x08 /* Private */,
-      19,    0,  146,    2, 0x08 /* Private */,
-      20,    0,  147,    2, 0x08 /* Private */,
-      21,    0,  148,    2, 0x08 /* Private */,
-      22,    1,  149,    2, 0x08 /* Private */,
-      24,    1,  152,    2, 0x08 /* Private */,
-      25,    0,  155,    2, 0x08 /* Private */,
-      26,    0,  156,    2, 0x08 /* Private */,
-      27,    0,  157,    2, 0x08 /* Private */,
-      28,    0,  158,    2, 0x08 /* Private */,
-      29,    0,  159,    2, 0x08 /* Private */,
+       1,    0,  139,    2, 0x08 /* Private */,
+       3,    0,  140,    2, 0x08 /* Private */,
+       4,    0,  141,    2, 0x08 /* Private */,
+       5,    0,  142,    2, 0x08 /* Private */,
+       6,    2,  143,    2, 0x08 /* Private */,
+      10,    2,  148,    2, 0x08 /* Private */,
+      12,    1,  153,    2, 0x08 /* Private */,
+      14,    0,  156,    2, 0x08 /* Private */,
+      15,    0,  157,    2, 0x08 /* Private */,
+      16,    0,  158,    2, 0x08 /* Private */,
+      17,    0,  159,    2, 0x08 /* Private */,
+      18,    0,  160,    2, 0x08 /* Private */,
+      19,    0,  161,    2, 0x08 /* Private */,
+      20,    0,  162,    2, 0x08 /* Private */,
+      21,    0,  163,    2, 0x08 /* Private */,
+      22,    1,  164,    2, 0x08 /* Private */,
+      24,    1,  167,    2, 0x08 /* Private */,
+      25,    0,  170,    2, 0x08 /* Private */,
+      26,    0,  171,    2, 0x08 /* Private */,
+      27,    0,  172,    2, 0x08 /* Private */,
+      28,    0,  173,    2, 0x08 /* Private */,
+      29,    0,  174,    2, 0x08 /* Private */,
+      30,    2,  175,    2, 0x08 /* Private */,
+      34,    1,  180,    2, 0x08 /* Private */,
+      36,    1,  183,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -138,6 +151,9 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::Int, 0x80000000 | 32,   31,   33,
+    QMetaType::Void, QMetaType::Char,   35,
+    QMetaType::Void, QMetaType::Int,   31,
 
        0        // eod
 };
@@ -170,6 +186,9 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 19: _t->on_beginButton_clicked(); break;
         case 20: _t->on_stopButton_clicked(); break;
         case 21: _t->on_pushButton_connectWifi_clicked(); break;
+        case 22: _t->handleHasNewDataPacket((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< double*(*)>(_a[2]))); break;
+        case 23: _t->handleHasNewCmdReply((*reinterpret_cast< char(*)>(_a[1]))); break;
+        case 24: _t->handleHasNewWifiConnection((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -200,13 +219,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 22)
+        if (_id < 25)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 22;
+        _id -= 25;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 22)
+        if (_id < 25)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 22;
+        _id -= 25;
     }
     return _id;
 }

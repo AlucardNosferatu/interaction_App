@@ -93,6 +93,7 @@ public:
     QCustomPlot *c8Plot_2;
     QCustomPlot *c6Plot_2;
     QCustomPlot *c7Plot_2;
+    QPushButton *pushButton_motion;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -135,13 +136,13 @@ public:
         lineEdit_3->setGeometry(QRect(570, 780, 71, 21));
         pushButton_2 = new QPushButton(centralWidget);
         pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-        pushButton_2->setGeometry(QRect(720, 820, 91, 23));
+        pushButton_2->setGeometry(QRect(680, 820, 91, 23));
         lineEditAddr = new QLineEdit(centralWidget);
         lineEditAddr->setObjectName(QStringLiteral("lineEditAddr"));
-        lineEditAddr->setGeometry(QRect(660, 820, 51, 20));
+        lineEditAddr->setGeometry(QRect(620, 820, 51, 20));
         label = new QLabel(centralWidget);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(620, 820, 31, 21));
+        label->setGeometry(QRect(580, 820, 31, 21));
         c2Plot = new QCustomPlot(centralWidget);
         c2Plot->setObjectName(QStringLiteral("c2Plot"));
         c2Plot->setGeometry(QRect(210, 100, 181, 131));
@@ -300,6 +301,9 @@ public:
         c7Plot_2 = new QCustomPlot(centralWidget);
         c7Plot_2->setObjectName(QStringLiteral("c7Plot_2"));
         c7Plot_2->setGeometry(QRect(400, 520, 181, 131));
+        pushButton_motion = new QPushButton(centralWidget);
+        pushButton_motion->setObjectName(QStringLiteral("pushButton_motion"));
+        pushButton_motion->setGeometry(QRect(790, 750, 331, 151));
         MainWindow->setCentralWidget(centralWidget);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -342,6 +346,7 @@ public:
         pushButton_connectWifi->setText(QApplication::translate("MainWindow", "\350\277\236\346\216\245", 0));
         lineEdit_port->setText(QApplication::translate("MainWindow", "8081;8082;8083;8084", 0));
         pushButton_clearLog->setText(QString());
+        pushButton_motion->setText(QApplication::translate("MainWindow", "motion", 0));
     } // retranslateUi
 
 };

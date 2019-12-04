@@ -357,27 +357,27 @@ void MainWindow::on_pushButton_connectWifi_clicked()
     count = 0;
     //读取权重-----
     conv1Filter = Filter(32, 1, 3, 1);
-    conv1Filter = parseFilterWeight("conv1_weight.xml", 32, 1, 3, 1);
-    convbias1 = parseBias("bias1_weight.xml", 32);
+    conv1Filter = parseFilterWeight("xml\\conv1_weight.xml", 32, 1, 3, 1);
+    convbias1 = parseBias("xml\\bias1_weight.xml", 32);
 
     conv2Filter = Filter(64, 32, 3, 1);
-    conv2Filter = parseFilterWeight("conv2_weight.xml", 64, 32, 3, 1);
-    convbias2 = parseBias("bias2_weight.xml", 64);
+    conv2Filter = parseFilterWeight("xml\\conv2_weight.xml", 64, 32, 3, 1);
+    convbias2 = parseBias("xml\\bias2_weight.xml", 64);
 
     conv3Filter = Filter(128, 64, 3, 1);
-    conv3Filter = parseFilterWeight("conv3_weight.xml", 128, 64, 3, 1);
-    convbias3 = parseBias("bias3_weight.xml", 128);
+    conv3Filter = parseFilterWeight("xml\\conv3_weight.xml", 128, 64, 3, 1);
+    convbias3 = parseBias("xml\\bias3_weight.xml", 128);
 
-    fc1weight = parseFullConnWeight("fullconn1_weight.xml", 5*8*128, 256);
-    fullbias1 = parseBias("fullconn1_bias.xml", 256);
+    fc1weight = parseFullConnWeight("xml\\fullconn1_weight.xml", 5*8*128, 256);
+    fullbias1 = parseBias("xml\\fullconn1_bias.xml", 256);
 
-    fc2weight = parseFullConnWeight("fullconn2_weight.xml", 256, 10);
-    fullbias2 = parseBias("fullconn2_bias.xml", 10);
+    fc2weight = parseFullConnWeight("xml\\fullconn2_weight.xml", 256, 10);
+    fullbias2 = parseBias("xml\\fullconn2_bias.xml", 10);
 
-    bn1_weight = parseBias("bn1_weight.xml", 256);
-    bn1_bias = parseBias("bn1_bias.xml", 256);
-    bn1_running_mean = parseBias("bn1_running_mean.xml", 256);
-    bn1_running_var = parseBias("bn1_running_var.xml", 256);
+    bn1_weight = parseBias("xml\\bn1_weight.xml", 256);
+    bn1_bias = parseBias("xml\\bn1_bias.xml", 256);
+    bn1_running_mean = parseBias("xml\\bn1_running_mean.xml", 256);
+    bn1_running_var = parseBias("xml\\bn1_running_var.xml", 256);
 
     p = new double*[row];
 
@@ -478,4 +478,185 @@ void MainWindow::refreshDataBuffer()
         filterData.append(fd);
         detrendedData.append(dd);
     }
+}
+
+void MainWindow::handleHasNewDataPacket(int module_index, double *newDP)      // the slot signal
+{
+    double fdata[CH_NUM];
+    double ddata[CH_NUM];
+    for(int i=0; i<CH_NUM; i++)
+    {
+        float fd;
+        float dd=0;
+        fd = notchfilters_50[i+module_index*CH_NUM]->filter(static_cast<float>(newDP[i]));                  //50Hz_notchfilters
+        fd = notchfilters_100[i+module_index*CH_NUM]->filter(fd);                                           //100Hz_notchfilter
+        fd = hpfilters[i+module_index*CH_NUM]->filter(fd);                                                  //20Hz_HighPassfilter
+        detrendedData[i+module_index*CH_NUM]->append(static_cast<const double>(dd));
+        filterData[i+module_index*CH_NUM]->append(static_cast<const double>(fd));                           //filterData
+        rawData[i+module_index*CH_NUM]->append(newDP[i]);                                                   //rawData
+        fdata[i] = static_cast<double>(fd);
+        ddata[i] = static_cast<double>(dd);
+
+        if(count >= row){// set zero if count >= 100
+            //CNNs                       CNNPrediction
+            //=============================================================================================================================
+            // index 8-15 channel data
+            Matrix emgImg = Matrix(100,8,0);
+            for(int imgRow=0; imgRow<100; imgRow++){
+                for(int imgCol=0; imgCol<8; imgCol++){
+                    emgImg.setValue(imgRow, imgCol, p[imgRow][8+imgCol]*1000);
+                }
+            }
+            Tensor semg = Tensor(0, 100, 8);
+            semg.addLayer(emgImg);
+            Tensor conv1 = semg.forwardConv(conv1Filter, 1, 1, 1, 0, convbias1);
+            conv1.forwardReLu();
+            Tensor pool1 = conv1.forwardMaxpool(10, 1);
+            Tensor conv2 = pool1.forwardConv(conv2Filter, 1, 1, 1, 0, convbias2);
+            conv2.forwardReLu();
+            Tensor pool2 = conv2.forwardMaxpool(2, 1);
+            Tensor conv3 = pool2.forwardConv(conv3Filter, 1, 1, 1, 0, convbias3);
+            conv3.forwardReLu();
+            Matrix flat = conv3.forwardFlat();
+            Matrix fc1 = flat.forwardFullConnect(5*8*128, 256, fc1weight, fullbias1);
+            fc1.batchNormal(bn1_weight, bn1_bias, bn1_running_mean, bn1_running_var);
+            fc1.forwardRelu();
+            //fc1.getShape();
+            Matrix fc2 = fc1.forwardFullConnect(256, 10, fc2weight, fullbias2);
+            vector<int> c = fc2.softmax();
+            string motion = getMotionStr(c[0]);
+            ui->pushButton_motion->setText(QString::fromStdString(intToString(c[0]) + ": " + motion));
+            ui->pushButton_motion->setStyleSheet("QPushButton{font-size:36px;color:#666666;}");
+            count = 0;
+            for(int m=0; m<row; m++){
+                for(int n=0; n<col; n++){
+                    p[m][n] = 0.0;
+                }
+             }
+        }
+        p[count][i] = fdata[i];
+    }
+    count ++;
+    updatePlotData();
+}
+
+void MainWindow::updatePlotData()
+{
+    double t = double(plotCounter++)/SAMPLE_Freq;
+
+    //Plot fData
+    plots[0]=ui->c1Plot;
+    plots[1]=ui->c2Plot;
+    plots[2]=ui->c3Plot;
+    plots[3]=ui->c4Plot;
+    plots[4]=ui->c5Plot;
+    plots[5]=ui->c6Plot;
+    plots[6]=ui->c7Plot;
+    plots[7]=ui->c8Plot;
+    plots[8]=ui->c1Plot_2;
+    plots[9]=ui->c2Plot_2;
+    plots[10]=ui->c3Plot_2;
+    plots[11]=ui->c4Plot_2;
+    plots[12]=ui->c5Plot_2;
+    plots[13]=ui->c6Plot_2;
+    plots[14]=ui->c7Plot_2;
+    plots[15]=ui->c8Plot_2;
+
+    int moIndex = 0;
+    for(int i= moIndex*CH_NUM; i < (moIndex+1)*CH_NUM; i++)
+    {
+        double fData = filterData[i]->back();
+        filterPlotData.push_back(fData);
+        if(filterPlotData.size()>PlotNum)    //the Plot number is 250*5.
+            filterPlotData.pop_front();
+
+        double fMax = getPlotMax(filterPlotData);
+        double fMin = getPlotMin(filterPlotData);
+        double fRange = fMax - fMin;
+        int j = int(i % CH_NUM);
+        plots[j]->graph(0)->addData(t, fData);
+        if(t<TIME_SPAN)
+            plots[j]->xAxis->setRange(0,TIME_SPAN+TIME_BORDER);
+        else
+        {
+            plots[j]->graph(0)->removeDataBefore(t-TIME_SPAN);
+            plots[j]->xAxis->setRange(t-TIME_SPAN,t+TIME_BORDER);
+        }
+        plots[j]->yAxis->setRange(fMin-0.2*fRange,fMax+0.2*fRange);
+    }
+
+}
+
+double MainWindow::getPlotMax(QQueue<double> &plotData)
+{
+    double max = plotData.first();
+    for (QQueue<double>::iterator i = plotData.begin(); i != plotData.end(); ++i)
+        if(*i>max)
+            max = *i;
+    return max;
+}
+
+double MainWindow::getPlotMin(QQueue<double> &plotData)
+{
+    double min = plotData.first();
+    for (QQueue<double>::iterator i = plotData.begin(); i != plotData.end(); ++i)
+        if(*i<min)
+            min = *i;
+    return min;
+}
+
+string MainWindow::getMotionStr(int num)
+{
+    string out = "";
+    switch(num){
+    case 0: cout << "放松";
+            out = "放松";
+            break;
+    case 1: cout << "握拳";
+            out = "握拳";
+                break;
+    case 2: cout << "上挥";
+            out = "上挥";
+                break;
+    case 3: cout << "下挥";
+            out = "下挥";
+                break;
+    case 4: cout << "左挥";
+            out = "左挥";
+                break;
+    case 5: cout << "右挥";
+            out = "右挥";
+                break;
+    case 6: cout << "一";
+            out = "一";
+                break;
+    case 7: cout << "二";
+            out = "二";
+                break;
+    case 8: cout << "五";
+            out = "五";
+                break;
+    case 9: cout << "六";
+            out = "六";
+                break;
+    }
+    return out;
+}
+
+void MainWindow::handleHasNewCmdReply(char cmdR)
+{
+    QString cmdR_str=QString::number(cmdR,16);
+    log(cmdR_str);
+    //返回命令根据16进制转化为字符串
+}
+
+void MainWindow::log(QString &info)
+{
+    ui->textBrowser_log->append(info);
+}
+
+void MainWindow::handleHasNewWifiConnection(int index)
+{
+    QString successInfo=QString("Module %1 connected!").arg(index);
+    log(successInfo);
 }

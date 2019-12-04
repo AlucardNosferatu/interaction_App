@@ -23,7 +23,8 @@
 
 #define TIME_SPAN 5
 #define TIME_BORDER 0
-
+#define SAMPLE_Freq 250
+#define PlotNum SAMPLE_Freq*TIME_SPAN
 
 namespace Ui {
     class MainWindow;
@@ -56,47 +57,33 @@ public:
 
 private slots:
     void updateUI();
-
     // serial port list slots
     void on_clearButton_clicked();
     void on_saveButton_clicked();
     void on_pushButton_2_clicked();
-
     // plot slots
     void addDatatoIMUPlots(float *angles,int n_datacount);
 	void addDatatoaccelPlots(float *accel, int n_datacount);
-
     // gesture response slots
     void showGesture(QString gesture);
-
     void on_onIMUButton_clicked();
     void on_loadButton_clicked();
-
     void on_Slider_sliderReleased();
-
     void on_playButton_clicked();
-
     void on_editorButton_clicked();
-
     void on_pauseButton_clicked();
-
     void on_pushButton_clicked();
-
     void on_onRobotButton_clicked();
-
     void on_radioButton_toggled(bool checked);
-
     void on_radioButton_2_toggled(bool checked);
-
     void on_play3XButton_clicked();
-
     void on_stepButton_clicked();
-
     void on_beginButton_clicked();
-
     void on_stopButton_clicked();
-
     void on_pushButton_connectWifi_clicked();
+    void handleHasNewDataPacket(int index, double* newDP);
+    void handleHasNewCmdReply(char cmdR);
+    void handleHasNewWifiConnection(int index);
 
 private:
     Ui::MainWindow *ui;
@@ -118,6 +105,11 @@ private:
     void setCustomPlotPattern();
     void refreshIIRFilters();
     void refreshDataBuffer();
+    string getMotionStr(int num);
+    void log(QString &info);
+    void updatePlotData();
+    double getPlotMax(QQueue<double> &plotData);
+    double getPlotMin(QQueue<double> &plotData);
     QList<QList<double>*> rawData;
     QList<QList<double>*> filterData;
     QList<QList<double>*> detrendedData;
@@ -127,7 +119,7 @@ private:
     QTimer replotTimer;
     int timeCounter;
     int plotCounter;
-
+    QQueue<double> filterPlotData;
 };
 
 #endif // MAINWINDOW_H
