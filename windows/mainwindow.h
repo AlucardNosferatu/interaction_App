@@ -2,6 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
+#include "emgserver/Filter.hpp"
+#include "emgserver/utils.hpp"
+#include "emgserver/ads1298decoder.h"
+#include "emgserver/iirfilter.h"
+
 #include "qserialport.h"
 #include "qserialportinfo.h"
 #include <QTimer>
@@ -12,7 +18,12 @@
 #include "camerawindow.h"
 #include "gestureeditor.h"
 #include "calibrationwindow.h"
-#include"dataprocessor.h"
+#include "dataprocessor.h"
+
+
+#define TIME_SPAN 5
+#define TIME_BORDER 0
+
 
 namespace Ui {
     class MainWindow;
@@ -25,6 +36,23 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    double **p; //semg data
+    int count;
+    int row, col;
+    Filter conv1Filter;
+    Filter conv2Filter;
+    Filter conv3Filter;
+    vector<double> convbias1;
+    vector<double> convbias2;
+    vector<double> convbias3;
+    Matrix fc1weight;
+    Matrix fc2weight;
+    vector<double> fullbias1;
+    vector<double> fullbias2;
+    vector<double> bn1_weight;
+    vector<double> bn1_bias;
+    vector<double> bn1_running_mean;
+    vector<double> bn1_running_var;
 
 private slots:
     void updateUI();
@@ -68,6 +96,8 @@ private slots:
 
     void on_stopButton_clicked();
 
+    void on_pushButton_connectWifi_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSerialPortInfo portinfo;
@@ -77,18 +107,26 @@ private:
     QByteArray  m_readData;
     int imucount,emgcount;
     QTimer updatetimer;
-
-    QCustomPlot* plots[8];
-
+    QCustomPlot* plots[16];
     Recognizor recognizor;
-
     int fileLength,datapoint;
-
     GestureEditor *gwin;
     CalibrationWindow *cawin;
     CameraWindow *cwin;
-
     bool isplaying;
+    QList<Ads1298Decoder*> module; //the Ads1298Decoder is a QObject,store the QObject and its subclass's pointer
+    void setCustomPlotPattern();
+    void refreshIIRFilters();
+    void refreshDataBuffer();
+    QList<QList<double>*> rawData;
+    QList<QList<double>*> filterData;
+    QList<QList<double>*> detrendedData;
+    QList<IIRFilter*> notchfilters_50;
+    QList<IIRFilter*> notchfilters_100;
+    QList<IIRFilter*> hpfilters;
+    QTimer replotTimer;
+    int timeCounter;
+    int plotCounter;
 
 };
 

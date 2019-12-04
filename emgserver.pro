@@ -11,7 +11,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 TARGET = emgserver
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
     plot/qcustomplot.cpp \
     gesture_modeling/angleciterion.cpp \
@@ -21,7 +20,6 @@ SOURCES += main.cpp\
     imu/cyclequeue.cpp \
     imu/movement.cpp \
     imu/quaternion.cpp \
-    ralsensor/ralsensor.cpp \
     windows/calibrationwindow.cpp \
     windows/camerawindow.cpp \
     windows/gestureeditor.cpp \
@@ -29,11 +27,17 @@ SOURCES += main.cpp\
     recognizor.cpp \
     gesturelib.cpp \
     dataprocessor.cpp \
-    ralsensor/ralfilter.cpp \
-    ralsensor/ralparser.cpp \
-    ralsensor/iirfilter.cpp \
-    robot/mobilearm.cpp
-
+    robot/mobilearm.cpp \
+    emgserver/Filter.cpp \
+    emgserver/utils.cpp \
+    emgserver/ads1298decoder.cpp \
+    emgserver/Tensor.cpp \
+    emgserver/Matrix.cpp \
+    emgserver/tinyxml/tinystr.cpp \
+    emgserver/tinyxml/tinyxml.cpp \
+    emgserver/tinyxml/tinyxmlerror.cpp \
+    emgserver/tinyxml/tinyxmlparser.cpp \
+    emgserver/iirfilter.cpp \
 
 HEADERS  +=     plot/qcustomplot.h \
     gesture_modeling/angleciterion.h \
@@ -46,7 +50,6 @@ HEADERS  +=     plot/qcustomplot.h \
     imu/movement.h \
     imu/quaternion.h \
     imu/recognizor.h \
-    ralsensor/ralsensor.h \
     windows/calibrationwindow.h \
     windows/camerawindow.h \
     windows/gestureeditor.h \
@@ -55,10 +58,16 @@ HEADERS  +=     plot/qcustomplot.h \
     gesturelib.h \
     dataprocessor.h \
     yei/yei_threespace_api.h \
-    ralsensor/ralfilter.h \
-    ralsensor/ralparser.h \
-    ralsensor/iirfilter.h \
-    robot/mobilearm.h
+    robot/mobilearm.h \
+    emgserver/Filter.hpp \
+    emgserver/utils.hpp \
+    emgserver/ads1298decoder.h \
+    emgserver/Tensor.hpp \
+    emgserver/Matrix.hpp \
+    emgserver/sEMG.hpp \
+    emgserver/tinyxml/tinystr.h \
+    emgserver/tinyxml/tinyxml.h \
+    emgserver/iirfilter.h \
 
 win32: LIBS += -L$$PWD/yei/ -lThreeSpace_API
 INCLUDEPATH += $$PWD/yei

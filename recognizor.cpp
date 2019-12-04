@@ -5,7 +5,6 @@ Recognizor::Recognizor()
     IMUconnected=false;
     grasptest=false;
     robotConnected=false;
-    dataprocessor.setRalSensor(&ralsensor);
     connect(&timer,SIGNAL(timeout()),this,SLOT(update()));
 }
 

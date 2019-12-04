@@ -5,7 +5,6 @@
 #include "dataprocessor.h"
 #include <gesturelib.h>
 #include "imu/movement.h"
-#include "ralsensor/ralsensor.h"
 #include "windows/camerawindow.h"
 #include "robot/mobilearm.h"
 
@@ -38,15 +37,10 @@ private:
 
     bool IMUconnected,EMGconnected,robotConnected,grasptest;
 
-    int ban[ELECTRODENUM];
-    float membership[ELECTRODENUM][3];
-
-
 
 public:
     Recognizor();
     QString getCurrentGesture();
-    RalSensor ralsensor;
 
     // Robot
     MobileArm robot;
@@ -85,9 +79,6 @@ public:
     // timer update function
     int timerbegin(int interval);
     int timerstop();
-
-    // recognition function
-    int gestureRecognition(const float angles[JOINTNUM], const float axes[AXISNUM][3], const float emg[ELECTRODENUM]);
 
     // robot functions
     int connectRobot();

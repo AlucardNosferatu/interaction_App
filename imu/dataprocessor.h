@@ -14,7 +14,6 @@
 #include <QCameraInfo>
 #include <QFileDialog>
 #include "gesture_modeling/gesture.h"
-#include "ralsensor/ralsensor.h"
 
 //number of sensors
 #define SENSORNUM 3
@@ -55,7 +54,6 @@ public:
     QFile IMUinfile,EMGinfile;
     QTextStream IMUtextinput,EMGtextinput;
 
-    RalSensor *ralsensor;
 
     explicit DataProcessor(QObject *parent = 0);
     ~DataProcessor();
@@ -79,13 +77,6 @@ public:
     double getElbowAngle(MyQuaternion uz, MyQuaternion fz);
     double getTwistAngle(MyQuaternion ux, MyQuaternion fx, MyQuaternion uz, double elbow);
     float tare();
-
-    // EMG functions
-    void setRalSensor(RalSensor *r);
-    int connectEMGSensor(QString portname);
-    int disconnectEMGSensor();
-    int getEMGData(float *emgRaw);
-    int getEMGDataFromFile(float *emgRaw);
 
     // File functions
     bool IMUfileExists,EMGfileExists;

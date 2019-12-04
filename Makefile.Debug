@@ -52,7 +52,6 @@ SOURCES       = main.cpp \
 		imu\cyclequeue.cpp \
 		imu\movement.cpp \
 		imu\quaternion.cpp \
-		ralsensor\ralsensor.cpp \
 		windows\calibrationwindow.cpp \
 		windows\camerawindow.cpp \
 		windows\gestureeditor.cpp \
@@ -60,19 +59,25 @@ SOURCES       = main.cpp \
 		recognizor.cpp \
 		gesturelib.cpp \
 		dataprocessor.cpp \
-		ralsensor\ralfilter.cpp \
-		ralsensor\ralparser.cpp \
-		ralsensor\iirfilter.cpp \
-		robot\mobilearm.cpp debug\moc_qcustomplot.cpp \
+		robot\mobilearm.cpp \
+		emgserver\Filter.cpp \
+		emgserver\utils.cpp \
+		emgserver\ads1298decoder.cpp \
+		emgserver\Tensor.cpp \
+		emgserver\Matrix.cpp \
+		emgserver\tinyxml\tinystr.cpp \
+		emgserver\tinyxml\tinyxml.cpp \
+		emgserver\tinyxml\tinyxmlerror.cpp \
+		emgserver\tinyxml\tinyxmlparser.cpp \
+		emgserver\iirfilter.cpp debug\moc_qcustomplot.cpp \
 		debug\moc_dataprocessor.cpp \
 		debug\moc_recognizor.cpp \
-		debug\moc_ralsensor.cpp \
 		debug\moc_calibrationwindow.cpp \
 		debug\moc_camerawindow.cpp \
 		debug\moc_gestureeditor.cpp \
 		debug\moc_mainwindow.cpp \
-		debug\moc_ralparser.cpp \
-		debug\moc_mobilearm.cpp
+		debug\moc_mobilearm.cpp \
+		debug\moc_ads1298decoder.cpp
 OBJECTS       = debug\main.obj \
 		debug\qcustomplot.obj \
 		debug\angleciterion.obj \
@@ -82,7 +87,6 @@ OBJECTS       = debug\main.obj \
 		debug\cyclequeue.obj \
 		debug\movement.obj \
 		debug\quaternion.obj \
-		debug\ralsensor.obj \
 		debug\calibrationwindow.obj \
 		debug\camerawindow.obj \
 		debug\gestureeditor.obj \
@@ -90,20 +94,26 @@ OBJECTS       = debug\main.obj \
 		debug\recognizor.obj \
 		debug\gesturelib.obj \
 		debug\dataprocessor.obj \
-		debug\ralfilter.obj \
-		debug\ralparser.obj \
-		debug\iirfilter.obj \
 		debug\mobilearm.obj \
+		debug\Filter.obj \
+		debug\utils.obj \
+		debug\ads1298decoder.obj \
+		debug\Tensor.obj \
+		debug\Matrix.obj \
+		debug\tinystr.obj \
+		debug\tinyxml.obj \
+		debug\tinyxmlerror.obj \
+		debug\tinyxmlparser.obj \
+		debug\iirfilter.obj \
 		debug\moc_qcustomplot.obj \
 		debug\moc_dataprocessor.obj \
 		debug\moc_recognizor.obj \
-		debug\moc_ralsensor.obj \
 		debug\moc_calibrationwindow.obj \
 		debug\moc_camerawindow.obj \
 		debug\moc_gestureeditor.obj \
 		debug\moc_mainwindow.obj \
-		debug\moc_ralparser.obj \
-		debug\moc_mobilearm.obj
+		debug\moc_mobilearm.obj \
+		debug\moc_ads1298decoder.obj
 
 DIST          =  plot\qcustomplot.h \
 		gesture_modeling\angleciterion.h \
@@ -116,7 +126,6 @@ DIST          =  plot\qcustomplot.h \
 		imu\movement.h \
 		imu\quaternion.h \
 		imu\recognizor.h \
-		ralsensor\ralsensor.h \
 		windows\calibrationwindow.h \
 		windows\camerawindow.h \
 		windows\gestureeditor.h \
@@ -125,10 +134,16 @@ DIST          =  plot\qcustomplot.h \
 		gesturelib.h \
 		dataprocessor.h \
 		yei\yei_threespace_api.h \
-		ralsensor\ralfilter.h \
-		ralsensor\ralparser.h \
-		ralsensor\iirfilter.h \
-		robot\mobilearm.h main.cpp \
+		robot\mobilearm.h \
+		emgserver\Filter.hpp \
+		emgserver\utils.hpp \
+		emgserver\ads1298decoder.h \
+		emgserver\Tensor.hpp \
+		emgserver\Matrix.hpp \
+		emgserver\sEMG.hpp \
+		emgserver\tinyxml\tinystr.h \
+		emgserver\tinyxml\tinyxml.h \
+		emgserver\iirfilter.h main.cpp \
 		plot\qcustomplot.cpp \
 		gesture_modeling\angleciterion.cpp \
 		gesture_modeling\axisciterion.cpp \
@@ -137,7 +152,6 @@ DIST          =  plot\qcustomplot.h \
 		imu\cyclequeue.cpp \
 		imu\movement.cpp \
 		imu\quaternion.cpp \
-		ralsensor\ralsensor.cpp \
 		windows\calibrationwindow.cpp \
 		windows\camerawindow.cpp \
 		windows\gestureeditor.cpp \
@@ -145,10 +159,17 @@ DIST          =  plot\qcustomplot.h \
 		recognizor.cpp \
 		gesturelib.cpp \
 		dataprocessor.cpp \
-		ralsensor\ralfilter.cpp \
-		ralsensor\ralparser.cpp \
-		ralsensor\iirfilter.cpp \
-		robot\mobilearm.cpp
+		robot\mobilearm.cpp \
+		emgserver\Filter.cpp \
+		emgserver\utils.cpp \
+		emgserver\ads1298decoder.cpp \
+		emgserver\Tensor.cpp \
+		emgserver\Matrix.cpp \
+		emgserver\tinyxml\tinystr.cpp \
+		emgserver\tinyxml\tinyxml.cpp \
+		emgserver\tinyxml\tinyxmlerror.cpp \
+		emgserver\tinyxml\tinyxmlparser.cpp \
+		emgserver\iirfilter.cpp
 QMAKE_TARGET  = emgserver
 DESTDIR        = debug\ #avoid trailing-slash linebreak
 TARGET         = emgserver.exe
@@ -157,26 +178,6 @@ DESTDIR_TARGET = debug\emgserver.exe
 ####### Implicit rules
 
 .SUFFIXES: .c .cpp .cc .cxx
-
-{ralsensor}.cpp{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{ralsensor}.cc{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{ralsensor}.cxx{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{ralsensor}.c{debug\}.obj::
-	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
 
 {robot}.cpp{debug\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
@@ -194,6 +195,26 @@ DESTDIR_TARGET = debug\emgserver.exe
 <<
 
 {robot}.c{debug\}.obj::
+	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{emgserver}.cpp{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{emgserver}.cc{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{emgserver}.cxx{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{emgserver}.c{debug\}.obj::
 	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
 <<
@@ -278,6 +299,26 @@ DESTDIR_TARGET = debug\emgserver.exe
 	$<
 <<
 
+{emgserver\tinyxml}.cpp{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{emgserver\tinyxml}.cc{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{emgserver\tinyxml}.cxx{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{emgserver\tinyxml}.c{debug\}.obj::
+	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
 {.}.cpp{debug\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
@@ -349,7 +390,7 @@ dist:
 	$(ZIP) emgserver.zip $(SOURCES) $(DIST) emgserver.pro C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\spec_pre.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\common\msvc-desktop.conf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\qconfig.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3dcollision.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3dcollision_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3dcore.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3dcore_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3dinput.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3dinput_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3dlogic.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3dlogic_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3dquick.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3dquick_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3dquickrenderer.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3dquickrenderer_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3drenderer.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_3drenderer_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_axbase.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_axbase_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_axcontainer.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_axcontainer_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_axserver.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_axserver_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_bluetooth.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_bluetooth_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_bootstrap_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_clucene_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_concurrent.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_concurrent_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_core.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_core_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_dbus.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_dbus_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_declarative.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_declarative_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_designer.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_designer_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_designercomponents_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_enginio.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_enginio_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_gui.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_gui_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_help.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_help_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_location.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_location_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_multimedia.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_multimedia_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_multimediawidgets.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_multimediawidgets_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_network.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_network_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_nfc.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_nfc_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_opengl.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_opengl_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_openglextensions.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_openglextensions_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_platformsupport_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_positioning.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_positioning_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_printsupport.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_printsupport_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_qml.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_qml_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_qmldevtools_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_qmltest.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_qmltest_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_quick.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_quick_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_quickparticles_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_quickwidgets.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_quickwidgets_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_script.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_script_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_scripttools.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_scripttools_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_sensors.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_sensors_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_serialport.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_serialport_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_sql.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_sql_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_svg.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_svg_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_testlib.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_testlib_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_uiplugin.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_uitools.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_uitools_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_webchannel.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_webchannel_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_webkit.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_webkit_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_webkitwidgets.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_webkitwidgets_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_websockets.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_websockets_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_widgets.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_widgets_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_winextras.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_winextras_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_xml.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_xml_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_xmlpatterns.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\modules\qt_lib_xmlpatterns_private.pri C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\qt_functions.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\qt_config.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\win32\qt_config.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\win32-msvc2012\qmake.conf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\spec_post.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\exclusive_builds.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\default_pre.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\win32\default_pre.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\resolve_config.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\exclusive_builds_post.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\default_post.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\build_pass.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\win32\rtti.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\c++11.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\precompile_header.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\warn_on.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\qt.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\resources.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\moc.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\win32\opengl.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\uic.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\win32\windows.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\testcase_targets.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\exceptions.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\yacc.prf C:\Qt\Qt5.5.1\5.5\msvc2012\mkspecs\features\lex.prf emgserver.pro C:/Qt/Qt5.5.1/5.5/msvc2012/lib/qtmaind.prl C:/Qt/Qt5.5.1/5.5/msvc2012/lib/Qt5MultimediaWidgetsd.prl C:/Qt/Qt5.5.1/5.5/msvc2012/lib/Qt5Multimediad.prl C:/Qt/Qt5.5.1/5.5/msvc2012/lib/Qt5PrintSupportd.prl C:/Qt/Qt5.5.1/5.5/msvc2012/lib/Qt5Widgetsd.prl C:/Qt/Qt5.5.1/5.5/msvc2012/lib/Qt5Guid.prl C:/Qt/Qt5.5.1/5.5/msvc2012/lib/Qt5SerialPortd.prl C:/Qt/Qt5.5.1/5.5/msvc2012/lib/Qt5Networkd.prl C:/Qt/Qt5.5.1/5.5/msvc2012/lib/Qt5Cored.prl  NO_PCH_SOURCES RESOURCES HEADERS SOURCES OBJECTIVE_SOURCES FORMS YACCSOURCES YACCSOURCES LEXSOURCES 
 
 clean: compiler_clean 
-	-$(DEL_FILE) debug\main.obj debug\qcustomplot.obj debug\angleciterion.obj debug\axisciterion.obj debug\gesture.obj debug\movementciterion.obj debug\cyclequeue.obj debug\movement.obj debug\quaternion.obj debug\ralsensor.obj debug\calibrationwindow.obj debug\camerawindow.obj debug\gestureeditor.obj debug\mainwindow.obj debug\recognizor.obj debug\gesturelib.obj debug\dataprocessor.obj debug\ralfilter.obj debug\ralparser.obj debug\iirfilter.obj debug\mobilearm.obj debug\moc_qcustomplot.obj debug\moc_dataprocessor.obj debug\moc_recognizor.obj debug\moc_ralsensor.obj debug\moc_calibrationwindow.obj debug\moc_camerawindow.obj debug\moc_gestureeditor.obj debug\moc_mainwindow.obj debug\moc_ralparser.obj debug\moc_mobilearm.obj
+	-$(DEL_FILE) debug\main.obj debug\qcustomplot.obj debug\angleciterion.obj debug\axisciterion.obj debug\gesture.obj debug\movementciterion.obj debug\cyclequeue.obj debug\movement.obj debug\quaternion.obj debug\calibrationwindow.obj debug\camerawindow.obj debug\gestureeditor.obj debug\mainwindow.obj debug\recognizor.obj debug\gesturelib.obj debug\dataprocessor.obj debug\mobilearm.obj debug\Filter.obj debug\utils.obj debug\ads1298decoder.obj debug\Tensor.obj debug\Matrix.obj debug\tinystr.obj debug\tinyxml.obj debug\tinyxmlerror.obj debug\tinyxmlparser.obj debug\iirfilter.obj debug\moc_qcustomplot.obj debug\moc_dataprocessor.obj debug\moc_recognizor.obj debug\moc_calibrationwindow.obj debug\moc_camerawindow.obj debug\moc_gestureeditor.obj debug\moc_mainwindow.obj debug\moc_mobilearm.obj debug\moc_ads1298decoder.obj
 	-$(DEL_FILE) debug\emgserver.exp debug\emgserver.ilk debug\emgserver.idb debug\emgserver.exe.embed.manifest debug\emgserver.exe_manifest.rc debug\emgserver.exe_manifest.res
 
 distclean: clean 
@@ -367,9 +408,9 @@ compiler_no_pch_compiler_make_all:
 compiler_no_pch_compiler_clean:
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: debug\moc_qcustomplot.cpp debug\moc_dataprocessor.cpp debug\moc_recognizor.cpp debug\moc_ralsensor.cpp debug\moc_calibrationwindow.cpp debug\moc_camerawindow.cpp debug\moc_gestureeditor.cpp debug\moc_mainwindow.cpp debug\moc_recognizor.cpp debug\moc_dataprocessor.cpp debug\moc_ralparser.cpp debug\moc_mobilearm.cpp
+compiler_moc_header_make_all: debug\moc_qcustomplot.cpp debug\moc_dataprocessor.cpp debug\moc_recognizor.cpp debug\moc_calibrationwindow.cpp debug\moc_camerawindow.cpp debug\moc_gestureeditor.cpp debug\moc_mainwindow.cpp debug\moc_recognizor.cpp debug\moc_dataprocessor.cpp debug\moc_mobilearm.cpp debug\moc_ads1298decoder.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) debug\moc_qcustomplot.cpp debug\moc_dataprocessor.cpp debug\moc_recognizor.cpp debug\moc_ralsensor.cpp debug\moc_calibrationwindow.cpp debug\moc_camerawindow.cpp debug\moc_gestureeditor.cpp debug\moc_mainwindow.cpp debug\moc_recognizor.cpp debug\moc_dataprocessor.cpp debug\moc_ralparser.cpp debug\moc_mobilearm.cpp
+	-$(DEL_FILE) debug\moc_qcustomplot.cpp debug\moc_dataprocessor.cpp debug\moc_recognizor.cpp debug\moc_calibrationwindow.cpp debug\moc_camerawindow.cpp debug\moc_gestureeditor.cpp debug\moc_mainwindow.cpp debug\moc_recognizor.cpp debug\moc_dataprocessor.cpp debug\moc_mobilearm.cpp debug\moc_ads1298decoder.cpp
 debug\moc_qcustomplot.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobject.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobjectdefs.h \
@@ -991,14 +1032,6 @@ debug\moc_dataprocessor.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QString \
 		gesture_modeling\axisciterion.h \
 		gesture_modeling\movementciterion.h \
-		ralsensor\ralsensor.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
-		ralsensor\ralparser.h \
-		ralsensor\ralfilter.h \
-		ralsensor\iirfilter.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDebug \
 		imu\dataprocessor.h
 	C:\Qt\Qt5.5.1\5.5\msvc2012\bin\moc.exe $(DEFINES) -D_MSC_VER=1700 -D_WIN32 -IC:/Qt/Qt5.5.1/5.5/msvc2012/mkspecs/win32-msvc2012 -IC:/Users/16413/Documents/GitHub/interaction_App -IC:/Users/16413/Documents/GitHub/interaction_App/yei -IC:/Qt/Qt5.5.1/5.5/msvc2012/include -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimediaWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimedia -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtPrintSupport -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtGui -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtANGLE -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtSerialPort -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtNetwork -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtCore imu\dataprocessor.h -o debug\moc_dataprocessor.cpp
 
@@ -1144,14 +1177,6 @@ debug\moc_recognizor.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qevent.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qvector2d.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtouchdevice.h \
-		ralsensor\ralsensor.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
-		ralsensor\ralparser.h \
-		ralsensor\ralfilter.h \
-		ralsensor\iirfilter.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDebug \
 		gesturelib.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QJsonDocument \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qjsondocument.h \
@@ -1177,91 +1202,14 @@ debug\moc_recognizor.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtMultimedia\QCameraImageCapture \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtMultimedia\qcameraimagecapture.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDir \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDebug \
 		robot\mobilearm.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QTimer \
 		imu\recognizor.h
 	C:\Qt\Qt5.5.1\5.5\msvc2012\bin\moc.exe $(DEFINES) -D_MSC_VER=1700 -D_WIN32 -IC:/Qt/Qt5.5.1/5.5/msvc2012/mkspecs/win32-msvc2012 -IC:/Users/16413/Documents/GitHub/interaction_App -IC:/Users/16413/Documents/GitHub/interaction_App/yei -IC:/Qt/Qt5.5.1/5.5/msvc2012/include -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimediaWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimedia -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtPrintSupport -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtGui -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtANGLE -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtSerialPort -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtNetwork -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtCore imu\recognizor.h -o debug\moc_recognizor.cpp
-
-debug\moc_ralsensor.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qiodevice.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qglobal.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qconfig.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfeatures.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qsystemdetection.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qprocessordetection.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcompilerdetection.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qtypeinfo.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qtypetraits.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qsysinfo.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qlogging.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qflags.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qbasicatomic.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_bootstrap.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qgenericatomic.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_cxx11.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_gcc.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_msvc.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_armv7.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_armv6.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_armv5.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_ia64.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_mips.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_x86.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_unix.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qglobalstatic.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qmutex.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qnumeric.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobject.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobjectdefs.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qnamespace.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobjectdefs_impl.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstring.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qchar.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qbytearray.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qrefcount.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qarraydata.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstringbuilder.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qlist.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qalgorithms.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qiterator.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qbytearraylist.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstringlist.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qregexp.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstringmatcher.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcoreevent.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qscopedpointer.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qmetatype.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qvarlengtharray.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcontainerfwd.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qisenum.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobject_impl.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
-		ralsensor\ralparser.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
-		ralsensor\ralfilter.h \
-		ralsensor\iirfilter.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QList \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QTextStream \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qtextstream.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qlocale.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qvariant.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qmap.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qpair.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qdebug.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qhash.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qvector.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qpoint.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qset.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcontiguouscache.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qshareddata.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QFile \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfile.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfiledevice.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDebug \
-		ralsensor\ralsensor.h
-	C:\Qt\Qt5.5.1\5.5\msvc2012\bin\moc.exe $(DEFINES) -D_MSC_VER=1700 -D_WIN32 -IC:/Qt/Qt5.5.1/5.5/msvc2012/mkspecs/win32-msvc2012 -IC:/Users/16413/Documents/GitHub/interaction_App -IC:/Users/16413/Documents/GitHub/interaction_App/yei -IC:/Qt/Qt5.5.1/5.5/msvc2012/include -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimediaWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimedia -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtPrintSupport -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtGui -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtANGLE -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtSerialPort -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtNetwork -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtCore ralsensor\ralsensor.h -o debug\moc_ralsensor.cpp
 
 debug\moc_calibrationwindow.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QMainWindow \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qmainwindow.h \
@@ -1413,14 +1361,6 @@ debug\moc_calibrationwindow.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QM
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qdir.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfileinfo.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qdialog.h \
-		ralsensor\ralsensor.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
-		ralsensor\ralparser.h \
-		ralsensor\ralfilter.h \
-		ralsensor\iirfilter.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDebug \
 		imu\cyclequeue.h \
 		dataprocessor.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QLineEdit \
@@ -1810,15 +1750,31 @@ debug\moc_mainwindow.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QMainWind
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtouchdevice.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qtabwidget.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qicon.h \
+		emgserver\Filter.hpp \
+		emgserver\sEMG.hpp \
+		emgserver\Matrix.hpp \
+		emgserver\Tensor.hpp \
+		emgserver\utils.hpp \
+		emgserver\tinyxml\tinyxml.h \
+		emgserver\tinyxml\tinystr.h \
+		emgserver\ads1298decoder.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\QTcpServer \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qtcpserver.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qabstractsocket.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qhostaddress.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\QTcpSocket \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qtcpsocket.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QList \
+		emgserver\iirfilter.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportinfo.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QTimer \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qtimer.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qbasictimer.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QList \
 		plot\qcustomplot.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QPointer \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qpointer.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QWidget \
@@ -2217,11 +2173,6 @@ debug\moc_mainwindow.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QMainWind
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtMultimedia\qvideoframe.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtMultimedia\qabstractvideobuffer.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QFileDialog \
-		ralsensor\ralsensor.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
-		ralsensor\ralparser.h \
-		ralsensor\ralfilter.h \
-		ralsensor\iirfilter.h \
 		gesturelib.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QJsonDocument \
 		imu\movement.h \
@@ -2392,14 +2343,6 @@ debug\moc_recognizor.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qevent.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qvector2d.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtouchdevice.h \
-		ralsensor\ralsensor.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
-		ralsensor\ralparser.h \
-		ralsensor\ralfilter.h \
-		ralsensor\iirfilter.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDebug \
 		gesturelib.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QJsonDocument \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qjsondocument.h \
@@ -2426,7 +2369,11 @@ debug\moc_recognizor.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtMultimedia\QCameraImageCapture \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtMultimedia\qcameraimagecapture.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDir \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDebug \
 		robot\mobilearm.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QTimer \
 		recognizor.h
 	C:\Qt\Qt5.5.1\5.5\msvc2012\bin\moc.exe $(DEFINES) -D_MSC_VER=1700 -D_WIN32 -IC:/Qt/Qt5.5.1/5.5/msvc2012/mkspecs/win32-msvc2012 -IC:/Users/16413/Documents/GitHub/interaction_App -IC:/Users/16413/Documents/GitHub/interaction_App/yei -IC:/Qt/Qt5.5.1/5.5/msvc2012/include -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimediaWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimedia -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtPrintSupport -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtGui -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtANGLE -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtSerialPort -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtNetwork -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtCore recognizor.h -o debug\moc_recognizor.cpp
@@ -2572,72 +2519,8 @@ debug\moc_dataprocessor.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QString \
 		gesture_modeling\axisciterion.h \
 		gesture_modeling\movementciterion.h \
-		ralsensor\ralsensor.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
-		ralsensor\ralparser.h \
-		ralsensor\ralfilter.h \
-		ralsensor\iirfilter.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDebug \
 		dataprocessor.h
 	C:\Qt\Qt5.5.1\5.5\msvc2012\bin\moc.exe $(DEFINES) -D_MSC_VER=1700 -D_WIN32 -IC:/Qt/Qt5.5.1/5.5/msvc2012/mkspecs/win32-msvc2012 -IC:/Users/16413/Documents/GitHub/interaction_App -IC:/Users/16413/Documents/GitHub/interaction_App/yei -IC:/Qt/Qt5.5.1/5.5/msvc2012/include -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimediaWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimedia -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtPrintSupport -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtGui -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtANGLE -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtSerialPort -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtNetwork -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtCore dataprocessor.h -o debug\moc_dataprocessor.cpp
-
-debug\moc_ralparser.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobject.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobjectdefs.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qnamespace.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qglobal.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qconfig.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfeatures.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qsystemdetection.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qprocessordetection.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcompilerdetection.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qtypeinfo.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qtypetraits.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qsysinfo.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qlogging.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qflags.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qbasicatomic.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_bootstrap.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qgenericatomic.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_cxx11.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_gcc.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_msvc.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_armv7.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_armv6.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_armv5.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_ia64.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_mips.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_x86.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_unix.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qglobalstatic.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qmutex.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qnumeric.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobjectdefs_impl.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstring.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qchar.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qbytearray.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qrefcount.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qarraydata.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstringbuilder.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qlist.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qalgorithms.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qiterator.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qbytearraylist.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstringlist.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qregexp.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstringmatcher.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcoreevent.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qscopedpointer.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qmetatype.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qvarlengtharray.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcontainerfwd.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qisenum.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobject_impl.h \
-		ralsensor\ralparser.h
-	C:\Qt\Qt5.5.1\5.5\msvc2012\bin\moc.exe $(DEFINES) -D_MSC_VER=1700 -D_WIN32 -IC:/Qt/Qt5.5.1/5.5/msvc2012/mkspecs/win32-msvc2012 -IC:/Users/16413/Documents/GitHub/interaction_App -IC:/Users/16413/Documents/GitHub/interaction_App/yei -IC:/Qt/Qt5.5.1/5.5/msvc2012/include -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimediaWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimedia -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtPrintSupport -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtGui -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtANGLE -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtSerialPort -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtNetwork -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtCore ralsensor\ralparser.h -o debug\moc_ralparser.cpp
 
 debug\moc_mobilearm.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QString \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstring.h \
@@ -2702,6 +2585,125 @@ debug\moc_mobilearm.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QString \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
 		robot\mobilearm.h
 	C:\Qt\Qt5.5.1\5.5\msvc2012\bin\moc.exe $(DEFINES) -D_MSC_VER=1700 -D_WIN32 -IC:/Qt/Qt5.5.1/5.5/msvc2012/mkspecs/win32-msvc2012 -IC:/Users/16413/Documents/GitHub/interaction_App -IC:/Users/16413/Documents/GitHub/interaction_App/yei -IC:/Qt/Qt5.5.1/5.5/msvc2012/include -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimediaWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimedia -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtPrintSupport -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtGui -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtANGLE -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtSerialPort -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtNetwork -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtCore robot\mobilearm.h -o debug\moc_mobilearm.cpp
+
+debug\moc_ads1298decoder.cpp: C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobject.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobjectdefs.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qnamespace.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qglobal.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qconfig.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfeatures.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qsystemdetection.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qprocessordetection.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcompilerdetection.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qtypeinfo.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qtypetraits.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qsysinfo.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qlogging.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qflags.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qbasicatomic.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_bootstrap.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qgenericatomic.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_cxx11.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_gcc.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_msvc.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_armv7.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_armv6.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_armv5.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_ia64.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_mips.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_x86.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qatomic_unix.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qglobalstatic.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qmutex.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qnumeric.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobjectdefs_impl.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstring.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qchar.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qbytearray.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qrefcount.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qarraydata.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstringbuilder.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qlist.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qalgorithms.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qiterator.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qbytearraylist.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstringlist.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qregexp.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstringmatcher.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcoreevent.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qscopedpointer.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qmetatype.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qvarlengtharray.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcontainerfwd.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qisenum.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobject_impl.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\QTcpServer \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qtcpserver.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qabstractsocket.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qiodevice.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qdebug.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qhash.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qpair.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qmap.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qtextstream.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qlocale.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qvariant.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qshareddata.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qvector.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qpoint.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qset.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcontiguouscache.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qhostaddress.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\QTcpSocket \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qtcpsocket.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QList \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QMainWindow \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qmainwindow.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qwidget.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qwindowdefs.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qwindowdefs_win.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qmargins.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpaintdevice.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qrect.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qsize.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpalette.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qcolor.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qrgb.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qbrush.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qmatrix.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpolygon.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qregion.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qdatastream.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qline.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtransform.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpainterpath.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qimage.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpixelformat.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpixmap.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qsharedpointer.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qsharedpointer_impl.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qfont.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qfontmetrics.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qfontinfo.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qsizepolicy.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qcursor.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qkeysequence.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qevent.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qurl.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qurlquery.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfile.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfiledevice.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qvector2d.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtouchdevice.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qtabwidget.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qicon.h \
+		emgserver\ads1298decoder.h
+	C:\Qt\Qt5.5.1\5.5\msvc2012\bin\moc.exe $(DEFINES) -D_MSC_VER=1700 -D_WIN32 -IC:/Qt/Qt5.5.1/5.5/msvc2012/mkspecs/win32-msvc2012 -IC:/Users/16413/Documents/GitHub/interaction_App -IC:/Users/16413/Documents/GitHub/interaction_App/yei -IC:/Qt/Qt5.5.1/5.5/msvc2012/include -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimediaWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtMultimedia -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtPrintSupport -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtWidgets -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtGui -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtANGLE -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtSerialPort -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtNetwork -IC:/Qt/Qt5.5.1/5.5/msvc2012/include/QtCore emgserver\ads1298decoder.h -o debug\moc_ads1298decoder.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -3316,15 +3318,31 @@ debug\main.obj: main.cpp windows/mainwindow.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtouchdevice.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qtabwidget.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qicon.h \
+		emgserver/Filter.hpp \
+		emgserver/sEMG.hpp \
+		emgserver/Matrix.hpp \
+		emgserver/Tensor.hpp \
+		emgserver/utils.hpp \
+		emgserver/tinyxml/tinyxml.h \
+		emgserver/tinyxml/tinystr.h \
+		emgserver/ads1298decoder.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\QTcpServer \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qtcpserver.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qabstractsocket.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qhostaddress.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\QTcpSocket \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qtcpsocket.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QList \
+		emgserver/iirfilter.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportinfo.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QTimer \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qtimer.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qbasictimer.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QList \
 		plot/qcustomplot.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QPointer \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qpointer.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QWidget \
@@ -3723,11 +3741,6 @@ debug\main.obj: main.cpp windows/mainwindow.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtMultimedia\qvideoframe.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtMultimedia\qabstractvideobuffer.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QFileDialog \
-		ralsensor/ralsensor.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
-		ralsensor/ralparser.h \
-		ralsensor/ralfilter.h \
-		ralsensor/iirfilter.h \
 		gesturelib.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QJsonDocument \
 		imu/movement.h \
@@ -4620,19 +4633,9 @@ debug\movement.obj: imu\movement.cpp imu/movement.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qdir.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfileinfo.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qdialog.h \
-		ralsensor/ralsensor.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
-		ralsensor/ralparser.h \
-		ralsensor/ralfilter.h \
-		ralsensor/iirfilter.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDebug \
 		imu/cyclequeue.h
 
 debug\quaternion.obj: imu\quaternion.cpp imu/quaternion.h
-
-debug\ralsensor.obj: ralsensor\ralsensor.cpp 
 
 debug\calibrationwindow.obj: windows\calibrationwindow.cpp windows/calibrationwindow.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QMainWindow \
@@ -4785,14 +4788,6 @@ debug\calibrationwindow.obj: windows\calibrationwindow.cpp windows/calibrationwi
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qdir.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfileinfo.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qdialog.h \
-		ralsensor/ralsensor.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
-		ralsensor/ralparser.h \
-		ralsensor/ralfilter.h \
-		ralsensor/iirfilter.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDebug \
 		imu/cyclequeue.h \
 		dataprocessor.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QLineEdit \
@@ -4801,7 +4796,44 @@ debug\calibrationwindow.obj: windows\calibrationwindow.cpp windows/calibrationwi
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtextformat.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpen.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtextoption.h \
-		ui_calibrationwindow.h
+		ui_calibrationwindow.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QVariant \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QAction \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qaction.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qactiongroup.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QApplication \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qapplication.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcoreapplication.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qeventloop.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qdesktopwidget.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qguiapplication.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qinputmethod.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QButtonGroup \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qbuttongroup.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QGroupBox \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qgroupbox.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QHeaderView \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qheaderview.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractitemview.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractscrollarea.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qabstractitemmodel.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qitemselectionmodel.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractitemdelegate.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qstyleoption.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractspinbox.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qvalidator.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qregularexpression.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qslider.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractslider.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qstyle.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qtabbar.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qrubberband.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QPushButton \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qpushbutton.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractbutton.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QRadioButton \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qradiobutton.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QWidget
 
 debug\camerawindow.obj: windows\camerawindow.cpp windows/camerawindow.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QMainWindow \
@@ -4941,7 +4973,42 @@ debug\camerawindow.obj: windows\camerawindow.cpp windows/camerawindow.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qdir.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfileinfo.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QDebug \
-		ui_camerawindow.h
+		ui_camerawindow.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QVariant \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QAction \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qaction.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qactiongroup.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QApplication \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qapplication.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcoreapplication.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qeventloop.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qdesktopwidget.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qguiapplication.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qinputmethod.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QButtonGroup \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qbuttongroup.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QHeaderView \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qheaderview.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractitemview.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractscrollarea.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qabstractitemmodel.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qitemselectionmodel.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractitemdelegate.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qstyleoption.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractspinbox.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qvalidator.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qregularexpression.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qslider.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractslider.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qstyle.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qtabbar.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qrubberband.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QVBoxLayout \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qboxlayout.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qlayout.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qlayoutitem.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qgridlayout.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QWidget
 
 debug\gestureeditor.obj: windows\gestureeditor.cpp windows/gestureeditor.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QMainWindow \
@@ -5074,7 +5141,66 @@ debug\gestureeditor.obj: windows\gestureeditor.cpp windows/gestureeditor.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qdir.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfileinfo.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qdialog.h \
-		ui_gestureeditor.h
+		ui_gestureeditor.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QVariant \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QAction \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qaction.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qactiongroup.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QApplication \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qapplication.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcoreapplication.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qeventloop.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qdesktopwidget.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qguiapplication.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qinputmethod.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QButtonGroup \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qbuttongroup.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QComboBox \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qcombobox.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractitemdelegate.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qstyleoption.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractspinbox.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qvalidator.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qregularexpression.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qslider.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractslider.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qstyle.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qtabbar.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qrubberband.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qframe.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QHeaderView \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qheaderview.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractitemview.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractscrollarea.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qitemselectionmodel.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QLabel \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qlabel.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QLineEdit \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qlineedit.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtextcursor.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtextformat.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpen.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtextoption.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QListView \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qlistview.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QMenuBar \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qmenubar.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qmenu.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QPlainTextEdit \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qplaintextedit.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qtextedit.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtextdocument.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qabstracttextdocumentlayout.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtextlayout.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qglyphrun.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qrawfont.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qfontdatabase.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QPushButton \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qpushbutton.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qabstractbutton.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QStatusBar \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qstatusbar.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QWidget
 
 debug\mainwindow.obj: windows\mainwindow.cpp 
 
@@ -5154,9 +5280,22 @@ debug\gesturelib.obj: gesturelib.cpp gesturelib.h \
 
 debug\dataprocessor.obj: dataprocessor.cpp 
 
-debug\ralfilter.obj: ralsensor\ralfilter.cpp ralsensor/ralfilter.h
+debug\mobilearm.obj: robot\mobilearm.cpp 
 
-debug\ralparser.obj: ralsensor\ralparser.cpp ralsensor/ralparser.h \
+debug\Filter.obj: emgserver\Filter.cpp emgserver/Filter.hpp \
+		emgserver/sEMG.hpp \
+		emgserver/Matrix.hpp \
+		emgserver/Tensor.hpp
+
+debug\utils.obj: emgserver\utils.cpp emgserver/sEMG.hpp \
+		emgserver/utils.hpp \
+		emgserver/Matrix.hpp \
+		emgserver/Filter.hpp \
+		emgserver/Tensor.hpp \
+		emgserver/tinyxml/tinyxml.h \
+		emgserver/tinyxml/tinystr.h
+
+debug\ads1298decoder.obj: emgserver\ads1298decoder.cpp emgserver/ads1298decoder.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QObject \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobject.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobjectdefs.h \
@@ -5209,9 +5348,91 @@ debug\ralparser.obj: ralsensor\ralparser.cpp ralsensor/ralparser.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qvarlengtharray.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcontainerfwd.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qisenum.h \
-		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobject_impl.h
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qobject_impl.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\QTcpServer \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qtcpserver.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qabstractsocket.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qiodevice.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qdebug.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qhash.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qpair.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qmap.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qtextstream.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qlocale.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qvariant.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qshareddata.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qvector.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qpoint.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qset.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qcontiguouscache.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qhostaddress.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\QTcpSocket \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtNetwork\qtcpsocket.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\QSerialPort \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialport.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtSerialPort\qserialportglobal.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QList \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\QMainWindow \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qmainwindow.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qwidget.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qwindowdefs.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qwindowdefs_win.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qmargins.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpaintdevice.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qrect.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qsize.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpalette.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qcolor.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qrgb.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qbrush.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qmatrix.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpolygon.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qregion.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qdatastream.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qline.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtransform.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpainterpath.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qimage.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpixelformat.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qpixmap.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qsharedpointer.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qsharedpointer_impl.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qfont.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qfontmetrics.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qfontinfo.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qsizepolicy.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qcursor.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qkeysequence.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qevent.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qurl.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qurlquery.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfile.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qfiledevice.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qvector2d.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qtouchdevice.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtWidgets\qtabwidget.h \
+		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtGui\qicon.h
 
-debug\iirfilter.obj: ralsensor\iirfilter.cpp ralsensor/iirfilter.h \
+debug\Tensor.obj: emgserver\Tensor.cpp emgserver/Tensor.hpp \
+		emgserver/sEMG.hpp \
+		emgserver/Matrix.hpp \
+		emgserver/Filter.hpp
+
+debug\Matrix.obj: emgserver\Matrix.cpp emgserver/Matrix.hpp \
+		emgserver/sEMG.hpp
+
+debug\tinystr.obj: emgserver\tinyxml\tinystr.cpp emgserver/tinyxml/tinystr.h
+
+debug\tinyxml.obj: emgserver\tinyxml\tinyxml.cpp emgserver/tinyxml/tinyxml.h \
+		emgserver/tinyxml/tinystr.h
+
+debug\tinyxmlerror.obj: emgserver\tinyxml\tinyxmlerror.cpp emgserver/tinyxml/tinyxml.h \
+		emgserver/tinyxml/tinystr.h
+
+debug\tinyxmlparser.obj: emgserver\tinyxml\tinyxmlparser.cpp emgserver/tinyxml/tinyxml.h \
+		emgserver/tinyxml/tinystr.h
+
+debug\iirfilter.obj: emgserver\iirfilter.cpp emgserver/iirfilter.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\QList \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qlist.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qalgorithms.h \
@@ -5256,15 +5477,11 @@ debug\iirfilter.obj: ralsensor\iirfilter.cpp ralsensor/iirfilter.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qregexp.h \
 		C:\Qt\Qt5.5.1\5.5\msvc2012\include\QtCore\qstringmatcher.h
 
-debug\mobilearm.obj: robot\mobilearm.cpp 
-
 debug\moc_qcustomplot.obj: debug\moc_qcustomplot.cpp 
 
 debug\moc_dataprocessor.obj: debug\moc_dataprocessor.cpp 
 
 debug\moc_recognizor.obj: debug\moc_recognizor.cpp 
-
-debug\moc_ralsensor.obj: debug\moc_ralsensor.cpp 
 
 debug\moc_calibrationwindow.obj: debug\moc_calibrationwindow.cpp 
 
@@ -5274,9 +5491,9 @@ debug\moc_gestureeditor.obj: debug\moc_gestureeditor.cpp
 
 debug\moc_mainwindow.obj: debug\moc_mainwindow.cpp 
 
-debug\moc_ralparser.obj: debug\moc_ralparser.cpp 
-
 debug\moc_mobilearm.obj: debug\moc_mobilearm.cpp 
+
+debug\moc_ads1298decoder.obj: debug\moc_ads1298decoder.cpp 
 
 ####### Install
 

@@ -89,7 +89,7 @@ int getCurrentState(CycleQueue *queue, int *state, float *value)
     return 0;
 }
 
-//è·å¾—å‰é©±çš„ä¸‹æ ‡
+//»ñµÃÇ°ÇıµÄÏÂ±ê
 int getPreviousIndex(CycleQuele *queue,int index)
 {
     int retval;
@@ -107,7 +107,7 @@ int getPreviousIndex(CycleQuele *queue,int index)
     return retval;
 }
 
-//æ£€æµ‹å¾€å¤è¿åŠ¨
+//¼ì²âÍù¸´ÔË¶¯
 int waveDectec(CycleQueue *queue,int *repeattime,float *amplitude,int *duration)
 {
     int index=getTopIndex(queue),previous;
@@ -126,7 +126,7 @@ int waveDectec(CycleQueue *queue,int *repeattime,float *amplitude,int *duration)
 
         if (delta==3)
         {
-            //æ˜¯åæ–¹å‘çš„è¿åŠ¨
+            //ÊÇ·´·½ÏòµÄÔË¶¯
             *repeattime+=1;
             *amplitude+=abs(queue->amplitude[previous]);
             starttime=queue->startTime[previous];
@@ -136,10 +136,10 @@ int waveDectec(CycleQueue *queue,int *repeattime,float *amplitude,int *duration)
         else
             break;
     }
-    //è®¡ç®—å¹³å‡è¿åŠ¨å¹…åº¦
+    //¼ÆËãÆ½¾ùÔË¶¯·ù¶È
     //*amplitude=*amplitude/(*repeattime);
 
-    //è®¡ç®—æŒç»­æ—¶é—´
+    //¼ÆËã³ÖĞøÊ±¼ä
     *duration=endtime-starttime;
     return 0;
 }

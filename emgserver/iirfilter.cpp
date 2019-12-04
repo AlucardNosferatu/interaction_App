@@ -8,12 +8,8 @@ IIRFilter::IIRFilter()
 
 int IIRFilter::initFilter(float atmp[], float btmp[], int nal, int nbl)
 {
-    //float atmp[3]={1,2,3};
-    //float btmp[4]={1,2,3,4};
-
     al=nal;
     bl=nbl;
-
     a.clear();
     b.clear();
     xtmp.clear();

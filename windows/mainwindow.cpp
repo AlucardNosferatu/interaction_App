@@ -2,30 +2,51 @@
 #include "ui_mainwindow.h"
 #include "recognizor.h"
 
+static float ahp[1]={
+    1.0f
+};
+static float bhp[5]={
+    static_cast<float>(0.0627402311),
+    static_cast<float>(-0.2499714735),
+    static_cast<float>(0.3744644353),
+    static_cast<float>(-0.24997147355),
+    static_cast<float>(0.062740231119)
+};
+static float anotch[7]={
+    1.000000000000000,
+    static_cast<float>(-1.699163423921474),
+    static_cast<float>(3.464263380095651),
+    static_cast<float>(-3.035006841250400),
+    static_cast<float>(2.930889612822229),
+    static_cast<float>(-1.213689963509197),
+    static_cast<float>(0.604109699507278)
+};
+static float bnotch[7]={
+    static_cast<float>(0.777337677403281),
+    static_cast<float>(-1.441206975301750),
+    static_cast<float>(3.222510786578553),
+    static_cast<float>(-3.065671614896859),
+    static_cast<float>(3.222258852356618),
+    static_cast<float>(-1.440981638482467),
+    static_cast<float>(0.777155376086710)
+};
+static float anotch1[3]={
+    static_cast<float>(0.990498466402),
+    static_cast<float>(-0.6121617180411),
+    static_cast<float>(0.990498466402)
+};
+static float bnotch1[3]={
+    1,
+    static_cast<float>(-0.6121617180411),
+    static_cast<float>(0.980996932804)
+};
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     isplaying=false;
     ui->setupUi(this);
-
-    plots[0]=ui->c1Plot;
-    plots[1]=ui->c2Plot;
-    plots[2]=ui->c3Plot;
-    plots[3]=ui->c4Plot;
-    plots[4]=ui->c5Plot;
-    plots[5]=ui->c6Plot;
-    plots[6]=ui->c7Plot;
-    plots[7]=ui->c8Plot;
-
-    for (int i=0;i<8;i++)
-    {
-        plots[i]->addGraph();
-        plots[i]->graph(0)->setName(QString("channel %1").arg(i+1));
-        plots[i]->xAxis->setRange(0,100);
-        plots[i]->yAxis->setRange(0,MAXMAGNITUDE);
-        plots[i]->legend->setVisible(true);
-    }
 
     connect(&updatetimer,SIGNAL(timeout()),this,SLOT(updateUI()));
     connect(&recognizor,SIGNAL(newIMUData(float*,int)),this,SLOT(addDatatoIMUPlots(float*,int)));
@@ -323,4 +344,138 @@ void MainWindow::on_stopButton_clicked()
 	recognizor.timerstop();
     if (updatetimer.isActive())
         updatetimer.stop();
+}
+
+void MainWindow::on_pushButton_connectWifi_clicked()
+{
+    QString s = ui->lineEdit_port->text();
+    QStringList ports = s.split(";");
+    std::cout <<  s.toStdString().data() << std::endl;
+    // init for cnn predict===
+    row=100;
+    col=16;
+    count = 0;
+    //读取权重-----
+    conv1Filter = Filter(32, 1, 3, 1);
+    conv1Filter = parseFilterWeight("conv1_weight.xml", 32, 1, 3, 1);
+    convbias1 = parseBias("bias1_weight.xml", 32);
+
+    conv2Filter = Filter(64, 32, 3, 1);
+    conv2Filter = parseFilterWeight("conv2_weight.xml", 64, 32, 3, 1);
+    convbias2 = parseBias("bias2_weight.xml", 64);
+
+    conv3Filter = Filter(128, 64, 3, 1);
+    conv3Filter = parseFilterWeight("conv3_weight.xml", 128, 64, 3, 1);
+    convbias3 = parseBias("bias3_weight.xml", 128);
+
+    fc1weight = parseFullConnWeight("fullconn1_weight.xml", 5*8*128, 256);
+    fullbias1 = parseBias("fullconn1_bias.xml", 256);
+
+    fc2weight = parseFullConnWeight("fullconn2_weight.xml", 256, 10);
+    fullbias2 = parseBias("fullconn2_bias.xml", 10);
+
+    bn1_weight = parseBias("bn1_weight.xml", 256);
+    bn1_bias = parseBias("bn1_bias.xml", 256);
+    bn1_running_mean = parseBias("bn1_running_mean.xml", 256);
+    bn1_running_var = parseBias("bn1_running_var.xml", 256);
+
+    p = new double*[row];
+
+    for(int i=0; i<row; i++){
+        p[i] = new double[col];
+    }
+
+    for(int i=0; i<row; i++){
+        for(int j=0; j<col; j++){
+            p[i][j] = 0.0;
+        }
+    }
+
+    Ads1298Decoder* ads = new Ads1298Decoder(static_cast<quint16>(ports[0].toUInt()),0,this);//create a pointer pointing to the class Ads1298Decoder
+    module.append(ads);
+    std::cout << "on_pushButton_connectWifi_clicked" << std::endl;
+    connect(module[0],SIGNAL(hasNewDataPacket(int,double*)),this,SLOT(handleHasNewDataPacket(int,double*)));
+    connect(module[0],SIGNAL(hasNewCmdReply(char)),this,SLOT(handleHasNewCmdReply(char)));
+    connect(module[0],SIGNAL(hasNewWifiConnection(int)),this,SLOT(handleHasNewWifiConnection(int)));
+
+    setCustomPlotPattern();
+    refreshIIRFilters();
+    refreshDataBuffer();
+    plotCounter = timeCounter = 0;    // initialize
+    replotTimer.start(100); //10fps
+    ui->statusBar->showMessage(tr("Server Open successed"));
+}
+
+void MainWindow::setCustomPlotPattern()
+{
+    plots[0]=ui->c1Plot;
+    plots[1]=ui->c2Plot;
+    plots[2]=ui->c3Plot;
+    plots[3]=ui->c4Plot;
+    plots[4]=ui->c5Plot;
+    plots[5]=ui->c6Plot;
+    plots[6]=ui->c7Plot;
+    plots[7]=ui->c8Plot;
+    plots[8]=ui->c1Plot_2;
+    plots[9]=ui->c2Plot_2;
+    plots[10]=ui->c3Plot_2;
+    plots[11]=ui->c4Plot_2;
+    plots[12]=ui->c5Plot_2;
+    plots[13]=ui->c6Plot_2;
+    plots[14]=ui->c7Plot_2;
+    plots[15]=ui->c8Plot_2;
+
+    for (int i=0;i<16;i++)
+    {
+        plots[i]->clearGraphs();
+        plots[i]->addGraph();
+        plots[i]->graph(0)->setPen(QPen(Qt::red));
+        plots[i]->graph(0)->setLineStyle(QCPGraph::lsLine);
+        plots[i]->legend->setFont(QFont("Helvetica",9));
+        plots[i]->legend->setMaximumSize(20,20);
+        plots[i]->yAxis->setRange(-0.04,0);
+        plots[i]->yAxis->setAutoTicks(true);
+        plots[i]->yAxis->setLabel("Voltage(V)");
+        plots[i]->xAxis->setRange(0,TIME_SPAN+TIME_BORDER);
+        plots[i]->xAxis->setLabel("time(s)");
+        plots[i]->replot();
+    }
+}
+
+void MainWindow::refreshIIRFilters()
+{
+    int chNum = module.length()*CH_NUM;
+    //Every module has 16 channels
+    //There are 4 modules in typical instance of experiment
+    //There are 4*16=64 channels in total
+    //According to the number of modules
+    for(int i=0;i<chNum;i++)//for every channel (64)
+    {
+        IIRFilter* nf_50 = new IIRFilter();
+        IIRFilter* nf_100 = new IIRFilter();
+        IIRFilter* hp = new IIRFilter();
+
+        hp->initFilter(ahp,bhp,1,5);
+        nf_50->initFilter(anotch,bnotch,7,7);
+        nf_100->initFilter(anotch1,bnotch1,3,3);
+
+        notchfilters_50.append(nf_50);
+        notchfilters_100.append(nf_100);
+        hpfilters.append(hp);
+    }
+}
+
+void MainWindow::refreshDataBuffer()
+{
+    int chNum = module.length()*CH_NUM;
+   //Accroding to chNum to assign the buffer size
+    for(int i=0;i<chNum;i++)
+    {
+        QList<double>* rd = new QList<double>();
+        QList<double>* fd = new QList<double>();
+        QList<double>* dd = new QList<double>();
+        rawData.append(rd);
+        filterData.append(fd);
+        detrendedData.append(dd);
+    }
 }

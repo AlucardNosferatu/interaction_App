@@ -5,7 +5,6 @@
 #include "dataprocessor.h"
 #include <gesturelib.h>
 #include "imu/movement.h"
-#include "ralsensor/ralsensor.h"
 #include "windows/camerawindow.h"
 #include "robot/mobilearm.h"
 #include<iostream>
@@ -51,7 +50,6 @@ private:
 public:
     Recognizor();
     QString getCurrentGesture();
-    RalSensor ralsensor;
 
     // Robot
     MobileArm robot;
