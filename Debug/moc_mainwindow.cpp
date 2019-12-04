@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[37];
-    char stringdata0[643];
+    QByteArrayData data[38];
+    char stringdata0[668];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -65,7 +65,8 @@ QT_MOC_LITERAL(32, 576, 7), // "double*"
 QT_MOC_LITERAL(33, 584, 5), // "newDP"
 QT_MOC_LITERAL(34, 590, 20), // "handleHasNewCmdReply"
 QT_MOC_LITERAL(35, 611, 4), // "cmdR"
-QT_MOC_LITERAL(36, 616, 26) // "handleHasNewWifiConnection"
+QT_MOC_LITERAL(36, 616, 26), // "handleHasNewWifiConnection"
+QT_MOC_LITERAL(37, 643, 24) // "handleReplotTimerTimeout"
 
     },
     "MainWindow\0updateUI\0\0on_clearButton_clicked\0"
@@ -84,7 +85,8 @@ QT_MOC_LITERAL(36, 616, 26) // "handleHasNewWifiConnection"
     "on_pushButton_connectWifi_clicked\0"
     "handleHasNewDataPacket\0index\0double*\0"
     "newDP\0handleHasNewCmdReply\0cmdR\0"
-    "handleHasNewWifiConnection"
+    "handleHasNewWifiConnection\0"
+    "handleReplotTimerTimeout"
 };
 #undef QT_MOC_LITERAL
 
@@ -94,7 +96,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      25,   14, // methods
+      26,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -102,31 +104,32 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  139,    2, 0x08 /* Private */,
-       3,    0,  140,    2, 0x08 /* Private */,
-       4,    0,  141,    2, 0x08 /* Private */,
-       5,    0,  142,    2, 0x08 /* Private */,
-       6,    2,  143,    2, 0x08 /* Private */,
-      10,    2,  148,    2, 0x08 /* Private */,
-      12,    1,  153,    2, 0x08 /* Private */,
-      14,    0,  156,    2, 0x08 /* Private */,
-      15,    0,  157,    2, 0x08 /* Private */,
-      16,    0,  158,    2, 0x08 /* Private */,
-      17,    0,  159,    2, 0x08 /* Private */,
-      18,    0,  160,    2, 0x08 /* Private */,
-      19,    0,  161,    2, 0x08 /* Private */,
-      20,    0,  162,    2, 0x08 /* Private */,
-      21,    0,  163,    2, 0x08 /* Private */,
-      22,    1,  164,    2, 0x08 /* Private */,
-      24,    1,  167,    2, 0x08 /* Private */,
-      25,    0,  170,    2, 0x08 /* Private */,
-      26,    0,  171,    2, 0x08 /* Private */,
-      27,    0,  172,    2, 0x08 /* Private */,
-      28,    0,  173,    2, 0x08 /* Private */,
-      29,    0,  174,    2, 0x08 /* Private */,
-      30,    2,  175,    2, 0x08 /* Private */,
-      34,    1,  180,    2, 0x08 /* Private */,
-      36,    1,  183,    2, 0x08 /* Private */,
+       1,    0,  144,    2, 0x08 /* Private */,
+       3,    0,  145,    2, 0x08 /* Private */,
+       4,    0,  146,    2, 0x08 /* Private */,
+       5,    0,  147,    2, 0x08 /* Private */,
+       6,    2,  148,    2, 0x08 /* Private */,
+      10,    2,  153,    2, 0x08 /* Private */,
+      12,    1,  158,    2, 0x08 /* Private */,
+      14,    0,  161,    2, 0x08 /* Private */,
+      15,    0,  162,    2, 0x08 /* Private */,
+      16,    0,  163,    2, 0x08 /* Private */,
+      17,    0,  164,    2, 0x08 /* Private */,
+      18,    0,  165,    2, 0x08 /* Private */,
+      19,    0,  166,    2, 0x08 /* Private */,
+      20,    0,  167,    2, 0x08 /* Private */,
+      21,    0,  168,    2, 0x08 /* Private */,
+      22,    1,  169,    2, 0x08 /* Private */,
+      24,    1,  172,    2, 0x08 /* Private */,
+      25,    0,  175,    2, 0x08 /* Private */,
+      26,    0,  176,    2, 0x08 /* Private */,
+      27,    0,  177,    2, 0x08 /* Private */,
+      28,    0,  178,    2, 0x08 /* Private */,
+      29,    0,  179,    2, 0x08 /* Private */,
+      30,    2,  180,    2, 0x08 /* Private */,
+      34,    1,  185,    2, 0x08 /* Private */,
+      36,    1,  188,    2, 0x08 /* Private */,
+      37,    0,  191,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -154,6 +157,7 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void, QMetaType::Int, 0x80000000 | 32,   31,   33,
     QMetaType::Void, QMetaType::Char,   35,
     QMetaType::Void, QMetaType::Int,   31,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -189,6 +193,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 22: _t->handleHasNewDataPacket((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< double*(*)>(_a[2]))); break;
         case 23: _t->handleHasNewCmdReply((*reinterpret_cast< char(*)>(_a[1]))); break;
         case 24: _t->handleHasNewWifiConnection((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 25: _t->handleReplotTimerTimeout(); break;
         default: ;
         }
     }
@@ -219,13 +224,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 25)
+        if (_id < 26)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 25;
+        _id -= 26;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 25)
+        if (_id < 26)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 25;
+        _id -= 26;
     }
     return _id;
 }

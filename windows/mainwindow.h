@@ -84,6 +84,7 @@ private slots:
     void handleHasNewDataPacket(int index, double* newDP);
     void handleHasNewCmdReply(char cmdR);
     void handleHasNewWifiConnection(int index);
+    void handleReplotTimerTimeout();
 
 private:
     Ui::MainWindow *ui;

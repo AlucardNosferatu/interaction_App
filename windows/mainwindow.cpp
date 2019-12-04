@@ -1,4 +1,4 @@
-ï»¿#include "mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "recognizor.h"
 
@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     isplaying=false;
     ui->setupUi(this);
 
+    connect(&replotTimer,SIGNAL(timeout()),this,SLOT(handleReplotTimerTimeout()));
     connect(&updatetimer,SIGNAL(timeout()),this,SLOT(updateUI()));
     connect(&recognizor,SIGNAL(newIMUData(float*,int)),this,SLOT(addDatatoIMUPlots(float*,int)));
 	connect(&recognizor,SIGNAL(newaccel(float*,int)),this,SLOT(addDatatoaccelPlots(float*,int)));
@@ -185,9 +186,9 @@ void MainWindow::on_onIMUButton_clicked()
 void MainWindow::on_loadButton_clicked()
 {
     QString fileName=QFileDialog::getOpenFileName(this,
-                "æ‰“å¼€",
+                "´ò¿ª",
                 "",
-                "æ•°æ®æ–‡ä»¶ (*.imu *.emg)");
+                "Êı¾İÎÄ¼ş (*.imu *.emg)");
     if (!fileName.isNull())
     {
         fileLength=recognizor.initReplay(fileName);
@@ -237,9 +238,9 @@ void MainWindow::on_pauseButton_clicked()
 void MainWindow::on_saveButton_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
-         QString("ä¿å­˜æ•°æ®"),
+         QString("±£´æÊı¾İ"),
          "",
-         QString("æ•°æ®æ–‡ä»¶ (*)"));
+         QString("Êı¾İÎÄ¼ş (*)"));
     if (!fileName.isNull())
     {
         int retval=recognizor.saveData(fileName);
@@ -248,7 +249,7 @@ void MainWindow::on_saveButton_clicked()
     }
     else
     {
-     //ç‚¹çš„æ˜¯å–æ¶ˆ
+     //µãµÄÊÇÈ¡Ïû
     }
      return;
 }
@@ -355,7 +356,7 @@ void MainWindow::on_pushButton_connectWifi_clicked()
     row=100;
     col=16;
     count = 0;
-    //è¯»å–æƒé‡-----
+    //¶ÁÈ¡È¨ÖØ-----
     conv1Filter = Filter(32, 1, 3, 1);
     conv1Filter = parseFilterWeight("xml\\conv1_weight.xml", 32, 1, 3, 1);
     convbias1 = parseBias("xml\\bias1_weight.xml", 32);
@@ -609,35 +610,35 @@ string MainWindow::getMotionStr(int num)
 {
     string out = "";
     switch(num){
-    case 0: cout << "æ”¾æ¾";
-            out = "æ”¾æ¾";
+    case 0: cout << "·ÅËÉ";
+            out = "·ÅËÉ";
             break;
-    case 1: cout << "æ¡æ‹³";
-            out = "æ¡æ‹³";
+    case 1: cout << "ÎÕÈ­";
+            out = "ÎÕÈ­";
                 break;
-    case 2: cout << "ä¸ŠæŒ¥";
-            out = "ä¸ŠæŒ¥";
+    case 2: cout << "ÉÏ»Ó";
+            out = "ÉÏ»Ó";
                 break;
-    case 3: cout << "ä¸‹æŒ¥";
-            out = "ä¸‹æŒ¥";
+    case 3: cout << "ÏÂ»Ó";
+            out = "ÏÂ»Ó";
                 break;
-    case 4: cout << "å·¦æŒ¥";
-            out = "å·¦æŒ¥";
+    case 4: cout << "×ó»Ó";
+            out = "×ó»Ó";
                 break;
-    case 5: cout << "å³æŒ¥";
-            out = "å³æŒ¥";
+    case 5: cout << "ÓÒ»Ó";
+            out = "ÓÒ»Ó";
                 break;
-    case 6: cout << "ä¸€";
-            out = "ä¸€";
+    case 6: cout << "Ò»";
+            out = "Ò»";
                 break;
-    case 7: cout << "äºŒ";
-            out = "äºŒ";
+    case 7: cout << "¶ş";
+            out = "¶ş";
                 break;
-    case 8: cout << "äº”";
-            out = "äº”";
+    case 8: cout << "Îå";
+            out = "Îå";
                 break;
-    case 9: cout << "å…­";
-            out = "å…­";
+    case 9: cout << "Áù";
+            out = "Áù";
                 break;
     }
     return out;
@@ -647,7 +648,7 @@ void MainWindow::handleHasNewCmdReply(char cmdR)
 {
     QString cmdR_str=QString::number(cmdR,16);
     log(cmdR_str);
-    //è¿”å›å‘½ä»¤æ ¹æ®16è¿›åˆ¶è½¬åŒ–ä¸ºå­—ç¬¦ä¸²
+    //·µ»ØÃüÁî¸ù¾İ16½øÖÆ×ª»¯Îª×Ö·û´®
 }
 
 void MainWindow::log(QString &info)
@@ -659,4 +660,29 @@ void MainWindow::handleHasNewWifiConnection(int index)
 {
     QString successInfo=QString("Module %1 connected!").arg(index);
     log(successInfo);
+}
+
+void MainWindow::handleReplotTimerTimeout()
+{
+    plots[0]=ui->c1Plot;
+    plots[1]=ui->c2Plot;
+    plots[2]=ui->c3Plot;
+    plots[3]=ui->c4Plot;
+    plots[4]=ui->c5Plot;
+    plots[5]=ui->c6Plot;
+    plots[6]=ui->c7Plot;
+    plots[7]=ui->c8Plot;
+    plots[8]=ui->c1Plot_2;
+    plots[9]=ui->c2Plot_2;
+    plots[10]=ui->c3Plot_2;
+    plots[11]=ui->c4Plot_2;
+    plots[12]=ui->c5Plot_2;
+    plots[13]=ui->c6Plot_2;
+    plots[14]=ui->c7Plot_2;
+    plots[15]=ui->c8Plot_2;
+
+    for (int i=0;i<16;i++)
+    {
+        plots[i]->replot();
+    }
 }
