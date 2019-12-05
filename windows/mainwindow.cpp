@@ -101,6 +101,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    int chNum = module.length()*CH_NUM;
+    for(int i=0;i<chNum;i++)
+    {
+        delete notchfilters_50[i];
+        delete notchfilters_100[i];
+        delete hpfilters[i];
+        delete rawData[i];
+        delete filterData[i];
+        delete detrendedData[i];
+    }
     delete ui;
 }
 
@@ -114,12 +124,6 @@ void MainWindow::updateUI()
     ui->elbowPlot->replot();
     ui->shoulderPlot->replot();
     ui->accelPlot->replot();
-    for (int i=0;i<8;i++)
-    {
-        plots[i]->xAxis->rescale();
-        plots[i]->replot();
-    }
-
     if (isplaying)
         ui->lengthLabel->setText(QString("%1/%2").arg(ui->Slider->value()).arg(fileLength));
 }
